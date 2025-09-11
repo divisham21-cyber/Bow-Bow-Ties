@@ -63,9 +63,14 @@ export default function Home() {
         {/* Header */}
         <header className="bg-white shadow-sm border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-              <div className="flex items-center">
-                <h1 className="text-2xl font-bold text-primary-600">🎀 Bow-Bow-Ties</h1>
+            <div className="flex justify-between items-center h-24">
+              <div className="logo-container">
+                <img 
+                  src="/bow_bow_ties.jpg" 
+                  alt="Bow-Bow-Ties Logo" 
+                  className="w-16 h-16 rounded-full object-cover"
+                />
+                <h1 className="text-3xl font-bold gradient-text">Bow-Bow-Ties</h1>
               </div>
               <nav className="hidden md:flex space-x-8">
                 <a href="#home" className="text-gray-700 hover:text-primary-600 transition-colors">Home</a>
@@ -88,7 +93,7 @@ export default function Home() {
             <div className="text-center">
               <h2 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
                 Stylish Bow Ties for Your
-                <span className="text-primary-600"> Furry Friends</span>
+                <span className="gradient-text"> Furry Friends</span>
               </h2>
               <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
                 Make your pet the most dapper companion with our premium collection of bow ties and accessories. 
