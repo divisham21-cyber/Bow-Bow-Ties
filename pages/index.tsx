@@ -1,56 +1,6 @@
-import { useState } from 'react'
 import Head from 'next/head'
 
-interface Product {
-  id: number
-  name: string
-  price: number
-  image: string
-  category: string
-  description: string
-}
-
-const products: Product[] = [
-  {
-    id: 1,
-    name: "Classic Red Bow Tie",
-    price: 9.99,
-    image: "/images/red-bowtie.jpg",
-    category: "bow-ties",
-    description: "Elegant red bow tie perfect for special occasions"
-  },
-  {
-    id: 2,
-    name: "Polka Dot Blue Bow Tie",
-    price: 9.99,
-    image: "/images/blue-polka-bowtie.jpg",
-    category: "bow-ties",
-    description: "Playful polka dot design in classic blue"
-  },
-  {
-    id: 3,
-    name: "Formal Black Bow Tie",
-    price: 9.99,
-    image: "/images/black-bowtie.jpg",
-    category: "bow-ties",
-    description: "Sophisticated black bow tie for formal events"
-  },
-  {
-    id: 4,
-    name: "Floral Print Bow Tie",
-    price: 9.99,
-    image: "/images/floral-bowtie.jpg",
-    category: "bow-ties",
-    description: "Beautiful floral pattern for spring occasions"
-  }
-]
-
 export default function Home() {
-  const [selectedCategory, setSelectedCategory] = useState('all')
-
-  const filteredProducts = selectedCategory === 'all' 
-    ? products 
-    : products.filter(product => product.category === selectedCategory)
 
   return (
     <>
@@ -74,14 +24,77 @@ export default function Home() {
               </div>
               <nav className="hidden md:flex space-x-8">
                 <a href="#home" className="text-gray-700 hover:text-primary-600 transition-colors">Home</a>
-                <a href="#products" className="text-gray-700 hover:text-primary-600 transition-colors">Products</a>
+                <a href="/products" className="text-gray-700 hover:text-primary-600 transition-colors">Products</a>
                 <a href="#about" className="text-gray-700 hover:text-primary-600 transition-colors">About</a>
                 <a href="#contact" className="text-gray-700 hover:text-primary-600 transition-colors">Contact</a>
               </nav>
-              <div className="flex items-center space-x-4">
-                <button className="text-gray-700 hover:text-primary-600">
-                  🛒 Cart (0)
-                </button>
+              <div className="flex items-center space-x-6">
+                <a 
+                  href="https://www.instagram.com/bow_bow_ties" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="transition-transform hover:scale-110"
+                  aria-label="Follow us on Instagram"
+                >
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-600 via-pink-600 to-yellow-500 p-0.5">
+                    <div className="w-full h-full bg-white rounded-2xl flex items-center justify-center">
+                      <svg className="w-10 h-10" viewBox="0 0 24 24">
+                        <defs>
+                          <linearGradient id="instagram-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stopColor="#833ab4"/>
+                            <stop offset="50%" stopColor="#fd1d1d"/>
+                            <stop offset="100%" stopColor="#fcb045"/>
+                          </linearGradient>
+                        </defs>
+                        <path fill="url(#instagram-gradient)" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                      </svg>
+                    </div>
+                  </div>
+                </a>
+                <a 
+                  href="https://www.facebook.com/p/Bow-Bow-Ties-100071472273808/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="transition-transform hover:scale-110"
+                  aria-label="Follow us on Facebook"
+                >
+                  <div className="w-16 h-16 rounded-2xl bg-blue-600 flex items-center justify-center">
+                    <svg className="w-10 h-10" fill="white" viewBox="0 0 24 24">
+                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                  </div>
+                </a>
+                <a 
+                  href="https://bow-bowties.wordpress.com/about/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="transition-transform hover:scale-110"
+                  aria-label="Visit our WordPress blog"
+                >
+                  <div className="w-16 h-16 rounded-2xl bg-gray-700 flex items-center justify-center">
+                    <svg
+                      width="40"
+                      height="40"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <text
+                        x="12"
+                        y="17"
+                        textAnchor="middle"
+                        fill="white"
+                        fontSize="18"
+                        fontWeight="900"
+                        fontFamily="Arial, sans-serif"
+                        stroke="white"
+                        strokeWidth="0.5"
+                      >
+                        W
+                      </text>
+                    </svg>
+                  </div>
+                </a>
               </div>
             </div>
           </div>
@@ -99,67 +112,63 @@ export default function Home() {
                 Make your pet the most dapper companion with our premium collection of bow ties and accessories. 
                 Comfortable, stylish, and perfect for any occasion.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button className="btn-primary text-lg px-8 py-3">
+              <div className="flex justify-center">
+                <a 
+                  href="https://www.etsy.com/shop/bowbowtiesdesigns" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="btn-primary text-lg px-8 py-3 inline-block text-center"
+                >
                   Shop Now
-                </button>
-                <button className="btn-secondary text-lg px-8 py-3">
-                  View Collection
-                </button>
+                </a>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Products Section */}
+        {/* Products Preview Section */}
         <section id="products" className="py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h3 className="text-3xl font-bold text-gray-900 mb-4">Our Premium Collection</h3>
-              <p className="text-lg text-gray-600">Handcrafted bow ties designed for comfort and style</p>
-            </div>
-
-            {/* Category Filter */}
-            <div className="flex justify-center mb-8">
-              <div className="flex space-x-4">
-                <button
-                  onClick={() => setSelectedCategory('all')}
-                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                    selectedCategory === 'all'
-                      ? 'bg-primary-600 text-white'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}
-                >
-                  All Products
-                </button>
-                <button
-                  onClick={() => setSelectedCategory('bow-ties')}
-                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                    selectedCategory === 'bow-ties'
-                      ? 'bg-primary-600 text-white'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}
-                >
-                  Bow Ties
-                </button>
-              </div>
-            </div>
-
-            {/* Products Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {filteredProducts.map((product) => (
-                <div key={product.id} className="card hover:shadow-lg transition-shadow">
-                  <div className="aspect-square bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
-                    <span className="text-4xl">🎀</span>
+              <p className="text-lg text-gray-600 mb-8">Handcrafted bow ties designed for comfort and style</p>
+              
+              <div className="bg-primary-50 rounded-lg p-8 max-w-4xl mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+                  <div className="text-center">
+                    <span className="text-6xl mb-4 block">🎀</span>
+                    <h4 className="text-xl font-semibold text-gray-900">Top 12 Products</h4>
+                    <p className="text-gray-600">Curated selection of our best sellers</p>
                   </div>
-                  <h4 className="text-lg font-semibold text-gray-900 mb-2">{product.name}</h4>
-                  <p className="text-gray-600 text-sm mb-3">{product.description}</p>
-                  <div className="flex justify-between items-center">
-                    <span className="text-xl font-bold text-primary-600">${product.price}</span>
-                    <button className="btn-primary text-sm">Add to Cart</button>
+                  <div className="text-center">
+                    <span className="text-6xl mb-4 block">✨</span>
+                    <h4 className="text-xl font-semibold text-gray-900">Premium Quality</h4>
+                    <p className="text-gray-600">Handcrafted with love and care</p>
+                  </div>
+                  <div className="text-center">
+                    <span className="text-6xl mb-4 block">🛍️</span>
+                    <h4 className="text-xl font-semibold text-gray-900">Available on Etsy</h4>
+                    <p className="text-gray-600">Shop directly from our store</p>
                   </div>
                 </div>
-              ))}
+                
+                <div className="mt-8 flex justify-center space-x-4">
+                  <a 
+                    href="/products"
+                    className="btn-primary text-lg px-8 py-3 inline-block"
+                  >
+                    View All Products
+                  </a>
+                  <a 
+                    href="https://www.etsy.com/shop/bowbowtiesdesigns" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="bg-white border-2 border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white font-semibold py-3 px-8 rounded-lg transition-all duration-200"
+                  >
+                    Shop on Etsy
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </section>
