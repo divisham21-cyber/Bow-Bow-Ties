@@ -92,13 +92,8 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
               <h2 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-<<<<<<< HEAD
                 Stylish Bow Ties for Your
                 <span className="gradient-text"> Furry Friends</span>
-=======
-                Pet Accesories with a 
-                <span className="text-primary-600"> Purpose</span>
->>>>>>> 22e0d42 (Price changed, update content)
               </h2>
               <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
                 Make your pet the most dapper companion with our premium collection of bow ties and accessories. 
