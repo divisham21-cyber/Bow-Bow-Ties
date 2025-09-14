@@ -14,7 +14,7 @@ const products: Product[] = [
   {
     id: 1,
     name: "Classic Red Bow Tie",
-    price: 24.99,
+    price: 9.99,
     image: "/images/red-bowtie.jpg",
     category: "bow-ties",
     description: "Elegant red bow tie perfect for special occasions"
@@ -22,7 +22,7 @@ const products: Product[] = [
   {
     id: 2,
     name: "Polka Dot Blue Bow Tie",
-    price: 27.99,
+    price: 9.99,
     image: "/images/blue-polka-bowtie.jpg",
     category: "bow-ties",
     description: "Playful polka dot design in classic blue"
@@ -30,7 +30,7 @@ const products: Product[] = [
   {
     id: 3,
     name: "Formal Black Bow Tie",
-    price: 29.99,
+    price: 9.99,
     image: "/images/black-bowtie.jpg",
     category: "bow-ties",
     description: "Sophisticated black bow tie for formal events"
@@ -38,7 +38,7 @@ const products: Product[] = [
   {
     id: 4,
     name: "Floral Print Bow Tie",
-    price: 26.99,
+    price: 9.99,
     image: "/images/floral-bowtie.jpg",
     category: "bow-ties",
     description: "Beautiful floral pattern for spring occasions"
@@ -92,8 +92,13 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
               <h2 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+<<<<<<< HEAD
                 Stylish Bow Ties for Your
                 <span className="gradient-text"> Furry Friends</span>
+=======
+                Pet Accesories with a 
+                <span className="text-primary-600"> Purpose</span>
+>>>>>>> 22e0d42 (Price changed, update content)
               </h2>
               <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
                 Make your pet the most dapper companion with our premium collection of bow ties and accessories. 
