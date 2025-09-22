@@ -15,112 +15,76 @@ interface Product {
 const products: Product[] = [
   {
     id: 1,
-    name: "Classic Red Bow Tie",
+    name: "Handmade Pet Bow Ties - Fall prints",
     price: 9.99,
-    image: "/images/red-bowtie.jpg",
+    image: "/images/fallbow.jpeg",
     category: "bow-ties",
-    description: "Elegant red bow tie perfect for special occasions",
-    etsyUrl: "https://www.etsy.com/shop/bowbowtiesdesigns"
+    description: "Luxurious velvet texture in royal purple",
+    etsyUrl: "https://www.etsy.com/listing/1719972410/handmade-pet-bow-tie-fall-2-plaid-and?ref=shop_home_feat_1&logging_key=e1352fc13ba3b9caff97b3643a01eef5853edbf3%3A1719972410"
   },
   {
     id: 2,
-    name: "Polka Dot Blue Bow Tie",
+    name: "Handmade Pet Bow Tie - Winter Prints",
     price: 9.99,
-    image: "/images/blue-polka-bowtie.jpg",
-    category: "bow-ties",
-    description: "Playful polka dot design in classic blue",
-    etsyUrl: "https://www.etsy.com/shop/bowbowtiesdesigns"
-  },
-  {
-    id: 3,
-    name: "Formal Black Bow Tie",
-    price: 9.99,
-    image: "/images/black-bowtie.jpg",
-    category: "bow-ties",
-    description: "Sophisticated black bow tie for formal events",
-    etsyUrl: "https://www.etsy.com/shop/bowbowtiesdesigns"
-  },
-  {
-    id: 4,
-    name: "Floral Print Bow Tie",
-    price: 9.99,
-    image: "/images/floral-bowtie.jpg",
-    category: "bow-ties",
-    description: "Beautiful floral pattern for spring occasions",
-    etsyUrl: "https://www.etsy.com/shop/bowbowtiesdesigns"
-  },
-  {
-    id: 5,
-    name: "Striped Navy Bow Tie",
-    price: 9.99,
-    image: "/images/navy-striped-bowtie.jpg",
-    category: "bow-ties",
-    description: "Classic navy stripes for a timeless look",
-    etsyUrl: "https://www.etsy.com/shop/bowbowtiesdesigns"
-  },
-  {
-    id: 6,
-    name: "Plaid Green Bow Tie",
-    price: 9.99,
-    image: "/images/green-plaid-bowtie.jpg",
-    category: "bow-ties",
-    description: "Festive plaid pattern in rich green tones",
-    etsyUrl: "https://www.etsy.com/shop/bowbowtiesdesigns"
-  },
-  {
-    id: 7,
-    name: "Velvet Purple Bow Tie",
-    price: 12.99,
-    image: "/images/purple-velvet-bowtie.jpg",
-    category: "bow-ties",
-    description: "Luxurious velvet texture in royal purple",
-    etsyUrl: "https://www.etsy.com/shop/bowbowtiesdesigns"
-  },
-  {
-    id: 8,
-    name: "Gingham Pink Bow Tie",
-    price: 9.99,
-    image: "/images/pink-gingham-bowtie.jpg",
+    image: "/images/winterbow.heic",
     category: "bow-ties",
     description: "Sweet gingham pattern in soft pink",
     etsyUrl: "https://www.etsy.com/shop/bowbowtiesdesigns"
   },
   {
-    id: 9,
-    name: "Leopard Print Bow Tie",
-    price: 11.99,
-    image: "/images/leopard-bowtie.jpg",
-    category: "bow-ties",
-    description: "Wild leopard print for adventurous pets",
-    etsyUrl: "https://www.etsy.com/shop/bowbowtiesdesigns"
-  },
-  {
-    id: 10,
-    name: "Christmas Holly Bow Tie",
+    id: 3,
+    name: "Handmade Pet Bow Ties - Spring and Summer Prints",
     price: 9.99,
-    image: "/images/holly-bowtie.jpg",
+    image: "/images/watermelon2.jpeg",
     category: "bow-ties",
-    description: "Festive holly pattern for holiday celebrations",
-    etsyUrl: "https://www.etsy.com/shop/bowbowtiesdesigns"
+    description: "Elegant red bow tie perfect for special occasions",
+    etsyUrl: "https://www.etsy.com/listing/1721494984/handmade-pet-bow-tie-spring-and-summer?ref=shop_home_active_4&logging_key=ebd39789fd90b5c5d256db2dce6e1865a3cdb0fe%3A1721494984"
   },
   {
-    id: 11,
-    name: "Denim Blue Bow Tie",
-    price: 10.99,
-    image: "/images/denim-bowtie.jpg",
+    id: 4,
+    name: "Handmade Pet Bow Tie - Sports, Patriotic Prints",
+    price: 9.99,
+    image: "/images/patriotic.HEIC",
     category: "bow-ties",
-    description: "Casual denim texture for everyday wear",
-    etsyUrl: "https://www.etsy.com/shop/bowbowtiesdesigns"
+    description: "Playful polka dot design in classic blue",
+    etsyUrl: "https://www.etsy.com/listing/4308947089/handmade-patriotic-pet-bow-tie-stars?ref=shop_home_active_6&logging_key=e8217d5b6d039f20b6859d67eab354f47b47fee5%3A4308947089"
   },
   {
-    id: 12,
-    name: "Gold Sparkle Bow Tie",
-    price: 14.99,
-    image: "/images/gold-sparkle-bowtie.jpg",
+    id: 5,
+    name: "Handmade Pet Bow Tie - Hawaiian and Pride Prints",
+    price: 9.99,
+    image: "/images/hawaiian.jpeg",
     category: "bow-ties",
-    description: "Glamorous gold sparkles for special occasions",
-    etsyUrl: "https://www.etsy.com/shop/bowbowtiesdesigns"
-  }
+    description: "Sophisticated black bow tie for formal events",
+    etsyUrl: "https://www.etsy.com/listing/1849482104/handmade-pet-bow-tie-sports-hawaiian?ref=shop_home_active_3&logging_key=050ae56a9dd7ed5e50187f3bd0714b9d2c894f6e%3A1849482104"
+  },
+  {
+    id: 6,
+    name: "Handmade Pet Bow Tie - Plaid and Paw Prints",
+    price: 9.99,
+    image: "/images/plaidpaw.heic",
+    category: "bow-ties",
+    description: "Beautiful floral pattern for spring occasions",
+    etsyUrl: "https://www.etsy.com/listing/1719972410/handmade-pet-bow-tie-fall-2-plaid-and?ref=shop_home_active_5&logging_key=43ef1205902942b9c6d59894dc04e6f30bfb8fc2%3A1719972410"
+  },
+  {
+    id: 7,
+    name: "Handmade Pet Bandana - All prints",
+    price: 9.99,
+    image: "/images/bandana.jpeg",
+    category: "bow-ties",
+    description: "Classic navy stripes for a timeless look",
+    etsyUrl: "https://www.etsy.com/listing/4366683950/handmade-pet-bow-tie-and-bandana-fall-1?ref=shop_home_active_2&logging_key=6abe50a67d6d32b75199f020ffcc108a9bafb9a1%3A4366683950"
+  },
+  {
+    id: 8,
+    name: "Handcrafted Wooden Bead Necklaces - Eco-Friendly, Multi-Themed, Various Sizes",
+    price: 9.99,
+    image: "/images/beads.PNG",
+    category: "bow-ties",
+    description: "Festive plaid pattern in rich green tones",
+    etsyUrl: "https://www.etsy.com/listing/1721516824/handcrafted-wooden-bead-necklaces-eco?ref=shop_home_active_1&logging_key=f5dbf19403b13b326d848579b0f4c545cde55b0b%3A1721516824"
+  },  
 ]
 
 export default function Products() {
@@ -134,7 +98,7 @@ export default function Products() {
     <>
       <Head>
         <title>Premium Collection - Bow-Bow-Ties</title>
-        <meta name="description" content="Discover our top 12 premium bow ties and accessories for your beloved pets. Handcrafted designs available on Etsy." />
+        <meta name="description" content="Discover our top premium bow ties and accessories for your beloved pets. Handcrafted designs available on Etsy." />
       </Head>
 
       <div className="min-h-screen">
@@ -269,8 +233,11 @@ export default function Products() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
               {filteredProducts.map((product) => (
                 <div key={product.id} className="card hover:shadow-lg transition-shadow">
-                  <div className="aspect-square bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
-                    <span className="text-4xl">🎀</span>
+                  <div className="aspect-square bg-gray-200 rounded-lg mb-4 overflow-hidden">
+                    <img 
+                      src={product.image} 
+                      alt={product.name}
+                    />
                   </div>
                   <h4 className="text-lg font-semibold text-gray-900 mb-2">{product.name}</h4>
                   <p className="text-gray-600 text-sm mb-3">{product.description}</p>
