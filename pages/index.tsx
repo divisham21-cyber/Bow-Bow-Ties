@@ -23,9 +23,9 @@ export default function Home() {
                 <h1 className="text-3xl font-bold gradient-text">Bow-Bow-Ties</h1>
               </div>
               <nav className="hidden md:flex space-x-8">
-                <a href="#home" className="text-gray-700 hover:text-primary-600 transition-colors">Home</a>
                 <a href="/products" className="text-gray-700 hover:text-primary-600 transition-colors">Products</a>
                 <a href="#about" className="text-gray-700 hover:text-primary-600 transition-colors">About</a>
+                <a href="/calendar" className="text-gray-700 hover:text-primary-600 transition-colors">Calendar</a>
                 <a href="#contact" className="text-gray-700 hover:text-primary-600 transition-colors">Contact</a>
               </nav>
               <div className="flex items-center space-x-6">
@@ -176,6 +176,27 @@ export default function Home() {
         {/* About Section */}
         <section id="about" className="py-16 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* Hero Banner */}
+            <div className="mb-12">
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+                <img 
+                  src="/hero-banner.svg" 
+                  alt="Bow-Bow-Ties Hero Banner" 
+                  className="w-full h-64 md:h-80 lg:h-96 object-cover"
+                />
+                <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center">
+                  <div className="text-center text-white">
+                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 drop-shadow-lg">
+                      About Bow-Bow-Ties
+                    </h2>
+                    <p className="text-xl md:text-2xl drop-shadow-md">
+                      Crafting Style for Your Beloved Pets
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div>
                 <h3 className="text-3xl font-bold text-gray-900 mb-6">Why Choose Bow-Bow-Ties?</h3>
