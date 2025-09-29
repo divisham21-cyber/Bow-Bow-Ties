@@ -308,9 +308,8 @@ export default function Products() {
               <div>
                 <h6 className="font-semibold mb-4">Contact</h6>
                 <ul className="space-y-2 text-gray-400">
-                  <li>📧 hello@bowbowties.com</li>
-                  <li>📞 (555) 123-4567</li>
-                  <li>📍 123 Pet Street, City, State</li>
+                  <li>📧 bowbowties21@gmail.com</li>
+                  <li>📍 Bothell, Washington</li>
                 </ul>
               </div>
             </div>

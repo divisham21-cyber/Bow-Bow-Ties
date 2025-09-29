@@ -6,7 +6,7 @@ export default function Home() {
     <>
       <Head>
         <title>Bow-Bow-Ties - Premium Pet Bow Ties & Accessories</title>
-        <meta name="description" content="Discover our collection of stylish bow ties and accessories for your beloved pets. Premium quality, comfortable fit, and adorable designs." />
+        <meta name="description" content="Discover our collection of stylish bow ties and accessories for your furry friends. Handmade, Premium quality, comfortable fit, and adorable designs." />
       </Head>
 
       <div className="min-h-screen">
@@ -109,7 +109,7 @@ export default function Home() {
                 <span className="gradient-text"> Purpose</span>
               </h2>
               <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-                Make your pet the most dapper companion with our premium collection of bow ties and accessories. 
+                Make your furry friend the most dapper companion with our premium collection of bow ties and accessories. 
                 Comfortable, stylish, and perfect for any occasion.
               </p>
               <div className="flex justify-center">
@@ -198,7 +198,7 @@ export default function Home() {
                     <span className="text-primary-600 text-xl">💝</span>
                     <div>
                       <h4 className="font-semibold text-gray-900">Perfect Fit</h4>
-                      <p className="text-gray-600">Adjustable sizing ensures a comfortable fit for pets of all sizes.</p>
+                      <p className="text-gray-600">Different sizing ensures a comfortable fit for pets of all sizes.</p>
                     </div>
                   </div>
                 </div>
@@ -208,7 +208,7 @@ export default function Home() {
                   <span className="text-6xl mb-4 block">🐕</span>
                   <h4 className="text-xl font-semibold text-gray-900 mb-2">Happy Pets, Happy Owners</h4>
                   <p className="text-gray-600">
-                    Join thousands of pet owners who trust Bow-Bow-Ties to make their furry friends look absolutely adorable.
+                    Join several pet owners who trust Bow-Bow-Ties to make their furry friends look absolutely adorable.
                   </p>
                 </div>
               </div>
@@ -284,17 +284,8 @@ export default function Home() {
                       <span className="text-primary-600 text-xl">📧</span>
                       <div>
                         <p className="font-medium text-gray-900">Email</p>
-                        <a href="mailto:hello@bowbowties.com" className="text-primary-600 hover:text-primary-700">
-                          hello@bowbowties.com
-                        </a>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <span className="text-primary-600 text-xl">📞</span>
-                      <div>
-                        <p className="font-medium text-gray-900">Phone</p>
-                        <a href="tel:+15551234567" className="text-primary-600 hover:text-primary-700">
-                          (555) 123-4567
+                        <a href="mailto:bowbowties21@gmail.com" className="text-primary-600 hover:text-primary-700">
+                          bowbowties21@gmail.com
                         </a>
                       </div>
                     </div>
@@ -302,7 +293,7 @@ export default function Home() {
                       <span className="text-primary-600 text-xl">📍</span>
                       <div>
                         <p className="font-medium text-gray-900">Address</p>
-                        <p className="text-gray-600">123 Pet Street<br />City, State 12345</p>
+                        <p className="text-gray-600">Bothell, Washington</p>
                       </div>
                     </div>
                   </div>
@@ -312,25 +303,17 @@ export default function Home() {
                   <h4 className="text-lg font-semibold text-gray-900 mb-4">Business Hours</h4>
                   <div className="space-y-2 text-gray-600">
                     <div className="flex justify-between">
-                      <span>Monday - Friday</span>
-                      <span>9:00 AM - 6:00 PM</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Saturday</span>
-                      <span>10:00 AM - 4:00 PM</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Sunday</span>
-                      <span>Closed</span>
+                      <span>Sunday - Saturday</span>
+                      <span>Always Open!</span>
                     </div>
                   </div>
                 </div>
 
                 <div className="bg-primary-50 rounded-lg p-6">
-                  <h4 className="text-lg font-semibold text-gray-900 mb-2">🎀 Custom Orders</h4>
+                  <h4 className="text-lg font-semibold text-gray-900 mb-2">🎀 Return Policy</h4>
                   <p className="text-gray-600">
-                    Looking for something special? We offer custom bow ties and accessories tailored to your pet's unique style. 
-                    Contact us to discuss your custom order!
+                    Since we make all the bow ties ourselves, we do not accept returns or refunds.
+                    Contact us to see if we can help!
                   </p>
                 </div>
               </div>
@@ -369,9 +352,8 @@ export default function Home() {
               <div>
                 <h6 className="font-semibold mb-4">Contact</h6>
                 <ul className="space-y-2 text-gray-400">
-                  <li>📧 hello@bowbowties.com</li>
-                  <li>📞 (555) 123-4567</li>
-                  <li>📍 123 Pet Street, City, State</li>
+                  <li>📧 bowbowties21@gmail.com</li>
+                  <li>📍 Bothell, Washington</li>
                 </ul>
               </div>
             </div>
