@@ -8,73 +8,116 @@ interface Event {
   date: string;
   time: string;
   description: string;
-  type: 'playdate' | 'training' | 'meetup';
+  type: 'playdate' | 'training' | 'meetup' | 'marketplace';
 }
 
-// Dummy event data for Sep-Nov 2024
+// Dummy event data for Sep-Dec 2025
 const dummyEvents: Event[] = [
   {
     id: 1,
-    title: 'Puppy Playdate at Central Park',
-    date: '2024-09-15',
+    title: 'Popup Save event : Kenmore',
+    date: '2025-09-15',
     time: '10:00 AM',
-    description: 'Bring your puppies for a fun playdate session!',
-    type: 'playdate'
+    description: 'Join us for a fun-filled day at the Kenmore Popup Save event! Bring your furry friends for games, treats, and lots of fun!',
+    type: 'marketplace'
   },
   {
     id: 2,
-    title: 'Dog Training Workshop',
-    date: '2024-09-22',
+    title: 'Training Workshop',
+    date: '2025-09-22',
     time: '2:00 PM',
     description: 'Learn basic obedience training techniques.',
     type: 'training'
   },
   {
-    id: 3,
-    title: 'Golden Retriever Meetup',
-    date: '2024-10-05',
+    id: 7,
+    title: 'Golden Meetup',
+    date: '2025-09-08',
     time: '11:00 AM',
     description: 'Monthly meetup for Golden Retriever owners.',
     type: 'meetup'
   },
   {
+    id: 8,
+    title: 'Pet Market Bellevue',
+    date: '2025-09-29',
+    time: '9:00 AM',
+    description: 'Browse and shop for premium pet products at our Bellevue marketplace event.',
+    type: 'marketplace'
+  },
+  {
+    id: 3,
+    title: 'Golden Retriever Meetup',
+    date: '2025-10-05',
+    time: '11:00 AM',
+    description: 'Monthly meetup for Golden Retriever owners.',
+    type: 'meetup'
+  },
+  {
+    id: 9,
+    title: 'Fall Market Seattle',
+    date: '2025-10-12',
+    time: '10:00 AM',
+    description: 'Fall-themed pet marketplace with seasonal treats and accessories.',
+    type: 'marketplace'
+  },
+  {
     id: 4,
     title: 'Halloween Pet Costume Contest',
-    date: '2024-10-31',
+    date: '2025-10-31',
     time: '4:00 PM',
     description: 'Dress up your pets for our spooky costume contest!',
     type: 'playdate'
   },
   {
+    id: 6,
+    title: 'Advanced Agility Training',
+    date: '2025-11-16',
+    time: '3:00 PM',
+    description: 'Advanced agility training for active dogs.',
+    type: 'training'
+  },
+  {
+    id: 10,
+    title: 'Holiday Pet Market',
+    date: '2025-11-23',
+    time: '11:00 AM',
+    description: 'Holiday-themed marketplace with festive pet accessories and gifts.',
+    type: 'marketplace'
+  },
+  {
     id: 5,
     title: 'Thanksgiving Dog Walk',
-    date: '2024-11-28',
+    date: '2025-11-28',
     time: '9:00 AM',
     description: 'Thanksgiving morning walk with your furry friends.',
     type: 'playdate'
   },
   {
-    id: 6,
-    title: 'Advanced Agility Training',
-    date: '2024-11-16',
-    time: '3:00 PM',
-    description: 'Advanced agility training for active dogs.',
-    type: 'training'
+    id: 11,
+    title: 'Winter Market Redmond',
+    date: '2025-12-07',
+    time: '10:00 AM',
+    description: 'Winter marketplace featuring cozy pet gear and holiday treats.',
+    type: 'marketplace'
+  },
+  {
+    id: 12,
+    title: 'Holiday Puppy Playdate',
+    date: '2025-12-21',
+    time: '2:00 PM',
+    description: 'Festive holiday playdate with puppies and holiday-themed activities.',
+    type: 'playdate'
   }
 ];
 
 const Calendar: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  const [currentMonth, setCurrentMonth] = useState(new Date(2024, 8, 1)); // September 2024
+  const [currentMonth, setCurrentMonth] = useState(new Date()); // Current month
 
-  // Get current date and next 2 months
-  const getMonthsToShow = () => {
-    const months = [];
-    for (let i = 0; i < 3; i++) {
-      const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + i, 1);
-      months.push(date);
-    }
-    return months;
+  // Get only current month
+  const getCurrentMonth = () => {
+    return currentMonth;
   };
 
   // Get events for a specific date
@@ -139,6 +182,8 @@ const Calendar: React.FC = () => {
           return 'bg-cyan-200 text-cyan-900 border-2 border-cyan-400';
         case 'meetup':
           return 'bg-emerald-200 text-emerald-900 border-2 border-emerald-400';
+        case 'marketplace':
+          return 'bg-pink-200 text-pink-900 border-2 border-pink-400';
         default:
           return 'bg-gray-200 text-gray-900 border-2 border-gray-400';
       }
@@ -163,6 +208,8 @@ const Calendar: React.FC = () => {
         return 'bg-secondary-100 text-secondary-800 border-secondary-200';
       case 'meetup':
         return 'bg-green-100 text-green-800 border-green-200';
+      case 'marketplace':
+        return 'bg-pink-100 text-pink-800 border-pink-200';
       default:
         return 'bg-gray-100 text-gray-800 border-gray-200';
     }
@@ -186,6 +233,8 @@ const Calendar: React.FC = () => {
         return '🎓';
       case 'meetup':
         return '👥';
+      case 'marketplace':
+        return '🛍️';
       default:
         return '📅';
     }
@@ -236,54 +285,99 @@ const Calendar: React.FC = () => {
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-            {/* Calendar Months */}
-            {getMonthsToShow().map((month, monthIndex) => (
-              <div key={monthIndex} className="bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4 text-center">
-                  {monthNames[month.getMonth()]} {month.getFullYear()}
-                </h2>
-                
-                {/* Day headers */}
-                <div className="grid grid-cols-7 gap-1 mb-2">
-                  {dayNames.map(day => (
-                    <div key={day} className="text-center text-sm font-medium text-gray-500 py-2">
-                      {day}
+        {/* Upcoming Event Banner */}
+        {(() => {
+          const nextEvent = getUpcomingEvents()[0];
+          if (!nextEvent) return null;
+          
+          return (
+            <div className={`${getEventTypeColor(nextEvent.type)} border-b`}>
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <span className="text-2xl">{getEventTypeIcon(nextEvent.type)}</span>
+                    <div>
+                      <h3 className="font-semibold text-lg">Next Event: {nextEvent.title}</h3>
+                      <p className="text-sm opacity-75">
+                        {new Date(nextEvent.date + 'T00:00:00').toLocaleDateString('en-US', {
+                          weekday: 'long',
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        })} at {nextEvent.time}
+                      </p>
                     </div>
-                  ))}
-                </div>
-
-                {/* Calendar days */}
-                <div className="grid grid-cols-7 gap-2">
-                  {generateCalendarDays(month).map((day, dayIndex) => (
-                    <button
-                      key={dayIndex}
-                      onClick={() => setSelectedDate(day.dateString)}
-                      className={`
-                        relative p-2 h-16 text-sm rounded-lg transition-all duration-200 font-medium flex flex-col items-center justify-start
-                        ${getCalendarCellColor(day.events, day.isCurrentMonth, day.isToday, selectedDate === day.dateString)}
-                      `}
-                    >
-                      <span className="text-base font-semibold">{day.day}</span>
-                      {day.events.length > 0 && day.isCurrentMonth && (
-                        <div className="flex flex-col items-center mt-1 space-y-0.5">
-                          <span className="text-xs">{getEventTypeIcon(day.events[0].type)}</span>
-                          {day.events.length > 1 && (
-                            <span className="text-xs font-bold">+{day.events.length - 1}</span>
-                          )}
-                        </div>
-                      )}
-                    </button>
-                  ))}
+                  </div>
+                  <span className="text-xs uppercase font-medium px-3 py-1 rounded-full bg-white bg-opacity-50">
+                    {nextEvent.type}
+                  </span>
                 </div>
               </div>
-            ))}
+            </div>
+          );
+        })()}
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Single Calendar Month - Page Wide */}
+          <div className="bg-white rounded-lg shadow-md p-8">
+            <h2 className="text-2xl font-semibold text-gray-900 mb-6 text-center">
+              {monthNames[getCurrentMonth().getMonth()]} {getCurrentMonth().getFullYear()}
+            </h2>
+            
+            {/* Day headers */}
+            <div className="grid grid-cols-7 gap-2 mb-4">
+              {dayNames.map(day => (
+                <div key={day} className="text-center text-lg font-semibold text-gray-700 py-3 bg-gray-50 rounded-lg">
+                  {day}
+                </div>
+              ))}
+            </div>
+
+            {/* Calendar days */}
+            <div className="grid grid-cols-7 gap-2">
+              {generateCalendarDays(getCurrentMonth()).map((day, dayIndex) => (
+                <button
+                  key={dayIndex}
+                  onClick={() => {
+                    setSelectedDate(day.dateString);
+                    // Scroll to event details section after a short delay to allow state update
+                    setTimeout(() => {
+                      const eventDetailsElement = document.getElementById('event-details');
+                      if (eventDetailsElement) {
+                        eventDetailsElement.scrollIntoView({ 
+                          behavior: 'smooth',
+                          block: 'start'
+                        });
+                      }
+                    }, 100);
+                  }}
+                  className={`
+                    relative p-3 h-24 text-sm rounded-lg transition-all duration-200 font-medium flex flex-col items-start justify-start
+                    ${getCalendarCellColor(day.events, day.isCurrentMonth, day.isToday, selectedDate === day.dateString)}
+                  `}
+                >
+                  <span className="text-lg font-bold mb-1">{day.day}</span>
+                  {day.events.length > 0 && day.isCurrentMonth && (
+                    <div className="flex flex-col items-start w-full space-y-1">
+                      {day.events.slice(0, 2).map((event, eventIndex) => (
+                        <div key={eventIndex} className="text-xs font-medium truncate w-full text-left">
+                          <span className="mr-1">{getEventTypeIcon(event.type)}</span>
+                          <span className="truncate">{event.title}</span>
+                        </div>
+                      ))}
+                      {day.events.length > 2 && (
+                        <span className="text-xs font-bold text-gray-600">+{day.events.length - 2} more</span>
+                      )}
+                    </div>
+                  )}
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* Event Details */}
+          {/* Event Details - Before Legend */}
           {selectedDate && (
-            <div className="mt-8 bg-white rounded-lg shadow-md p-6">
+            <div id="event-details" className="mt-8 bg-white rounded-lg shadow-md p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
                 Events for {new Date(selectedDate + 'T00:00:00').toLocaleDateString('en-US', {
                   weekday: 'long',
@@ -340,6 +434,12 @@ const Calendar: React.FC = () => {
                       <span className="text-xs">👥</span>
                     </div>
                     <span className="text-sm">Community Meetups</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-6 h-6 bg-pink-200 border-2 border-pink-400 rounded flex items-center justify-center">
+                      <span className="text-xs">🛍️</span>
+                    </div>
+                    <span className="text-sm">Marketplace Events</span>
                   </div>
                 </div>
               </div>
