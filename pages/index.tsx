@@ -202,24 +202,24 @@ export default function Home() {
                 <h3 className="text-3xl font-bold text-gray-900 mb-6">Why Choose Bow-Bow-Ties?</h3>
                 <div className="space-y-4">
                   <div className="flex items-start space-x-3">
-                    <span className="text-primary-600 text-xl">✨</span>
+                    <span className="text-primary-600 text-xl">🎀</span>
                     <div>
-                      <h4 className="font-semibold text-gray-900">Premium Quality</h4>
-                      <p className="text-gray-600">Made with high-quality, pet-safe materials that are comfortable and durable.</p>
+                      <h4 className="font-semibold text-gray-900">Support in Style</h4>
+                      <p className="text-gray-600">Styling your pet while providing for an animal in need.</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
-                    <span className="text-primary-600 text-xl">🎨</span>
+                    <span className="text-primary-600 text-xl">🐕</span>
                     <div>
-                      <h4 className="font-semibold text-gray-900">Stylish Designs</h4>
-                      <p className="text-gray-600">From classic to contemporary, we have designs for every occasion and personality.</p>
+                      <h4 className="font-semibold text-gray-900">Helping Animals</h4>
+                      <p className="text-gray-600">Supporting a shelter working endlessly to care for animals.</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
                     <span className="text-primary-600 text-xl">💝</span>
                     <div>
-                      <h4 className="font-semibold text-gray-900">Perfect Fit</h4>
-                      <p className="text-gray-600">Different sizing ensures a comfortable fit for pets of all sizes.</p>
+                      <h4 className="font-semibold text-gray-900">Motivating a Youth Entrepreneur</h4>
+                      <p className="text-gray-600">Encouraging a compassionate young girl entrepreneur to grow.</p>
                     </div>
                   </div>
                 </div>
