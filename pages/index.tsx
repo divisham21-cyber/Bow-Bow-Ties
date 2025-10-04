@@ -180,7 +180,7 @@ export default function Home() {
             <div className="mb-12">
               <div className="relative rounded-2xl overflow-hidden shadow-2xl">
                 <img 
-                  src="/hero-banner.svg" 
+                  src="/bowbowtiebanner.png" 
                   alt="Bow-Bow-Ties Hero Banner" 
                   className="w-full h-64 md:h-80 lg:h-96 object-cover"
                 />
@@ -226,11 +226,10 @@ export default function Home() {
               </div>
               <div className="bg-white rounded-lg p-8 shadow-md">
                 <div className="text-center">
-                  <span className="text-6xl mb-4 block">🐕</span>
-                  <h4 className="text-xl font-semibold text-gray-900 mb-2">Happy Pets, Happy Owners</h4>
+                  <span className="text-6xl mb-4 block">🐾</span>
+                  <h4 className="text-xl font-semibold text-gray-900 mb-2">❤️From the Founder - Divisha M❤️</h4>
                   <p className="text-gray-600">
-                    Join several pet owners who trust Bow-Bow-Ties to make their furry friends look absolutely adorable.
-                  </p>
+                    Hi! I’m the founder of Bow-Bow Ties, a purpose driven business with a mission to make the world a better place for animals. We have donated over $7,500 so far, and I hope that with your support, we can help raise funds for even more animals in the shelters! </p>
                 </div>
               </div>
             </div>
