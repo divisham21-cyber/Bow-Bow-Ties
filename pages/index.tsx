@@ -174,22 +174,24 @@ export default function Home() {
         </section>
 
         {/* About Section */}
-        <section id="about" className="py-16 bg-gray-50">
+        <section id="about" className="py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {/* Hero Banner */}
-            <div className="mb-12">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-                <img 
-                  src="/bowbowtiebanner.png" 
-                  alt="Bow-Bow-Ties Hero Banner" 
-                  className="w-full h-64 md:h-80 lg:h-96 object-cover"
-                />
+            <div className="mb-12 -mx-4 sm:-mx-6 lg:-mx-8">
+              <div className="relative">
+                <div className="w-full" style={{ aspectRatio: '2528/1126' }}>
+                  <img 
+                    src="/bowbowtiebanner.jpeg" 
+                    alt="Bow-Bow-Ties Hero Banner" 
+                    className="w-full h-full object-contain"
+                  />
+                </div>
                 <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center">
                   <div className="text-center text-white">
-                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 drop-shadow-lg">
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3 drop-shadow-2xl" style={{ textShadow: '2px 2px 0px #000, -2px -2px 0px #000, 2px -2px 0px #000, -2px 2px 0px #000' }}>
                       About Bow-Bow-Ties
                     </h2>
-                    <p className="text-xl md:text-2xl drop-shadow-md">
+                    <p className="text-lg md:text-xl drop-shadow-xl" style={{ textShadow: '1px 1px 0px #000, -1px -1px 0px #000, 1px -1px 0px #000, -1px 1px 0px #000' }}>
                       Crafting Style for Your Beloved Pets
                     </p>
                   </div>
