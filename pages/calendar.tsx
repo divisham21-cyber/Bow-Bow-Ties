@@ -8,107 +8,35 @@ interface Event {
   date: string;
   time: string;
   description: string;
-  type: 'playdate' | 'training' | 'meetup' | 'marketplace';
+  type: 'playdate' | 'training' | 'national pet' | 'marketplace';
 }
 
 // Dummy event data for Sep-Dec 2025
 const dummyEvents: Event[] = [
   {
     id: 1,
-    title: 'Popup Save event : Kenmore',
-    date: '2025-09-15',
-    time: '10:00 AM',
-    description: 'Join us for a fun-filled day at the Kenmore Popup Save event! Bring your furry friends for games, treats, and lots of fun!',
-    type: 'marketplace'
+    title: 'National Cat Day',
+    date: '2025-10-29',
+    time: 'All Day',
+    description: 'It\'s National Cat Day! Give your feline friend some extra attention and love. Better yet, spoil them with a new collar and charm!',
+    type: 'national pet'
   },
   {
     id: 2,
-    title: 'Training Workshop',
-    date: '2025-09-22',
-    time: '2:00 PM',
-    description: 'Learn basic obedience training techniques.',
-    type: 'training'
-  },
-  {
-    id: 7,
-    title: 'Golden Meetup',
-    date: '2025-09-08',
-    time: '11:00 AM',
-    description: 'Monthly meetup for Golden Retriever owners.',
-    type: 'meetup'
-  },
-  {
-    id: 8,
-    title: 'Pet Market Bellevue',
-    date: '2025-09-29',
-    time: '9:00 AM',
-    description: 'Browse and shop for premium pet products at our Bellevue marketplace event.',
-    type: 'marketplace'
+    title: 'National Senior Pet Month',
+    date: '2025-11-01',
+    time: 'All month',
+    description: 'Old is gold! National Senior Pet Month is dedicated to celebrating and raising awareness for senior pets. They have so much love to give.',
+    type: 'national pet'
   },
   {
     id: 3,
-    title: 'Golden Retriever Meetup',
-    date: '2025-10-05',
-    time: '11:00 AM',
-    description: 'Monthly meetup for Golden Retriever owners.',
-    type: 'meetup'
-  },
-  {
-    id: 9,
-    title: 'Fall Market Seattle',
-    date: '2025-10-12',
-    time: '10:00 AM',
-    description: 'Fall-themed pet marketplace with seasonal treats and accessories.',
+    title: 'Kenmore Winterfest',
+    date: '2025-12-06',
+    time: '11:00AM-3:00PM',
+    description: 'Winter Market at the Hangar in Kenmore, and POP shop! Festive activities and vendors.',
     type: 'marketplace'
   },
-  {
-    id: 4,
-    title: 'Halloween Pet Costume Contest',
-    date: '2025-10-31',
-    time: '4:00 PM',
-    description: 'Dress up your pets for our spooky costume contest!',
-    type: 'playdate'
-  },
-  {
-    id: 6,
-    title: 'Advanced Agility Training',
-    date: '2025-11-16',
-    time: '3:00 PM',
-    description: 'Advanced agility training for active dogs.',
-    type: 'training'
-  },
-  {
-    id: 10,
-    title: 'Holiday Pet Market',
-    date: '2025-11-23',
-    time: '11:00 AM',
-    description: 'Holiday-themed marketplace with festive pet accessories and gifts.',
-    type: 'marketplace'
-  },
-  {
-    id: 5,
-    title: 'Thanksgiving Dog Walk',
-    date: '2025-11-28',
-    time: '9:00 AM',
-    description: 'Thanksgiving morning walk with your furry friends.',
-    type: 'playdate'
-  },
-  {
-    id: 11,
-    title: 'Winter Market Redmond',
-    date: '2025-12-07',
-    time: '10:00 AM',
-    description: 'Winter marketplace featuring cozy pet gear and holiday treats.',
-    type: 'marketplace'
-  },
-  {
-    id: 12,
-    title: 'Holiday Puppy Playdate',
-    date: '2025-12-21',
-    time: '2:00 PM',
-    description: 'Festive holiday playdate with puppies and holiday-themed activities.',
-    type: 'playdate'
-  }
 ];
 
 const Calendar: React.FC = () => {
@@ -180,7 +108,7 @@ const Calendar: React.FC = () => {
           return 'bg-orange-200 text-orange-900 border-2 border-orange-400';
         case 'training':
           return 'bg-cyan-200 text-cyan-900 border-2 border-cyan-400';
-        case 'meetup':
+        case 'national pet':
           return 'bg-emerald-200 text-emerald-900 border-2 border-emerald-400';
         case 'marketplace':
           return 'bg-pink-200 text-pink-900 border-2 border-pink-400';
@@ -206,7 +134,7 @@ const Calendar: React.FC = () => {
         return 'bg-primary-100 text-primary-800 border-primary-200';
       case 'training':
         return 'bg-secondary-100 text-secondary-800 border-secondary-200';
-      case 'meetup':
+      case 'national pet':
         return 'bg-green-100 text-green-800 border-green-200';
       case 'marketplace':
         return 'bg-pink-100 text-pink-800 border-pink-200';
@@ -231,8 +159,8 @@ const Calendar: React.FC = () => {
         return '🐕';
       case 'training':
         return '🎓';
-      case 'meetup':
-        return '👥';
+      case 'national pet':
+        return '🐾';
       case 'marketplace':
         return '🛍️';
       default:
@@ -431,9 +359,9 @@ const Calendar: React.FC = () => {
                   </div>
                   <div className="flex items-center space-x-3">
                     <div className="w-6 h-6 bg-emerald-200 border-2 border-emerald-400 rounded flex items-center justify-center">
-                      <span className="text-xs">👥</span>
+                      <span className="text-xs">🐾</span>
                     </div>
-                    <span className="text-sm">Community Meetups</span>
+                    <span className="text-sm">National Pet</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <div className="w-6 h-6 bg-pink-200 border-2 border-pink-400 rounded flex items-center justify-center">
