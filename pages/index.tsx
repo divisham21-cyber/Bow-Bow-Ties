@@ -13,22 +13,43 @@ export default function Home() {
         {/* Header */}
         <header className="bg-white shadow-sm border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-24">
-              <div className="logo-container">
-                <img 
-                  src="/bow_bow_ties.jpg" 
-                  alt="Bow-Bow-Ties Logo" 
-                  className="w-16 h-16 rounded-full object-cover"
-                />
-                <h1 className="text-3xl font-bold gradient-text">Bow-Bow-Ties</h1>
+            <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center py-4 lg:h-24">
+              <div className="flex justify-between items-center">
+                <div className="logo-container">
+                  <img 
+                    src="/bow_bow_ties.jpg" 
+                    alt="Bow-Bow-Ties Logo" 
+                    className="w-16 h-16 rounded-full object-cover"
+                  />
+                  <h1 className="text-3xl font-bold gradient-text">Bow-Bow-Ties</h1>
+                </div>
               </div>
-              <nav className="hidden md:flex space-x-8">
-                <a href="/products" className="text-gray-700 hover:text-primary-600 transition-colors">Products</a>
-                <a href="#about" className="text-gray-700 hover:text-primary-600 transition-colors">About</a>
-                <a href="/calendar" className="text-gray-700 hover:text-primary-600 transition-colors">Calendar</a>
-                <a href="#contact" className="text-gray-700 hover:text-primary-600 transition-colors">Contact</a>
+              
+              {/* Mobile Navigation */}
+              <nav className="flex md:hidden justify-center space-x-4 mt-2 mb-2">
+                <a href="/products" className="text-gray-700 hover:text-primary-600 transition-colors text-base font-bold">Products</a>
+                <a href="#about" className="text-gray-700 hover:text-primary-600 transition-colors text-base font-bold">About</a>
+                <a href="/calendar" className="text-gray-700 hover:text-primary-600 transition-colors text-base font-bold">Calendar</a>
+                <a href="#contact" className="text-gray-700 hover:text-primary-600 transition-colors text-base font-bold">Contact</a>
               </nav>
-              <div className="flex items-center space-x-6">
+              
+              {/* Tablet Navigation */}
+              <nav className="hidden md:flex lg:hidden justify-center space-x-6 mt-2 mb-2">
+                <a href="/products" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Products</a>
+                <a href="#about" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">About</a>
+                <a href="/calendar" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Calendar</a>
+                <a href="#contact" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Contact</a>
+              </nav>
+              
+              {/* Desktop Navigation */}
+              <nav className="hidden lg:flex space-x-8">
+                <a href="/products" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Products</a>
+                <a href="#about" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">About</a>
+                <a href="/calendar" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Calendar</a>
+                <a href="#contact" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Contact</a>
+              </nav>
+              
+              <div className="flex items-center justify-center space-x-4 mt-2 lg:mt-0 lg:space-x-6">
                 <a 
                   href="https://www.instagram.com/bow_bow_ties" 
                   target="_blank" 
@@ -99,6 +120,26 @@ export default function Home() {
             </div>
           </div>
         </header>
+
+        {/* Marketplace Event Banner */}
+        <div className="bg-pink-100 text-pink-800 border-pink-200 border-b">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <span className="text-2xl">🛍️</span>
+                <div>
+                  <h3 className="font-semibold text-lg">Next Event: Kenmore Winterfest</h3>
+                  <p className="text-sm opacity-75">
+                    Friday, December 6, 2025 at 11:00AM-3:00PM
+                  </p>
+                </div>
+              </div>
+              <span className="text-xs uppercase font-medium px-3 py-1 rounded-full bg-white bg-opacity-50">
+                marketplace
+              </span>
+            </div>
+          </div>
+        </div>
 
         {/* Hero Section */}
         <section id="home" className="hero-section">
@@ -427,6 +468,7 @@ export default function Home() {
                   <li><a href="#home" className="hover:text-white transition-colors">Home</a></li>
                   <li><a href="#products" className="hover:text-white transition-colors">Products</a></li>
                   <li><a href="#about" className="hover:text-white transition-colors">About</a></li>
+                  <li><a href="/calendar" className="hover:text-white transition-colors">Calendar</a></li>
                   <li><a href="#contact" className="hover:text-white transition-colors">Contact</a></li>
                 </ul>
               </div>
