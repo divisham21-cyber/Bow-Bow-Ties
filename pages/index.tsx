@@ -19,7 +19,7 @@ export default function Home() {
                   <img 
                     src="/bow_bow_ties.jpg" 
                     alt="Bow-Bow-Ties Logo" 
-                    className="w-16 h-16 rounded-full object-cover"
+                    className="w-10 h-10 rounded-full object-cover"
                   />
                   <h1 className="text-3xl font-bold gradient-text">Bow-Bow-Ties</h1>
                 </div>
@@ -271,7 +271,7 @@ export default function Home() {
                   <span className="text-6xl mb-4 block">🐾</span>
                   <h4 className="text-xl font-semibold text-gray-900 mb-2">❤️From the Founder - Divisha M❤️</h4>
                   <p className="text-gray-600">
-                    Hi! I’m the founder of Bow-Bow Ties, a purpose driven business with a mission to make the world a better place for animals. We have donated over $7,500 so far, and I hope that with your support, we can help raise funds for even more animals in the shelters! </p>
+                    Hi! I’m the founder of Bow-Bow Ties, a purpose driven business with a mission to make the world a better place for animals. Since starting at 9 years old in 2021, we have donated over $7,500 and supported over 15 animal shelters. I hope that with your support, we can help raise funds for even more animals in need! </p>
                 </div>
               </div>
             </div>
@@ -374,10 +374,9 @@ export default function Home() {
                 <div className="bg-primary-50 rounded-lg p-6">
                   <h4 className="text-lg font-semibold text-gray-900 mb-2">🎀 How Do We Support?🐾</h4>
                   <p className="text-gray-600">
-                    50% of sales proceeds donated to shelters | 
-                    Supporting microchipping & pet food drives | 
-                    Partnering in fundraising events for animal welfare | 
-                    We support 
+                    💰 Donating 50% of sales proceeds donated to animal shelters <br />
+                    🏷️ Supporting microchipping & pet food drives <br />
+                    🤝 Partnering in fundraising events for animal welfare <br />
                   </p>
                 </div>
               </div>
