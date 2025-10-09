@@ -109,8 +109,7 @@ export default function Home() {
                 <span className="gradient-text"> Purpose</span>
               </h2>
               <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-                Make your furry friend the most dapper companion with our premium collection of bow ties and accessories. 
-                Comfortable, stylish, and perfect for any occasion.
+                Make your furry friend the most dapper companion with our handmade collection of accessories, while providing for an animal in need. 
               </p>
               <div className="flex justify-center">
                 <a 
@@ -137,13 +136,13 @@ export default function Home() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
                   <div className="text-center">
                     <span className="text-6xl mb-4 block">🎀</span>
-                    <h4 className="text-xl font-semibold text-gray-900">Top 12 Products</h4>
+                    <h4 className="text-xl font-semibold text-gray-900">Top 8 Products</h4>
                     <p className="text-gray-600">Curated selection of our best sellers</p>
                   </div>
                   <div className="text-center">
                     <span className="text-6xl mb-4 block">✨</span>
                     <h4 className="text-xl font-semibold text-gray-900">Premium Quality</h4>
-                    <p className="text-gray-600">Handcrafted with love and care</p>
+                    <p className="text-gray-600">Comfortable, stylish, and perfect for any occasion.</p>
                   </div>
                   <div className="text-center">
                     <span className="text-6xl mb-4 block">🛍️</span>
@@ -192,7 +191,7 @@ export default function Home() {
                       About Bow-Bow-Ties
                     </h2>
                     <p className="text-lg md:text-xl drop-shadow-xl" style={{ textShadow: '1px 1px 0px #000, -1px -1px 0px #000, 1px -1px 0px #000, -1px 1px 0px #000' }}>
-                      Crafting Style for Your Beloved Pets
+                      Making The World A Better Place For Animals
                     </p>
                   </div>
                 </div>
@@ -213,7 +212,7 @@ export default function Home() {
                   <div className="flex items-start space-x-3">
                     <span className="text-primary-600 text-xl">🐕</span>
                     <div>
-                      <h4 className="font-semibold text-gray-900">Helping Animals</h4>
+                      <h4 className="font-semibold text-gray-900">Helping Animals in Need</h4>
                       <p className="text-gray-600">Supporting a shelter working endlessly to care for animals.</p>
                     </div>
                   </div>
@@ -231,7 +230,7 @@ export default function Home() {
                   <span className="text-6xl mb-4 block">🐾</span>
                   <h4 className="text-xl font-semibold text-gray-900 mb-2">❤️From the Founder - Divisha M❤️</h4>
                   <p className="text-gray-600">
-                    Hi! I’m the founder of Bow-Bow Ties, a purpose driven business with a mission to make the world a better place for animals. We have donated over $7,500 so far, and I hope that with your support, we can help raise funds for even more animals in the shelters! </p>
+                    Hi! I’m the founder of Bow-Bow Ties, a purpose driven business with a mission to make the world a better place for animals. Since starting in 2021 at 9 years old, we have donated over $7,500 so far, and supported over 15 shelter. I hope that with your support, we can help raise funds for even more animals in the shelters! </p>
                 </div>
               </div>
             </div>
@@ -332,10 +331,11 @@ export default function Home() {
                 </div>
 
                 <div className="bg-primary-50 rounded-lg p-6">
-                  <h4 className="text-lg font-semibold text-gray-900 mb-2">🎀 Return Policy</h4>
+                  <h4 className="text-lg font-semibold text-gray-900 mb-2">🎀 How do we Support?</h4>
                   <p className="text-gray-600">
-                    Since we make all the bow ties ourselves, we do not accept returns or refunds.
-                    Contact us to see if we can help!
+                    We donate 50% of our sales proceeds to animal shelters - 
+                    We support miccrochipping events - 
+                    We do pet food drives
                   </p>
                 </div>
               </div>
@@ -350,7 +350,7 @@ export default function Home() {
               <div>
                 <h5 className="text-xl font-bold mb-4">🎀 Bow-Bow-Ties</h5>
                 <p className="text-gray-400">
-                  Premium pet accessories for the most stylish companions.
+                  Handmade pet accessories giving back 50%
                 </p>
               </div>
               <div>
