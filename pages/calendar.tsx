@@ -179,9 +179,9 @@ const Calendar: React.FC = () => {
         {/* Header */}
         <div className="bg-white shadow-sm border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center py-6">
-              <div className="flex items-center space-x-4">
-                <Link href="/" className="text-primary-600 hover:text-primary-700 font-semibold">
+            <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center py-6">
+              <div className="flex flex-col lg:flex-row lg:items-center lg:space-x-4">
+                <Link href="/" className="text-primary-600 hover:text-primary-700 font-semibold mb-4 lg:mb-0">
                   ← Back to Home
                 </Link>
                 <div>
@@ -189,7 +189,9 @@ const Calendar: React.FC = () => {
                   <p className="text-gray-600 mt-1">Join our community events and connect with fellow pet lovers</p>
                 </div>
               </div>
-              <div className="flex space-x-2">
+              
+              {/* Mobile Navigation Buttons - Below community line */}
+              <div className="flex justify-center space-x-2 mt-4 lg:mt-0">
                 <button
                   onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))}
                   className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
