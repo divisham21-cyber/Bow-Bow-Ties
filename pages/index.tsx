@@ -372,11 +372,12 @@ export default function Home() {
                 </div>
 
                 <div className="bg-primary-50 rounded-lg p-6">
-                  <h4 className="text-lg font-semibold text-gray-900 mb-2">🎀 How do we Support?</h4>
+                  <h4 className="text-lg font-semibold text-gray-900 mb-2">🎀 How Do We Support?🐾</h4>
                   <p className="text-gray-600">
-                    We donate 50% of our sales proceeds to animal shelters - 
-                    We support miccrochipping events - 
-                    We do pet food drives
+                    50% of sales proceeds donated to shelters | 
+                    Supporting microchipping & pet food drives | 
+                    Partnering in fundraising events for animal welfare | 
+                    We support 
                   </p>
                 </div>
               </div>
