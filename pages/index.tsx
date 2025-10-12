@@ -29,6 +29,7 @@ export default function Home() {
               <nav className="flex md:hidden justify-center space-x-4 mt-2 mb-2">
                 <a href="/products" className="text-gray-700 hover:text-primary-600 transition-colors text-base font-bold">Products</a>
                 <a href="#about" className="text-gray-700 hover:text-primary-600 transition-colors text-base font-bold">About</a>
+                <a href="#impact" className="text-gray-700 hover:text-primary-600 transition-colors text-base font-bold">Impact</a>
                 <a href="/calendar" className="text-gray-700 hover:text-primary-600 transition-colors text-base font-bold">Calendar</a>
               </nav>
               
@@ -36,6 +37,7 @@ export default function Home() {
               <nav className="hidden md:flex lg:hidden justify-center space-x-6 mt-2 mb-2">
                 <a href="/products" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Products</a>
                 <a href="#about" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">About</a>
+                <a href="#impact" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Impact</a>
                 <a href="/calendar" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Calendar</a>
               </nav>
               
@@ -43,6 +45,7 @@ export default function Home() {
               <nav className="hidden lg:flex space-x-8">
                 <a href="/products" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Products</a>
                 <a href="#about" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">About</a>
+                <a href="#impact" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Impact</a>
                 <a href="/calendar" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Calendar</a>
               </nav>
               
@@ -228,7 +231,7 @@ export default function Home() {
         </section>
 
         {/* About Section */}
-        <section id="about" className="py-16">
+        <section id="about" className="py-16 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {/* Hero Banner */}
             <div className="mb-12 -mx-4 sm:-mx-6 lg:-mx-8">
@@ -250,6 +253,42 @@ export default function Home() {
                     </p>
                   </div>
                 </div>
+              </div>
+            </div>
+
+            {/* Our Impact Section */}
+            <div id="impact" className="mb-16">
+              <div className="text-center mb-12">
+                <h3 className="text-3xl font-bold text-gray-900 mb-4">Our Impact</h3>
+                <p className="text-lg text-gray-600">See how your support has made a difference in the lives of animals</p>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="bg-yellow-100 rounded-lg p-6 text-center">
+                  <div className="text-3xl font-bold text-yellow-600 mb-2">$7,500+</div>
+                  <div className="text-lg font-medium text-gray-900">Amount Donated</div>              
+                </div>
+                
+                <div className="bg-blue-100 rounded-lg p-6 text-center">
+                  <div className="text-3xl font-bold text-blue-600 mb-2">18+</div>
+                  <div className="text-lg font-medium text-gray-900">Shelters Supported</div>  
+                </div>
+                
+                <div className="bg-green-100 rounded-lg p-6 text-center">
+                  <div className="text-3xl font-bold text-green-600 mb-2">400+ LBs</div>
+                  <div className="text-lg font-medium text-gray-900">Food Donated</div>
+                </div>
+                
+                <div className="bg-purple-100 rounded-lg p-6 text-center">
+                  <div className="text-3xl font-bold text-purple-600 mb-2">68</div>
+                  <div className="text-lg font-medium text-gray-900">Dogs Microchipped</div>
+                </div>
+              </div>
+              
+              <div className="text-center mt-8">
+                <p className="text-gray-600 italic">
+                  "Making the world a better place one bow at a time"
+                </p>
               </div>
             </div>
 
