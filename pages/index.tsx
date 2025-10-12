@@ -329,7 +329,7 @@ export default function Home() {
         </section>
 
         {/* About Section */}
-        <section id="about" className="py-16 bg-gray-50">
+        <section id="about" className="py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {/* Hero Banner */}
             <div className="mb-12 -mx-4 sm:-mx-6 lg:-mx-8">
@@ -373,6 +373,82 @@ export default function Home() {
                   />
                   <p className="text-center text-sm text-gray-600 mt-3 font-medium">Divisha M, Founder & CEO</p>
                 </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Recognition Section */}
+        <section id="recognition" className="py-16 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h3 className="text-3xl font-bold text-gray-900 mb-4">Recognition & Awards</h3>
+              <p className="text-lg text-gray-600">Celebrating the achievements and recognition Bow-Bow-Ties has received over the years</p>
+            </div>
+            
+            <div className="max-w-6xl mx-auto">
+              {/* Desktop: 2 rows layout, Mobile: stacked */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                {/* First row - 4 images */}
+                <div className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
+                  <img 
+                    src="/Recognition/janegoodall.jpeg" 
+                    alt="Jane Goodall Recognition" 
+                    className="w-full h-auto sm:h-48 object-contain sm:object-cover rounded-lg"
+                  />
+                </div>
+                <div className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
+                  <img 
+                    src="/Recognition/presidentletter.jpeg" 
+                    alt="Presidential Letter Recognition" 
+                    className="w-full h-auto sm:h-48 object-contain sm:object-cover rounded-lg"
+                  />
+                </div>
+                <div className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
+                  <img 
+                    src="/Recognition/YSA.jpeg" 
+                    alt="YSA Recognition Award" 
+                    className="w-full h-auto sm:h-48 object-contain sm:object-cover rounded-lg"
+                  />
+                </div>
+                <div className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
+                  <img 
+                    src="/Recognition/CEM.jpeg" 
+                    alt="CEM Recognition Award" 
+                    className="w-full h-auto sm:h-48 object-contain sm:object-cover rounded-lg"
+                  />
+                </div>
+              </div>
+              
+              {/* Second row - 3 images centered */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                <div className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
+                  <img 
+                    src="/Recognition/expressionarts.png" 
+                    alt="Expression Arts Recognition" 
+                    className="w-full h-auto sm:h-48 object-contain sm:object-cover rounded-lg"
+                  />
+                </div>
+                <div className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
+                  <img 
+                    src="/Recognition/youth4us.jpeg" 
+                    alt="Youth4US Recognition" 
+                    className="w-full h-auto sm:h-48 object-contain sm:object-cover rounded-lg"
+                  />
+                </div>
+                <div className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
+                  <img 
+                    src="/Recognition/jackson.jpeg" 
+                    alt="Jackson Recognition Award" 
+                    className="w-full h-auto sm:h-48 object-contain sm:object-cover rounded-lg"
+                  />
+                </div>
+              </div>
+              
+              <div className="text-center mt-8">
+                <p className="text-gray-600 italic">
+                  "These recognitions inspire us to continue our mission of helping animals in need."
+                </p>
               </div>
             </div>
           </div>
