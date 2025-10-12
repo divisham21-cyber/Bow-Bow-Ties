@@ -215,14 +215,12 @@ export default function Products() {
                   className="transition-transform hover:scale-110"
                   aria-label="Buy Me a Coffee"
                 >
-                  <div className="w-12 h-12 rounded-2xl bg-yellow-400 flex items-center justify-center">
-                    <svg className="w-7 h-7" fill="white" viewBox="0 0 24 24">
-                      <path d="M20 3H4v2h16V3zM4 19h16v2H4v-2zM20 7H4c-1.1 0-2 .9-2 2v6c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zm0 8H4V9h16v6z"/>
-                      <path d="M6 11h2v2H6v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2z"/>
-                      <path d="M12 2c0-.6-.4-1-1-1s-1 .4-1 1c0 .6.4 1 1 1s1-.4 1-1z" opacity="0.7"/>
-                      <path d="M14 1c0-.6-.4-1-1-1s-1 .4-1 1c0 .6.4 1 1 1s1-.4 1-1z" opacity="0.5"/>
-                      <path d="M16 2c0-.6-.4-1-1-1s-1 .4-1 1c0 .6.4 1 1 1s1-.4 1-1z" opacity="0.3"/>
-                    </svg>
+                  <div className="w-12 h-12 rounded-2xl overflow-hidden">
+                    <img 
+                      src="/images/donate.png" 
+                      alt="Buy Me a Coffee" 
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                 </a>
               </div>
@@ -398,14 +396,12 @@ export default function Products() {
                     className="transition-transform hover:scale-110"
                     aria-label="Buy Me a Coffee"
                   >
-                    <div className="w-10 h-10 rounded-xl bg-yellow-400 flex items-center justify-center">
-                      <svg className="w-6 h-6" fill="white" viewBox="0 0 24 24">
-                        <path d="M20 3H4v2h16V3zM4 19h16v2H4v-2zM20 7H4c-1.1 0-2 .9-2 2v6c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zm0 8H4V9h16v6z"/>
-                        <path d="M6 11h2v2H6v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2z"/>
-                        <path d="M12 2c0-.6-.4-1-1-1s-1 .4-1 1c0 .6.4 1 1 1s1-.4 1-1z" opacity="0.7"/>
-                        <path d="M14 1c0-.6-.4-1-1-1s-1 .4-1 1c0 .6.4 1 1 1s1-.4 1-1z" opacity="0.5"/>
-                        <path d="M16 2c0-.6-.4-1-1-1s-1 .4-1 1c0 .6.4 1 1 1s1-.4 1-1z" opacity="0.3"/>
-                      </svg>
+                    <div className="w-10 h-10 rounded-xl overflow-hidden">
+                      <img 
+                        src="/images/donate.png" 
+                        alt="Buy Me a Coffee" 
+                        className="w-full h-full object-cover"
+                      />
                     </div>
                   </a>
                 </div>
