@@ -185,25 +185,30 @@ export default function Home() {
         <section id="products" className="py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h3 className="text-3xl font-bold text-gray-900 mb-4">Our Premium Collection</h3>
-              <p className="text-lg text-gray-600 mb-8">Handcrafted bow ties designed for comfort and style</p>
+              <h3 className="text-3xl font-bold text-gray-900 mb-4">Why Choose Bow-Bow Ties?</h3>
+              <p className="text-lg text-gray-600 mb-8">For pets, by hearts that care — every piece supports an animal in need.</p>
               
               <div className="bg-primary-50 rounded-lg p-8 max-w-4xl mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-8 items-center">
                   <div className="text-center">
-                    <span className="text-6xl mb-4 block">🎀</span>
-                    <h4 className="text-xl font-semibold text-gray-900">Top 8 Products</h4>
-                    <p className="text-gray-600">Curated selection of our best sellers</p>
-                  </div>
-                  <div className="text-center">
-                    <span className="text-6xl mb-4 block">✨</span>
-                    <h4 className="text-xl font-semibold text-gray-900">Premium Quality</h4>
-                    <p className="text-gray-600">Comfortable, stylish, and perfect for any occasion.</p>
+                    <span className="text-6xl mb-4 block">💰</span>
+                    <h4 className="text-xl font-semibold text-gray-900">Donation</h4>
+                    <p className="text-gray-600">We donate 50% of our sales proceeds to animals in the shelter</p>
                   </div>
                   <div className="text-center">
                     <span className="text-6xl mb-4 block">🛍️</span>
-                    <h4 className="text-xl font-semibold text-gray-900">Available on Etsy</h4>
-                    <p className="text-gray-600">Shop directly from our store</p>
+                    <h4 className="text-xl font-semibold text-gray-900">Collections</h4>
+                    <p className="text-gray-600">We make pet bow ties, bandanas, necklaces, and neckbands</p>
+                  </div>
+                  <div className="text-center">
+                    <span className="text-6xl mb-4 block">🪡</span>
+                    <h4 className="text-xl font-semibold text-gray-900">Handmade</h4>
+                    <p className="text-gray-600">Handmade by a youth entrepreneur with a passion for animals</p>
+                  </div>
+                  <div className="text-center">
+                    <span className="text-6xl mb-4 block">❤️</span>
+                    <h4 className="text-xl font-semibold text-gray-900">Cause</h4>
+                    <p className="text-gray-600">Our cause is to help animals in the shelter get adopted</p>
                   </div>
                 </div>
                 
