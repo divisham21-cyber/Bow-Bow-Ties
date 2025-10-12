@@ -217,7 +217,7 @@ export default function Products() {
                 >
                   <div className="w-12 h-12 rounded-2xl overflow-hidden">
                     <img 
-                      src="/images/donate.png" 
+                      src="/images/donate.jpeg" 
                       alt="Buy Me a Coffee" 
                       className="w-full h-full object-cover"
                     />
@@ -398,7 +398,7 @@ export default function Products() {
                   >
                     <div className="w-10 h-10 rounded-xl overflow-hidden">
                       <img 
-                        src="/images/donate.png" 
+                        src="/images/donate.jpeg" 
                         alt="Buy Me a Coffee" 
                         className="w-full h-full object-cover"
                       />
