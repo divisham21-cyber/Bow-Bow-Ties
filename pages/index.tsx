@@ -19,7 +19,7 @@ export default function Home() {
                   <img 
                     src="/bow_bow_ties.jpg" 
                     alt="Bow-Bow-Ties Logo" 
-                    className="w-10 h-10 rounded-full object-cover"
+                    className="w-16 h-16 rounded-full object-cover"
                   />
                   <h1 className="text-3xl font-bold gradient-text">Bow-Bow-Ties</h1>
                 </div>
@@ -30,7 +30,6 @@ export default function Home() {
                 <a href="/products" className="text-gray-700 hover:text-primary-600 transition-colors text-base font-bold">Products</a>
                 <a href="#about" className="text-gray-700 hover:text-primary-600 transition-colors text-base font-bold">About</a>
                 <a href="/calendar" className="text-gray-700 hover:text-primary-600 transition-colors text-base font-bold">Calendar</a>
-                <a href="#contact" className="text-gray-700 hover:text-primary-600 transition-colors text-base font-bold">Contact</a>
               </nav>
               
               {/* Tablet Navigation */}
@@ -38,7 +37,6 @@ export default function Home() {
                 <a href="/products" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Products</a>
                 <a href="#about" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">About</a>
                 <a href="/calendar" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Calendar</a>
-                <a href="#contact" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Contact</a>
               </nav>
               
               {/* Desktop Navigation */}
@@ -46,10 +44,9 @@ export default function Home() {
                 <a href="/products" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Products</a>
                 <a href="#about" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">About</a>
                 <a href="/calendar" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Calendar</a>
-                <a href="#contact" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Contact</a>
               </nav>
               
-              <div className="flex items-center justify-center space-x-4 mt-2 lg:mt-0 lg:space-x-6">
+              <div className="flex items-center justify-center space-x-3 mt-2 lg:mt-0 lg:space-x-4">
                 <a 
                   href="https://www.instagram.com/bow_bow_ties" 
                   target="_blank" 
@@ -57,9 +54,9 @@ export default function Home() {
                   className="transition-transform hover:scale-110"
                   aria-label="Follow us on Instagram"
                 >
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-600 via-pink-600 to-yellow-500 p-0.5">
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-600 via-pink-600 to-yellow-500 p-0.5">
                     <div className="w-full h-full bg-white rounded-2xl flex items-center justify-center">
-                      <svg className="w-10 h-10" viewBox="0 0 24 24">
+                      <svg className="w-7 h-7" viewBox="0 0 24 24">
                         <defs>
                           <linearGradient id="instagram-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
                             <stop offset="0%" stopColor="#833ab4"/>
@@ -79,23 +76,23 @@ export default function Home() {
                   className="transition-transform hover:scale-110"
                   aria-label="Follow us on Facebook"
                 >
-                  <div className="w-16 h-16 rounded-2xl bg-blue-600 flex items-center justify-center">
-                    <svg className="w-10 h-10" fill="white" viewBox="0 0 24 24">
+                  <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center">
+                    <svg className="w-7 h-7" fill="white" viewBox="0 0 24 24">
                       <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                     </svg>
                   </div>
                 </a>
                 <a 
-                  href="https://bow-bowties.wordpress.com/about/" 
+                  href="https://www.etsy.com/shop/bowbowtiesdesigns" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="transition-transform hover:scale-110"
-                  aria-label="Visit our WordPress blog"
+                  aria-label="Shop on Etsy"
                 >
-                  <div className="w-16 h-16 rounded-2xl bg-gray-700 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-2xl bg-orange-500 flex items-center justify-center">
                     <svg
-                      width="40"
-                      height="40"
+                      width="24"
+                      height="24"
                       viewBox="0 0 24 24"
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
@@ -105,14 +102,31 @@ export default function Home() {
                         y="17"
                         textAnchor="middle"
                         fill="white"
-                        fontSize="18"
+                        fontSize="20"
                         fontWeight="900"
                         fontFamily="Arial, sans-serif"
                         stroke="white"
-                        strokeWidth="0.5"
+                        strokeWidth="0.3"
                       >
-                        W
+                        E
                       </text>
+                    </svg>
+                  </div>
+                </a>
+                <a 
+                  href="https://buymeacoffee.com/bowbowties" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="transition-transform hover:scale-110"
+                  aria-label="Buy Me a Coffee"
+                >
+                  <div className="w-12 h-12 rounded-2xl bg-yellow-400 flex items-center justify-center">
+                    <svg className="w-7 h-7" fill="white" viewBox="0 0 24 24">
+                      <path d="M20 3H4v2h16V3zM4 19h16v2H4v-2zM20 7H4c-1.1 0-2 .9-2 2v6c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zm0 8H4V9h16v6z"/>
+                      <path d="M6 11h2v2H6v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2z"/>
+                      <path d="M12 2c0-.6-.4-1-1-1s-1 .4-1 1c0 .6.4 1 1 1s1-.4 1-1z" opacity="0.7"/>
+                      <path d="M14 1c0-.6-.4-1-1-1s-1 .4-1 1c0 .6.4 1 1 1s1-.4 1-1z" opacity="0.5"/>
+                      <path d="M16 2c0-.6-.4-1-1-1s-1 .4-1 1c0 .6.4 1 1 1s1-.4 1-1z" opacity="0.3"/>
                     </svg>
                   </div>
                 </a>
@@ -287,60 +301,10 @@ export default function Home() {
             </div>
             
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-              {/* Contact Form */}
-              <div className="bg-gray-50 rounded-lg p-8">
-                <h4 className="text-xl font-semibold text-gray-900 mb-6">Send us a Message</h4>
-                <form className="space-y-4">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">Name</label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-600 focus:border-transparent"
-                      placeholder="Your name"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-600 focus:border-transparent"
-                      placeholder="your@email.com"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">Subject</label>
-                    <input
-                      type="text"
-                      id="subject"
-                      name="subject"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-600 focus:border-transparent"
-                      placeholder="How can we help?"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">Message</label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      rows={4}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-600 focus:border-transparent"
-                      placeholder="Tell us about your pet and what you're looking for..."
-                    ></textarea>
-                  </div>
-                  <button type="submit" className="btn-primary w-full">
-                    Send Message
-                  </button>
-                </form>
-              </div>
-
-              {/* Contact Information */}
+              {/* Contact Information - Left on Desktop */}
               <div className="space-y-8">
                 <div>
-                  <h4 className="text-xl font-semibold text-gray-900 mb-6">Contact Information</h4>
+                  <h4 className="text-2xl font-semibold text-gray-900 mb-6">Contact Information</h4>
                   <div className="space-y-4">
                     <div className="flex items-center space-x-3">
                       <span className="text-primary-600 text-xl">📧</span>
@@ -370,14 +334,15 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
+              </div>
 
-                <div className="bg-primary-50 rounded-lg p-6">
-                  <h4 className="text-lg font-semibold text-gray-900 mb-2">🎀 How Do We Support?🐾</h4>
-                  <p className="text-gray-600">
-                    💰 Donating 50% of sales proceeds donated to animal shelters <br />
-                    🏷️ Supporting microchipping & pet food drives <br />
-                    🤝 Partnering in fundraising events for animal welfare <br />
-                  </p>
+              {/* How Do We Support Section - Right on Desktop */}
+              <div className="bg-primary-50 rounded-lg p-8">
+                <h4 className="text-2xl font-semibold text-gray-900 mb-6">🎀 How Do We Support?🐾</h4>
+                <div className="space-y-4 text-gray-600">
+                  <p>💰 Donating 50% of sales proceeds donated to animal shelters</p>
+                  <p>🏷️ Supporting microchipping & pet food drives</p>
+                  <p>🤝 Partnering in fundraising events for animal welfare</p>
                 </div>
               </div>
             </div>
@@ -430,16 +395,16 @@ export default function Home() {
                     </div>
                   </a>
                   <a 
-                    href="https://bow-bowties.wordpress.com/about/" 
+                    href="https://www.etsy.com/shop/bowbowtiesdesigns" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="transition-transform hover:scale-110"
-                    aria-label="Visit our WordPress blog"
+                    aria-label="Shop on Etsy"
                   >
-                    <div className="w-10 h-10 rounded-xl bg-gray-700 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-xl bg-orange-500 flex items-center justify-center">
                       <svg
-                        width="24"
-                        height="24"
+                        width="20"
+                        height="20"
                         viewBox="0 0 24 24"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
@@ -449,14 +414,31 @@ export default function Home() {
                           y="17"
                           textAnchor="middle"
                           fill="white"
-                          fontSize="14"
+                          fontSize="16"
                           fontWeight="900"
                           fontFamily="Arial, sans-serif"
                           stroke="white"
                           strokeWidth="0.3"
                         >
-                          W
+                          E
                         </text>
+                      </svg>
+                    </div>
+                  </a>
+                  <a 
+                    href="https://buymeacoffee.com/bowbowties" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="transition-transform hover:scale-110"
+                    aria-label="Buy Me a Coffee"
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-yellow-400 flex items-center justify-center">
+                      <svg className="w-6 h-6" fill="white" viewBox="0 0 24 24">
+                        <path d="M20 3H4v2h16V3zM4 19h16v2H4v-2zM20 7H4c-1.1 0-2 .9-2 2v6c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zm0 8H4V9h16v6z"/>
+                        <path d="M6 11h2v2H6v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2z"/>
+                        <path d="M12 2c0-.6-.4-1-1-1s-1 .4-1 1c0 .6.4 1 1 1s1-.4 1-1z" opacity="0.7"/>
+                        <path d="M14 1c0-.6-.4-1-1-1s-1 .4-1 1c0 .6.4 1 1 1s1-.4 1-1z" opacity="0.5"/>
+                        <path d="M16 2c0-.6-.4-1-1-1s-1 .4-1 1c0 .6.4 1 1 1s1-.4 1-1z" opacity="0.3"/>
                       </svg>
                     </div>
                   </a>
