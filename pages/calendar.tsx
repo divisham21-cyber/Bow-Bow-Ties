@@ -104,8 +104,6 @@ const Calendar: React.FC = () => {
     if (events.length > 0 && isCurrentMonth) {
       const event = events[0]; // Use first event for color
       switch (event.type) {
-        case 'playdate':
-          return 'bg-orange-200 text-orange-900 border-2 border-orange-400';
         case 'partner events':
           return 'bg-cyan-200 text-cyan-900 border-2 border-cyan-400';
         case 'celebration days':
@@ -130,8 +128,6 @@ const Calendar: React.FC = () => {
 
   const getEventTypeColor = (type: string) => {
     switch (type) {
-      case 'playdate':
-        return 'bg-primary-100 text-primary-800 border-primary-200';
       case 'partner events':
         return 'bg-secondary-100 text-secondary-800 border-secondary-200';
       case 'celebration days':
@@ -155,8 +151,6 @@ const Calendar: React.FC = () => {
 
   const getEventTypeIcon = (type: string) => {
     switch (type) {
-      case 'playdate':
-        return '🐕';
       case 'partner events':
         return '🎓';
       case 'celebration days':
@@ -172,7 +166,7 @@ const Calendar: React.FC = () => {
     <>
       <Head>
         <title>Upcoming Events - Bow-Bow-Ties</title>
-        <meta name="description" content="View upcoming dog events, playdates, and meetups for Bow-Bow-Ties community." />
+        <meta name="description" content="View upcoming marketplaces, celebration days, and partner events for Bow-Bow-Ties community." />
       </Head>
 
       <div className="min-h-screen bg-gray-50">
