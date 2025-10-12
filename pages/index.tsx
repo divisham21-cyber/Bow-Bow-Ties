@@ -255,13 +255,13 @@ export default function Home() {
               </div>
               
               <div className="bg-blue-100 rounded-lg p-6 text-center">
-                <div className="text-3xl font-bold text-blue-600 mb-2">18+</div>
+                <div className="text-3xl font-bold text-blue-600 mb-2">15+</div>
                 <div className="text-lg font-medium text-gray-900">Shelters Supported</div>  
               </div>
               
               <div className="bg-green-100 rounded-lg p-6 text-center">
                 <div className="text-3xl font-bold text-green-600 mb-2">400+ LBs</div>
-                <div className="text-lg font-medium text-gray-900">Food Donated</div>
+                <div className="text-lg font-medium text-gray-900">Pet Food Donated</div>
               </div>
               
               <div className="bg-purple-100 rounded-lg p-6 text-center">
@@ -520,9 +520,6 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div>
                 <h5 className="text-xl font-bold mb-4">🎀 Bow-Bow-Ties</h5>
-                <p className="text-gray-400">
-                  Premium pet accessories for the most stylish companions.
-                </p>
                 <div className="flex space-x-4">
                   <a 
                     href="https://www.instagram.com/bow_bow_ties" 
@@ -611,7 +608,7 @@ export default function Home() {
                 <h6 className="font-semibold mb-4">Quick Links</h6>
                 <ul className="space-y-2 text-gray-400">
                   <li><a href="#home" className="hover:text-white transition-colors">Home</a></li>
-                  <li><a href="#products" className="hover:text-white transition-colors">Products</a></li>
+                  <li><a href="/products" className="hover:text-white transition-colors">Products</a></li>
                   <li><a href="#about" className="hover:text-white transition-colors">About</a></li>
                   <li><a href="/calendar" className="hover:text-white transition-colors">Calendar</a></li>
                   <li><a href="#contact" className="hover:text-white transition-colors">Contact</a></li>

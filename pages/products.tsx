@@ -294,9 +294,6 @@ export default function Products() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div>
                 <h5 className="text-xl font-bold mb-4">🎀 Bow-Bow-Ties</h5>
-                <p className="text-gray-400 mb-4">
-                  Premium pet accessories for the most stylish companions.
-                </p>
                 <div className="flex space-x-4">
                   <a 
                     href="https://www.instagram.com/bow_bow_ties" 
