@@ -283,16 +283,16 @@ export default function Home() {
               <div className="bg-primary-50 rounded-lg p-8 md:p-12">
                 <div className="text-center mb-8">
                   <span className="text-6xl mb-4 block">🌟</span>
-                  <h4 className="text-2xl font-semibold text-gray-900 mb-4">From a 9-Year-Old's Dream to Reality</h4>
+                  <h4 className="text-2xl font-semibold text-gray-900 mb-4">Our Story: From a 9-Year-Old's Dream to Reality</h4>
                 </div>
                 
                 <div className="prose prose-lg mx-auto text-gray-700 space-y-6">
                   <p>
-                    In 2021, at just 9 years old, Divisha M had a simple yet powerful vision: to help animals in need while creating beautiful accessories for beloved pets. What started as a young girl's compassionate idea has blossomed into Bow-Bow-Ties, a purpose-driven business that combines style with social impact.
+                    At Bow-Bow Ties, every bow, bandana, and necklace tells a story of love, purpose, and pawsitive change. Founded by a young animal lover, Divisha, at just 9 years old, Bow-Bow Ties began with a simple dream - to make the world a better place for animals.
                   </p>
                   
                   <p>
-                    Divisha noticed that many animals in shelters lacked basic necessities and care. Instead of just feeling sad about it, she decided to take action. With the support of her family and an unwavering determination to make a difference, she began handcrafting bow ties and accessories for pets, with a commitment to donate a portion of every sale to animal shelters.
+                    What started with a single handmade bow tie has grown into a small business with a big heart. Each purchase supports animal shelters, microchipping drives, and pet food donation events, helping animals find love, safety, and forever homes.
                   </p>
                   
                   <p>
@@ -302,6 +302,19 @@ export default function Home() {
                   <p>
                     Today, Bow-Bow-Ties has grown beyond Divisha's wildest dreams, but the core mission remains the same: to make the world a better place for animals, one bow at a time. When you choose Bow-Bow-Ties, you're not just buying an accessory—you're joining a movement of compassion and hope.
                   </p>
+                  <p>
+                    ✨ 50% of our proceeds are donated to shelters and animal welfare causes.
+                  </p>
+                  <p>
+                    🐾 Every product is handmade with care — designed to make your pet stand out while giving back.
+                  </p>
+                  <p>
+                    🌍 Your purchase creates real impact — one bow tie, one meal, one rescued pet at a time.
+                  </p>
+                  <p>
+                    Be part of the change. Dress your pet with purpose.💕
+                  </p>
+
                 </div>
                 
                 <div className="text-center mt-8">
