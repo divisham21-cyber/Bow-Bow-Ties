@@ -8,7 +8,7 @@ interface Event {
   date: string;
   time: string;
   description: string;
-  type: 'playdate' | 'training' | 'national pet' | 'marketplace';
+  type: 'partner events' | 'celebration days' | 'marketplace';
 }
 
 // Dummy event data for Sep-Dec 2025
@@ -19,7 +19,7 @@ const dummyEvents: Event[] = [
     date: '2025-10-29',
     time: 'All Day',
     description: 'It\'s National Cat Day! Give your feline friend some extra attention and love. Better yet, spoil them with a new collar and charm!',
-    type: 'national pet'
+    type: 'celebration days'
   },
   {
     id: 2,
@@ -27,7 +27,7 @@ const dummyEvents: Event[] = [
     date: '2025-11-01',
     time: 'All month',
     description: 'Old is gold! National Senior Pet Month is dedicated to celebrating and raising awareness for senior pets. They have so much love to give.',
-    type: 'national pet'
+    type: 'celebration days'
   },
   {
     id: 3,
@@ -106,9 +106,9 @@ const Calendar: React.FC = () => {
       switch (event.type) {
         case 'playdate':
           return 'bg-orange-200 text-orange-900 border-2 border-orange-400';
-        case 'training':
+        case 'partner events':
           return 'bg-cyan-200 text-cyan-900 border-2 border-cyan-400';
-        case 'national pet':
+        case 'celebration days':
           return 'bg-emerald-200 text-emerald-900 border-2 border-emerald-400';
         case 'marketplace':
           return 'bg-pink-200 text-pink-900 border-2 border-pink-400';
@@ -132,9 +132,9 @@ const Calendar: React.FC = () => {
     switch (type) {
       case 'playdate':
         return 'bg-primary-100 text-primary-800 border-primary-200';
-      case 'training':
+      case 'partner events':
         return 'bg-secondary-100 text-secondary-800 border-secondary-200';
-      case 'national pet':
+      case 'celebration days':
         return 'bg-green-100 text-green-800 border-green-200';
       case 'marketplace':
         return 'bg-pink-100 text-pink-800 border-pink-200';
@@ -157,9 +157,9 @@ const Calendar: React.FC = () => {
     switch (type) {
       case 'playdate':
         return '🐕';
-      case 'training':
+      case 'partner events':
         return '🎓';
-      case 'national pet':
+      case 'celebration days':
         return '🐾';
       case 'marketplace':
         return '🛍️';
@@ -472,27 +472,21 @@ const Calendar: React.FC = () => {
                 <div className="space-y-2">
                   <div className="flex items-center space-x-3">
                     <div className="w-6 h-6 bg-orange-200 border-2 border-orange-400 rounded flex items-center justify-center">
-                      <span className="text-xs">🐕</span>
-                    </div>
-                    <span className="text-sm">Playdate Events</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-6 h-6 bg-cyan-200 border-2 border-cyan-400 rounded flex items-center justify-center">
-                      <span className="text-xs">🎓</span>
-                    </div>
-                    <span className="text-sm">Training Sessions</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-6 h-6 bg-emerald-200 border-2 border-emerald-400 rounded flex items-center justify-center">
-                      <span className="text-xs">🐾</span>
-                    </div>
-                    <span className="text-sm">National Pet</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-6 h-6 bg-pink-200 border-2 border-pink-400 rounded flex items-center justify-center">
                       <span className="text-xs">🛍️</span>
                     </div>
                     <span className="text-sm">Marketplace Events</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-6 h-6 bg-cyan-200 border-2 border-cyan-400 rounded flex items-center justify-center">
+                      <span className="text-xs">🐾</span>
+                    </div>
+                    <span className="text-sm">Celebration Days</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-6 h-6 bg-emerald-200 border-2 border-emerald-400 rounded flex items-center justify-center">
+                      <span className="text-xs">🤝</span>
+                    </div>
+                    <span className="text-sm">Partner Events</span>
                   </div>
                 </div>
               </div>
