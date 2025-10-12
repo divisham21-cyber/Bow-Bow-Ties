@@ -193,7 +193,7 @@ export default function Home() {
                   <div className="text-center">
                     <span className="text-6xl mb-4 block">💰</span>
                     <h4 className="text-xl font-semibold text-gray-900">Donation</h4>
-                    <p className="text-gray-600">We donate 50% of our sales proceeds to animals in the shelter</p>
+                    <p className="text-gray-600">We donate 50% of our sales proceeds to animals shelter</p>
                   </div>
                   <div className="text-center">
                     <span className="text-6xl mb-4 block">🛍️</span>
@@ -271,8 +271,52 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Our Story Section */}
+        <section id="story" className="py-16 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h3 className="text-3xl font-bold text-gray-900 mb-4">Our Story</h3>
+              <p className="text-lg text-gray-600">The journey of a young entrepreneur with a big heart for animals</p>
+            </div>
+            
+            <div className="max-w-4xl mx-auto">
+              <div className="bg-primary-50 rounded-lg p-8 md:p-12">
+                <div className="text-center mb-8">
+                  <span className="text-6xl mb-4 block">🌟</span>
+                  <h4 className="text-2xl font-semibold text-gray-900 mb-4">From a 9-Year-Old's Dream to Reality</h4>
+                </div>
+                
+                <div className="prose prose-lg mx-auto text-gray-700 space-y-6">
+                  <p>
+                    In 2021, at just 9 years old, Divisha M had a simple yet powerful vision: to help animals in need while creating beautiful accessories for beloved pets. What started as a young girl's compassionate idea has blossomed into Bow-Bow-Ties, a purpose-driven business that combines style with social impact.
+                  </p>
+                  
+                  <p>
+                    Divisha noticed that many animals in shelters lacked basic necessities and care. Instead of just feeling sad about it, she decided to take action. With the support of her family and an unwavering determination to make a difference, she began handcrafting bow ties and accessories for pets, with a commitment to donate a portion of every sale to animal shelters.
+                  </p>
+                  
+                  <p>
+                    What makes Bow-Bow-Ties special isn't just the quality of our handmade products—it's the heart behind every creation. Each bow tie sold helps provide food, medical care, and shelter for animals in need. Every purchase becomes part of a larger mission to create a world where no animal goes without care.
+                  </p>
+                  
+                  <p>
+                    Today, Bow-Bow-Ties has grown beyond Divisha's wildest dreams, but the core mission remains the same: to make the world a better place for animals, one bow at a time. When you choose Bow-Bow-Ties, you're not just buying an accessory—you're joining a movement of compassion and hope.
+                  </p>
+                </div>
+                
+                <div className="text-center mt-8">
+                  <div className="inline-flex items-center space-x-2 bg-white rounded-full px-6 py-3 shadow-sm">
+                    <span className="text-2xl">💝</span>
+                    <span className="text-lg font-semibold text-gray-900">Made with Love, Driven by Purpose</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* About Section */}
-        <section id="about" className="py-16 bg-white">
+        <section id="about" className="py-16 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {/* Hero Banner */}
             <div className="mb-12 -mx-4 sm:-mx-6 lg:-mx-8">
@@ -298,38 +342,23 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-              <div>
-                <h3 className="text-3xl font-bold text-gray-900 mb-6">Why Choose Bow-Bow-Ties?</h3>
-                <div className="space-y-4">
-                  <div className="flex items-start space-x-3">
-                    <span className="text-primary-600 text-xl">🎀</span>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Support in Style</h4>
-                      <p className="text-gray-600">Styling your pet while providing for an animal in need.</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <span className="text-primary-600 text-xl">🐕</span>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Helping Animals in Need</h4>
-                      <p className="text-gray-600">Supporting a shelter working endlessly to care for animals.</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <span className="text-primary-600 text-xl">💝</span>
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Motivating a Youth Entrepreneur</h4>
-                      <p className="text-gray-600">Encouraging a compassionate young girl entrepreneur to grow.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
               <div className="bg-white rounded-lg p-8 shadow-md">
                 <div className="text-center">
                   <span className="text-6xl mb-4 block">🐾</span>
                   <h4 className="text-xl font-semibold text-gray-900 mb-2">❤️From the Founder - Divisha M❤️</h4>
                   <p className="text-gray-600">
-                    Hi! I’m the founder of Bow-Bow Ties, a purpose driven business with a mission to make the world a better place for animals. Since starting at 9 years old in 2021, we have donated over $7,500 and supported over 15 animal shelters. I hope that with your support, we can help raise funds for even more animals in need! </p>
+                    Hi! I'm the founder of Bow-Bow Ties, a purpose driven business with a mission to make the world a better place for animals. Since starting at 9 years old in 2021, we have donated over $7,500 and supported over 15 animal shelters. I hope that with your support, we can help raise funds for even more animals in need! </p>
+                </div>
+              </div>
+              
+              <div className="flex justify-center">
+                <div className="bg-white rounded-lg p-4 shadow-md">
+                  <img 
+                    src="/images/divisha.jpeg" 
+                    alt="Divisha M - Founder of Bow-Bow-Ties" 
+                    className="w-full max-w-sm rounded-lg object-cover"
+                  />
+                  <p className="text-center text-sm text-gray-600 mt-3 font-medium">Divisha M, Founder & CEO</p>
                 </div>
               </div>
             </div>
