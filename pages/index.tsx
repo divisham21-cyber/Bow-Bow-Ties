@@ -182,7 +182,7 @@ export default function Home() {
         </section>
 
         {/* Products Preview Section */}
-        <section id="products" className="py-16 bg-white">
+        <section id="products" className="py-12 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h3 className="text-3xl font-bold text-gray-900 mb-4">Why Choose Bow-Bow Ties?</h3>
@@ -211,6 +211,13 @@ export default function Home() {
                     <p className="text-gray-600">Our cause is to help animals in the shelter get adopted</p>
                   </div>
                 </div>
+
+                <div className="text-center mt-8">
+                  <div className="inline-flex items-center space-x-2 bg-white rounded-full px-6 py-3 shadow-sm">
+                    <span className="text-lg font-semibold text-gray-900">Be Part of the Change. Dress your Pet with Purpose.</span>
+                  </div>
+                </div>
+                
                 
                 <div className="mt-8 flex justify-center space-x-4">
                   <a 
@@ -234,7 +241,7 @@ export default function Home() {
         </section>
 
         {/* Our Impact Section */}
-        <section id="impact" className="py-16 bg-gray-50">
+        <section id="impact" className="py-12 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h3 className="text-3xl font-bold text-gray-900 mb-4">Our Impact</h3>
@@ -271,55 +278,35 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Our Story Section */}
-        <section id="story" className="py-16 bg-white">
+        {/* How Do We Support Section */}
+        <section id="support" className="py-12 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h3 className="text-3xl font-bold text-gray-900 mb-4">Our Story</h3>
-              <p className="text-lg text-gray-600">The journey of a young entrepreneur with a big heart for animals</p>
+              <h3 className="text-3xl font-bold text-gray-900 mb-4">🐾 How Do We Support? 🐾</h3>
+              <p className="text-lg text-gray-600">See how your support makes a difference in the lives of animals</p>
             </div>
             
             <div className="max-w-4xl mx-auto">
               <div className="bg-primary-50 rounded-lg p-8 md:p-12">
-                <div className="text-center mb-8">
-                  <span className="text-6xl mb-4 block">🌟</span>
-                  <h4 className="text-2xl font-semibold text-gray-900 mb-4">Our Story: From a 9-Year-Old's Dream to Reality</h4>
-                </div>
-                
-                <div className="prose prose-lg mx-auto text-gray-700 space-y-6">
-                  <p>
-                    At Bow-Bow Ties, every bow, bandana, and necklace tells a story of love, purpose, and pawsitive change. Founded by a young animal lover, Divisha, at just 9 years old, Bow-Bow Ties began with a simple dream - to make the world a better place for animals.
-                  </p>
+                <div className="space-y-6 text-gray-700">
+                  <div className="flex items-start space-x-4">
+                    <span className="text-2xl">💰</span>
+                    <p className="text-lg">Donating 50% of sales proceeds donated to animal shelters to help provide food, medical care, and training to animals in need.</p>
+                  </div>
                   
-                  <p>
-                    What started with a single handmade bow tie has grown into a small business with a big heart. Each purchase supports animal shelters, microchipping drives, and pet food donation events, helping animals find love, safety, and forever homes.
-                  </p>
+                  <div className="flex items-start space-x-4">
+                    <span className="text-2xl">🏷️</span>
+                    <p className="text-lg">Supporting microchipping & pet food drives for low income group with pets.</p>
+                  </div>
                   
-                  <p>
-                    What makes Bow-Bow-Ties special isn't just the quality of our handmade products—it's the heart behind every creation. Each bow tie sold helps provide food, medical care, and shelter for animals in need. Every purchase becomes part of a larger mission to create a world where no animal goes without care.
-                  </p>
-                  
-                  <p>
-                    Today, Bow-Bow-Ties has grown beyond Divisha's wildest dreams, but the core mission remains the same: to make the world a better place for animals, one bow at a time. When you choose Bow-Bow-Ties, you're not just buying an accessory—you're joining a movement of compassion and hope.
-                  </p>
-                  <p>
-                    ✨ 50% of our proceeds are donated to shelters and animal welfare causes.
-                  </p>
-                  <p>
-                    🐾 Every product is handmade with care — designed to make your pet stand out while giving back.
-                  </p>
-                  <p>
-                    🌍 Your purchase creates real impact — one bow tie, one meal, one rescued pet at a time.
-                  </p>
-                  <p>
-                    Be part of the change. Dress your pet with purpose.💕
-                  </p>
-
+                  <div className="flex items-start space-x-4">
+                    <span className="text-2xl">🤝</span>
+                    <p className="text-lg">Partnering in fundraising events for animal welfare.</p>
+                  </div>
                 </div>
                 
                 <div className="text-center mt-8">
                   <div className="inline-flex items-center space-x-2 bg-white rounded-full px-6 py-3 shadow-sm">
-                    <span className="text-2xl">💝</span>
                     <span className="text-lg font-semibold text-gray-900">Made with Love, Driven by Purpose</span>
                   </div>
                 </div>
@@ -329,7 +316,7 @@ export default function Home() {
         </section>
 
         {/* About Section */}
-        <section id="about" className="py-16 bg-white">
+        <section id="about" className="py-12 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {/* Hero Banner */}
             <div className="mb-12 -mx-4 sm:-mx-6 lg:-mx-8">
@@ -358,20 +345,36 @@ export default function Home() {
               <div className="bg-white rounded-lg p-8 shadow-md">
                 <div className="text-center">
                   <span className="text-6xl mb-4 block">🐾</span>
-                  <h4 className="text-xl font-semibold text-gray-900 mb-2">❤️From the Founder - Divisha M❤️</h4>
-                  <p className="text-gray-600">
-                    Hi! I'm the founder of Bow-Bow Ties, a purpose driven business with a mission to make the world a better place for animals. Since starting at 9 years old in 2021, we have donated over $7,500 and supported over 15 animal shelters. I hope that with your support, we can help raise funds for even more animals in need! </p>
+                  <h4 className="text-xl font-semibold text-gray-900 mb-6">From the Founder - Divisha M</h4>
+                  <div className="text-left space-y-4">
+                    <p className="text-gray-600">I started Bow-Bow Ties in 2021 when I was 9 years old with a mission to make the world a better place for animals. I wanted to help animals in shelters by creating adorable bow ties that would make them look cuter in adoption photo shoots and increase their chances of finding loving homes.</p>
+                    <p className="text-gray-600">I started by making bow ties and gifting them to local animal shelters. But I was not sure, if it was enough and I was looking to do more.</p>
+                    <p className="text-gray-600">In Summer 2021, I decided to sell a few bow ties at a lemonade stand, where I got a positive response. I realized that this allowed me to raise funds for the shelters which might be more helpful than gifting the bow ties. I started participating in pop-up stalls, children's business fairs, and establishing an online presence, and donated 50% of my sale proceeds.</p>
+                     <p className="text-gray-600">The best part of my job is dressing up my pup Trixie, my supermodel along with hundreds of adorable animals!</p>
+                    <p className="text-gray-600">Since starting in 2021, we have donated over $7,500 and supported over 15 animal shelters. I hope that with your support, we can help raise funds for even more animals in need!</p>
+                  </div>
                 </div>
               </div>
               
               <div className="flex justify-center">
-                <div className="bg-white rounded-lg p-4 shadow-md">
-                  <img 
-                    src="/images/divisha.jpeg" 
-                    alt="Divisha M - Founder of Bow-Bow-Ties" 
-                    className="w-full max-w-sm rounded-lg object-cover"
-                  />
-                  <p className="text-center text-sm text-gray-600 mt-3 font-medium">Divisha M, Founder & CEO</p>
+                <div className="space-y-6">
+                  <div className="bg-white rounded-lg p-4 shadow-md">
+                    <img 
+                      src="/images/divisha.jpeg" 
+                      alt="Divisha M - Founder of Bow-Bow-Ties" 
+                      className="w-full max-w-lg h-80 rounded-lg object-cover"
+                    />
+                    <p className="text-center text-sm text-gray-600 mt-3 font-medium">Divisha M, Founder & CEO</p>
+                  </div>
+                  
+                  <div className="bg-white rounded-lg p-4 shadow-md">
+                    <img 
+                      src="/images/divisha_with_trixie.jpeg" 
+                      alt="Divisha with Trixie" 
+                      className="w-full max-w-lg h-80 rounded-lg object-cover"
+                    />
+                    <p className="text-center text-sm text-gray-600 mt-3 font-medium">Divisha with Trixie</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -379,7 +382,7 @@ export default function Home() {
         </section>
 
         {/* Recognition Section */}
-        <section id="recognition" className="py-16 bg-gray-50">
+        <section id="recognition" className="py-12 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h3 className="text-3xl font-bold text-gray-900 mb-4">Recognition & Awards</h3>
@@ -455,7 +458,7 @@ export default function Home() {
         </section>
 
         {/* Contact Section */}
-        <section id="contact" className="py-16 bg-white">
+        <section id="contact" className="py-12 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h3 className="text-3xl font-bold text-gray-900 mb-4">Get in Touch</h3>
@@ -491,20 +494,20 @@ export default function Home() {
                   <h4 className="text-lg font-semibold text-gray-900 mb-4">Business Hours</h4>
                   <div className="space-y-2 text-gray-600">
                     <div className="flex justify-between">
-                      <span>Sunday - Saturday</span>
                       <span>Always Open!</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* How Do We Support Section - Right on Desktop */}
-              <div className="bg-primary-50 rounded-lg p-8">
-                <h4 className="text-2xl font-semibold text-gray-900 mb-6">🎀 How Do We Support?🐾</h4>
-                <div className="space-y-4 text-gray-600">
-                  <p>💰 Donating 50% of sales proceeds donated to animal shelters</p>
-                  <p>🏷️ Supporting microchipping & pet food drives</p>
-                  <p>🤝 Partnering in fundraising events for animal welfare</p>
+              {/* Image Section - Right on Desktop */}
+              <div className="flex justify-center">
+                <div className="bg-white rounded-lg p-4 shadow-md">
+                  <img 
+                    src="I_support_bbt.jpeg" 
+                    alt="I support bow-bow ties" 
+                    className="w-full max-w-xs h-64 rounded-lg object-cover"
+                  />
                 </div>
               </div>
             </div>
@@ -512,9 +515,9 @@ export default function Home() {
         </section>
 
         {/* Footer */}
-        <footer className="bg-gray-900 text-white py-12">
+        <footer className="bg-gray-900 text-white py-12 pb-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div>
                 <h5 className="text-xl font-bold mb-4">🎀 Bow-Bow-Ties</h5>
                 <p className="text-gray-400">
@@ -612,15 +615,6 @@ export default function Home() {
                   <li><a href="#about" className="hover:text-white transition-colors">About</a></li>
                   <li><a href="/calendar" className="hover:text-white transition-colors">Calendar</a></li>
                   <li><a href="#contact" className="hover:text-white transition-colors">Contact</a></li>
-                </ul>
-              </div>
-              <div>
-                <h6 className="font-semibold mb-4">Categories</h6>
-                <ul className="space-y-2 text-gray-400">
-                  <li><a href="#" className="hover:text-white transition-colors">Bow Ties</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Collars</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Accessories</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Gift Sets</a></li>
                 </ul>
               </div>
               <div>

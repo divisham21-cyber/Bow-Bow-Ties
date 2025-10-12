@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 
@@ -88,17 +87,12 @@ const products: Product[] = [
 ]
 
 export default function Products() {
-  const [selectedCategory, setSelectedCategory] = useState('all')
-
-  const filteredProducts = selectedCategory === 'all' 
-    ? products 
-    : products.filter(product => product.category === selectedCategory)
 
   return (
     <>
       <Head>
         <title>Premium Collection - Bow-Bow-Ties</title>
-        <meta name="description" content="Discover our top premium bow ties and accessories for your beloved pets. Handcrafted designs available on Etsy." />
+        <meta name="description" content="Discover our handcarfted pet accessories for your beloved pets. Our products include Bow Ties, Bandana, Necklaces, and Neckbands. We have seasonals and specical day themes perfect for photoshoots and everyday walk. Designs available on Etsy." />
       </Head>
 
       <div className="min-h-screen">
@@ -231,43 +225,24 @@ export default function Products() {
         {/* Products Section */}
         <section className="py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Premium Collection</h2>
-              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                Discover our top 12 handcrafted bow ties designed for comfort and style. 
-                Each piece is carefully crafted with premium materials and available on our Etsy store.
-              </p>
-            </div>
-
-            {/* Category Filter */}
-            <div className="flex justify-center mb-8">
-              <div className="flex space-x-4">
-                <button
-                  onClick={() => setSelectedCategory('all')}
-                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                    selectedCategory === 'all'
-                      ? 'bg-primary-600 text-white'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}
-                >
-                  All Products
-                </button>
-                <button
-                  onClick={() => setSelectedCategory('bow-ties')}
-                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                    selectedCategory === 'bow-ties'
-                      ? 'bg-primary-600 text-white'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}
-                >
-                  Bow Ties
-                </button>
+            <div className="mb-12">
+              <h2 className="text-4xl font-bold text-gray-900 mb-8 text-center">Our Collection</h2>
+              <div className="max-w-4xl mx-auto space-y-6">
+                <p className="text-lg text-gray-600 text-left">
+                  Discover our handcrafted pet accessories for your beloved pets. Each piece is made with love and attention to detail, ensuring your furry friend looks stylish and feels comfortable.
+                </p>
+                <p className="text-lg text-gray-600 text-left">
+                  Our products include Bow Ties, Bandanas, Necklaces, and Neckbands. Our collection features a variety of fun themes, seasonal styles, and special-day designs — perfect for everyday wear, festive walks, or adorable photo shoots. Whether it's a holiday, a birthday, or just a sunny day at the park, there's a Bow-Bow Ties accessory to match every occasion and every personality!
+                </p>
+                <p className="text-lg text-gray-600 text-left">
+                  All designs are available on Etsy, where you can browse our complete collection and find the perfect accessory for your pet. Each purchase supports our mission to help animals in need.
+                </p>
               </div>
             </div>
 
             {/* Products Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-              {filteredProducts.map((product) => (
+              {products.map((product) => (
                 <div key={product.id} className="card hover:shadow-lg transition-shadow">
                   <div className="aspect-square bg-gray-200 rounded-lg mb-4 overflow-hidden">
                     <img 
@@ -314,9 +289,9 @@ export default function Products() {
         </section>
 
         {/* Footer */}
-        <footer className="bg-gray-900 text-white py-12">
+        <footer className="bg-gray-900 text-white py-12 pb-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div>
                 <h5 className="text-xl font-bold mb-4">🎀 Bow-Bow-Ties</h5>
                 <p className="text-gray-400 mb-4">
@@ -414,15 +389,6 @@ export default function Products() {
                   <li><a href="/#about" className="hover:text-white transition-colors">About</a></li>
                   <li><Link href="/calendar" className="hover:text-white transition-colors">Calendar</Link></li>
                   <li><a href="/#contact" className="hover:text-white transition-colors">Contact</a></li>
-                </ul>
-              </div>
-              <div>
-                <h6 className="font-semibold mb-4">Categories</h6>
-                <ul className="space-y-2 text-gray-400">
-                  <li><a href="#" className="hover:text-white transition-colors">Bow Ties</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Collars</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Accessories</a></li>
-                  <li><a href="#" className="hover:text-white transition-colors">Gift Sets</a></li>
                 </ul>
               </div>
               <div>
