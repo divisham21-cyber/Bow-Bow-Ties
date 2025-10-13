@@ -15,7 +15,7 @@ const products: Product[] = [
   {
     id: 1,
     name: "Handmade Pet Bow Ties - Fall prints",
-    price: 9.99,
+    price: 10.00,
     image: "/images/fallbow.jpeg",
     category: "bow-ties",
     description: "Luxurious velvet texture in royal purple",
@@ -24,7 +24,7 @@ const products: Product[] = [
   {
     id: 2,
     name: "Handmade Pet Bow Tie - Winter Prints",
-    price: 9.99,
+    price: 10.00,
     image: "/images/winterbow.heic",
     category: "bow-ties",
     description: "Sweet gingham pattern in soft pink",
@@ -33,7 +33,7 @@ const products: Product[] = [
   {
     id: 3,
     name: "Handmade Pet Bow Ties - Spring and Summer Prints",
-    price: 9.99,
+    price: 10.00,
     image: "/images/watermelon2.jpeg",
     category: "bow-ties",
     description: "Elegant red bow tie perfect for special occasions",
@@ -42,7 +42,7 @@ const products: Product[] = [
   {
     id: 4,
     name: "Handmade Pet Bow Tie - Sports, Patriotic Prints",
-    price: 9.99,
+    price: 10.00,
     image: "/images/patriotic.HEIC",
     category: "bow-ties",
     description: "Playful polka dot design in classic blue",
@@ -51,7 +51,7 @@ const products: Product[] = [
   {
     id: 5,
     name: "Handmade Pet Bow Tie - Hawaiian and Pride Prints",
-    price: 9.99,
+    price: 10.00,
     image: "/images/hawaiian.jpeg",
     category: "bow-ties",
     description: "Sophisticated black bow tie for formal events",
@@ -60,7 +60,7 @@ const products: Product[] = [
   {
     id: 6,
     name: "Handmade Pet Bow Tie - Plaid and Paw Prints",
-    price: 9.99,
+    price: 10.00,
     image: "/images/plaidpaw.heic",
     category: "bow-ties",
     description: "Beautiful floral pattern for spring occasions",
@@ -69,7 +69,7 @@ const products: Product[] = [
   {
     id: 7,
     name: "Handmade Pet Bandana - All prints",
-    price: 9.99,
+    price: 10.00,
     image: "/images/bandana.jpeg",
     category: "bow-ties",
     description: "Classic navy stripes for a timeless look",
@@ -78,7 +78,7 @@ const products: Product[] = [
   {
     id: 8,
     name: "Handcrafted Wooden Bead Necklaces - Eco-Friendly, Multi-Themed, Various Sizes",
-    price: 9.99,
+    price: 10.00,
     image: "/images/beads.PNG",
     category: "bow-ties",
     description: "Festive plaid pattern in rich green tones",
