@@ -136,6 +136,32 @@ export default function Home() {
           </div>
         </header>
 
+        {/* Holiday Designs Banner */}
+        <div 
+          className="text-black border-red-300 border-b relative overflow-hidden"
+          style={{
+            background: `repeating-linear-gradient(
+              45deg,
+              #f87171 0px,
+              #f87171 20px,
+              #ffffff 20px,
+              #ffffff 40px
+            )`
+          }}
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 relative z-10">
+            <div className="flex items-center justify-center">
+              <div className="flex items-center space-x-3">
+                <span className="text-2xl animate-bounce">🎄</span>
+                <div className="text-center">
+                  <h3 className="font-bold text-xl" style={{ textShadow: '2px 2px 0px #fff, -2px -2px 0px #fff, 2px -2px 0px #fff, -2px 2px 0px #fff, 1px 1px 0px #fff, -1px -1px 0px #fff, 1px -1px 0px #fff, -1px 1px 0px #fff' }}>Holiday Designs Coming Soon!</h3>
+                </div>
+                <span className="text-xl animate-bounce">🎁</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Marketplace Event Banner */}
         <div className="bg-pink-100 text-pink-800 border-pink-200 border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -302,6 +328,21 @@ export default function Home() {
                   <div className="flex items-start space-x-4">
                     <span className="text-2xl">🤝</span>
                     <p className="text-lg">Partnering in fundraising events for animal welfare.</p>
+                  </div>
+                  
+                  <div className="flex items-start space-x-4">
+                    <span className="text-2xl">🎯</span>
+                    <p className="text-lg">Raising awareness about animal adoption and responsible pet ownership in our community.</p>
+                  </div>
+                  
+                  <div className="flex items-start space-x-4">
+                    <span className="text-2xl">🏠</span>
+                    <p className="text-lg">Creating beautiful accessories that help shelter animals look their best for adoption photos.</p>
+                  </div>
+                  
+                  <div className="flex items-start space-x-4">
+                    <span className="text-2xl">🌟</span>
+                    <p className="text-lg">Inspiring young entrepreneurs to start businesses that make a positive impact on their communities.</p>
                   </div>
                 </div>
                 
