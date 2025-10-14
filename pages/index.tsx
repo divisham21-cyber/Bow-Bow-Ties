@@ -138,23 +138,14 @@ export default function Home() {
 
         {/* Holiday Designs Banner */}
         <div 
-          className="text-black border-red-300 border-b relative overflow-hidden"
-          style={{
-            background: `repeating-linear-gradient(
-              45deg,
-              #f87171 0px,
-              #f87171 20px,
-              #ffffff 20px,
-              #ffffff 40px
-            )`
-          }}
+          className="text-black border-green-300 border-b relative overflow-hidden bg-green-100"
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 relative z-10">
             <div className="flex items-center justify-center">
               <div className="flex items-center space-x-3">
                 <span className="text-2xl animate-bounce">🎄</span>
                 <div className="text-center">
-                  <h3 className="font-bold text-xl" style={{ textShadow: '2px 2px 0px #fff, -2px -2px 0px #fff, 2px -2px 0px #fff, -2px 2px 0px #fff, 1px 1px 0px #fff, -1px -1px 0px #fff, 1px -1px 0px #fff, -1px 1px 0px #fff' }}>Holiday Designs Coming Soon!</h3>
+                  <h3 className="font-bold text-3xl" style={{ textShadow: '2px 2px 0px #fff, -2px -2px 0px #fff, 2px -2px 0px #fff, -2px 2px 0px #fff, 1px 1px 0px #fff, -1px -1px 0px #fff, 1px -1px 0px #fff, -1px 1px 0px #fff' }}>Holiday Designs Coming Soon!</h3>
                 </div>
                 <span className="text-xl animate-bounce">🎁</span>
               </div>
@@ -219,7 +210,7 @@ export default function Home() {
                   <div className="text-center">
                     <span className="text-6xl mb-4 block">💰</span>
                     <h4 className="text-xl font-semibold text-gray-900">Donation</h4>
-                    <p className="text-gray-600">We donate 50% of our sales proceeds to animals shelter</p>
+                    <p className="text-gray-600">We donate 50% of our sales proceeds to animal shelter</p>
                   </div>
                   <div className="text-center">
                     <span className="text-6xl mb-4 block">🛍️</span>
@@ -309,7 +300,7 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h3 className="text-3xl font-bold text-gray-900 mb-4">🐾 How Do We Support? 🐾</h3>
-              <p className="text-lg text-gray-600">See how your support makes a difference in the lives of animals</p>
+              <p className="text-lg text-gray-600">See how your support makes a difference</p>
             </div>
             
             <div className="max-w-4xl mx-auto">
@@ -332,17 +323,12 @@ export default function Home() {
                   
                   <div className="flex items-start space-x-4">
                     <span className="text-2xl">🎯</span>
-                    <p className="text-lg">Raising awareness about animal adoption and responsible pet ownership in our community.</p>
+                    <p className="text-lg">Raising awareness about animal adoption.</p>
                   </div>
                   
                   <div className="flex items-start space-x-4">
                     <span className="text-2xl">🏠</span>
                     <p className="text-lg">Creating beautiful accessories that help shelter animals look their best for adoption photos.</p>
-                  </div>
-                  
-                  <div className="flex items-start space-x-4">
-                    <span className="text-2xl">🌟</span>
-                    <p className="text-lg">Inspiring young entrepreneurs to start businesses that make a positive impact on their communities.</p>
                   </div>
                 </div>
                 
