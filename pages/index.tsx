@@ -162,7 +162,7 @@ export default function Home() {
                 <div>
                   <h3 className="font-semibold text-lg">Next Event: Kenmore Winterfest</h3>
                   <p className="text-sm opacity-75">
-                    Friday, December 6, 2025 at 11:00AM-3:00PM
+                    Saturday, December 6, 2025 at 11:00AM-3:00PM
                   </p>
                 </div>
               </div>
