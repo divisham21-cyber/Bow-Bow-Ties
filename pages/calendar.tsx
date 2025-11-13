@@ -48,12 +48,11 @@ const dummyEvents: Event[] = [
   {
     id: 5,
     title: "Pop-Up at Coby's Cafe",
-    date: '2025-12-7',
+    date: '2025-12-07',
     time: '11:00AM-3:00PM',
     description: "Pop-up event at the Coby's Cafe location in Seattle, Washington!",
     type: 'partner events'
   },
-  
 ];
 
 const Calendar: React.FC = () => {
