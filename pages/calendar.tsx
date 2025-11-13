@@ -37,6 +37,23 @@ const dummyEvents: Event[] = [
     description: 'Winter Market at the Hangar in Kenmore, and POP shop! Festive activities and vendors.',
     type: 'marketplace'
   },
+  {
+    id: 4,
+    title: "Pop-Up at Bella's Voice store",
+    date: '2025-11-22',
+    time: '12:00PM-3:00PM',
+    description: "Pop-up event at the Bella's Voice location in Lynwood, Washington!",
+    type: 'partner events'
+  },
+  {
+    id: 5,
+    title: "Pop-Up at Coby's Cafe",
+    date: '2025-12-7',
+    time: '11:00AM-3:00PM',
+    description: "Pop-up event at the Coby's Cafe location in Seattle, Washington!",
+    type: 'partner events'
+  },
+  
 ];
 
 const Calendar: React.FC = () => {
