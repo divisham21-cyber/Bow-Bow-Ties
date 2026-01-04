@@ -53,6 +53,14 @@ const dummyEvents: Event[] = [
     description: "Pop-up event at the Coby's Cafe location in Seattle, Washington!",
     type: 'partner events'
   },
+  {
+    id: 6,
+    title: "Bella's Voice New Location Celebration",
+    date: '2026-01-31',
+    time: '10:00AM-2:00PM',
+    description: "Pop-up event at the Bella's Voice location in Shoreline, Washington!",
+    type: 'partner events'
+  },
 ];
 
 const Calendar: React.FC = () => {

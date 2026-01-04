@@ -1,6 +1,8 @@
 import Head from 'next/head'
+import { useState } from 'react'
 
 export default function Home() {
+  const [selectedImage, setSelectedImage] = useState<string | null>(null)
 
   return (
     <>
@@ -136,38 +138,21 @@ export default function Home() {
           </div>
         </header>
 
-        {/* Holiday Designs Banner */}
-        <div 
-          className="text-black border-green-300 border-b relative overflow-hidden bg-green-100"
-        >
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 relative z-10">
-            <div className="flex items-center justify-center">
-              <div className="flex items-center space-x-3">
-                <span className="text-2xl animate-bounce">🎄</span>
-                <div className="text-center">
-                  <h3 className="font-bold text-3xl" style={{ textShadow: '2px 2px 0px #fff, -2px -2px 0px #fff, 2px -2px 0px #fff, -2px 2px 0px #fff, 1px 1px 0px #fff, -1px -1px 0px #fff, 1px -1px 0px #fff, -1px 1px 0px #fff' }}>Holiday Designs Coming Soon!</h3>
-                </div>
-                <span className="text-xl animate-bounce">🎁</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* Marketplace Event Banner */}
         <div className="bg-pink-100 text-pink-800 border-pink-200 border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <span className="text-2xl">🛍️</span>
+                <span className="text-2xl">🤝</span>
                 <div>
-                  <h3 className="font-semibold text-lg">Next Event: Kenmore Winterfest</h3>
+                  <h3 className="font-semibold text-lg">Next Event: Bella's Voice</h3>
                   <p className="text-sm opacity-75">
-                    Saturday, December 6, 2025 at 11:00AM-3:00PM
+                    Saturday, January 31, 2025 at 10:00AM-2:00PM
                   </p>
                 </div>
               </div>
               <span className="text-xs uppercase font-medium px-3 py-1 rounded-full bg-white bg-opacity-50">
-                marketplace
+                partner event
               </span>
             </div>
           </div>
@@ -265,14 +250,64 @@ export default function Home() {
               <p className="text-lg text-gray-600">See how your support has made a difference in the lives of animals</p>
             </div>
             
+            {/* Impact Photos Gallery */}
+            <div className="mb-12">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div 
+                  className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+                  onClick={() => setSelectedImage('impact/impact_photo_1.jpeg')}
+                >
+                  <img 
+                    src="impact/impact_photo_1.jpeg" 
+                    alt="Impact Photo 1" 
+                    className="w-full h-48 object-contain rounded-lg"
+                  />
+                  <p className="text-center text-sm text-gray-500 mt-2">Click to enlarge</p>
+                </div>
+                <div 
+                  className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+                  onClick={() => setSelectedImage('impact/impact_photo_2.jpeg')}
+                >
+                  <img 
+                    src="impact/impact_photo_2.jpeg" 
+                    alt="Impact Photo 2" 
+                    className="w-full h-48 object-contain rounded-lg"
+                  />
+                  <p className="text-center text-sm text-gray-500 mt-2">Click to enlarge</p>
+                </div>
+                <div 
+                  className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+                  onClick={() => setSelectedImage('impact/impact_photo_3.jpeg')}
+                >
+                  <img 
+                    src="impact/impact_photo_3.jpeg" 
+                    alt="Impact Photo 3" 
+                    className="w-full h-48 object-contain rounded-lg"
+                  />
+                  <p className="text-center text-sm text-gray-500 mt-2">Click to enlarge</p>
+                </div>
+                <div 
+                  className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+                  onClick={() => setSelectedImage('impact/impact_photo_4.jpeg')}
+                >
+                  <img 
+                    src="impact/impact_photo_4.jpeg" 
+                    alt="Impact Photo 4" 
+                    className="w-full h-48 object-contain rounded-lg"
+                  />
+                  <p className="text-center text-sm text-gray-500 mt-2">Click to enlarge</p>
+                </div>
+              </div>
+            </div>
+            
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="bg-yellow-100 rounded-lg p-6 text-center">
-                <div className="text-3xl font-bold text-yellow-600 mb-2">$7,500+</div>
+                <div className="text-3xl font-bold text-yellow-600 mb-2">$9,250+</div>
                 <div className="text-lg font-medium text-gray-900">Amount Donated</div>              
               </div>
               
               <div className="bg-blue-100 rounded-lg p-6 text-center">
-                <div className="text-3xl font-bold text-blue-600 mb-2">15+</div>
+                <div className="text-3xl font-bold text-blue-600 mb-2">20+</div>
                 <div className="text-lg font-medium text-gray-900">Shelters Supported</div>  
               </div>
               
@@ -540,6 +575,32 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* Image Modal */}
+        {selectedImage && (
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
+            onClick={() => setSelectedImage(null)}
+          >
+            <div className="relative max-w-7xl max-h-full">
+              <button
+                onClick={() => setSelectedImage(null)}
+                className="absolute top-4 right-4 text-white bg-black bg-opacity-50 rounded-full p-2 hover:bg-opacity-75 transition-all z-10"
+                aria-label="Close"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+              <img
+                src={selectedImage}
+                alt="Impact photo enlarged"
+                className="max-w-full max-h-[90vh] object-contain rounded-lg"
+                onClick={(e) => e.stopPropagation()}
+              />
+            </div>
+          </div>
+        )}
 
         {/* Footer */}
         <footer className="bg-gray-900 text-white py-12 pb-16">
