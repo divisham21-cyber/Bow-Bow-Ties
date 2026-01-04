@@ -455,58 +455,86 @@ export default function Home() {
               {/* Desktop: 2 rows layout, Mobile: stacked */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 {/* First row - 4 images */}
-                <div className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
+                <div 
+                  className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+                  onClick={() => setSelectedImage('/Recognition/janegoodall.jpeg')}
+                >
                   <img 
                     src="/Recognition/janegoodall.jpeg" 
                     alt="Jane Goodall Recognition" 
                     className="w-full h-auto sm:h-48 object-contain sm:object-cover rounded-lg"
                   />
+                  <p className="text-center text-sm text-gray-500 mt-2">Click to enlarge</p>
                 </div>
-                <div className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
+                <div 
+                  className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+                  onClick={() => setSelectedImage('/Recognition/presidentletter.jpeg')}
+                >
                   <img 
                     src="/Recognition/presidentletter.jpeg" 
                     alt="Presidential Letter Recognition" 
                     className="w-full h-auto sm:h-48 object-contain sm:object-cover rounded-lg"
                   />
+                  <p className="text-center text-sm text-gray-500 mt-2">Click to enlarge</p>
                 </div>
-                <div className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
+                <div 
+                  className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+                  onClick={() => setSelectedImage('/Recognition/YSA.jpeg')}
+                >
                   <img 
                     src="/Recognition/YSA.jpeg" 
                     alt="YSA Recognition Award" 
                     className="w-full h-auto sm:h-48 object-contain sm:object-cover rounded-lg"
                   />
+                  <p className="text-center text-sm text-gray-500 mt-2">Click to enlarge</p>
                 </div>
-                <div className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
+                <div 
+                  className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+                  onClick={() => setSelectedImage('/Recognition/CEM.jpeg')}
+                >
                   <img 
                     src="/Recognition/CEM.jpeg" 
                     alt="CEM Recognition Award" 
                     className="w-full h-auto sm:h-48 object-contain sm:object-cover rounded-lg"
                   />
+                  <p className="text-center text-sm text-gray-500 mt-2">Click to enlarge</p>
                 </div>
               </div>
               
               {/* Second row - 3 images centered */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
-                <div className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
+                <div 
+                  className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+                  onClick={() => setSelectedImage('/Recognition/expressionarts.png')}
+                >
                   <img 
                     src="/Recognition/expressionarts.png" 
                     alt="Expression Arts Recognition" 
                     className="w-full h-auto sm:h-48 object-contain sm:object-cover rounded-lg"
                   />
+                  <p className="text-center text-sm text-gray-500 mt-2">Click to enlarge</p>
                 </div>
-                <div className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
+                <div 
+                  className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+                  onClick={() => setSelectedImage('/Recognition/youth4us.jpeg')}
+                >
                   <img 
                     src="/Recognition/youth4us.jpeg" 
                     alt="Youth4US Recognition" 
                     className="w-full h-auto sm:h-48 object-contain sm:object-cover rounded-lg"
                   />
+                  <p className="text-center text-sm text-gray-500 mt-2">Click to enlarge</p>
                 </div>
-                <div className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
+                <div 
+                  className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+                  onClick={() => setSelectedImage('/Recognition/jackson.jpeg')}
+                >
                   <img 
                     src="/Recognition/jackson.jpeg" 
                     alt="Jackson Recognition Award" 
                     className="w-full h-auto sm:h-48 object-contain sm:object-cover rounded-lg"
                   />
+                  <p className="text-center text-sm text-gray-500 mt-2">Click to enlarge</p>
                 </div>
               </div>
               
