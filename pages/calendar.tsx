@@ -61,6 +61,22 @@ const dummyEvents: Event[] = [
     description: "Pop-up event at the Bella's Voice location in Shoreline, Washington!",
     type: 'partner events'
   },
+  {
+    id: 7,
+    title: "Bothell Pet Fair",
+    date: '2026-06-12',
+    time: '11:00AM-2:00PM',
+    description: "Marketplace event at the Bothell Police Department! Over 40 local pet affiliated vendors.",
+    type: 'marketplace'
+  },
+  {
+    id: 8,
+    title: "Bellvue Children's Business Fair",
+    date: '2026-07-11',
+    time: '2:30PM-6:00PM',
+    description: "Marketplace event at Bellvue Downtown Park! Support several youth entrpreneurs.",
+    type: 'marketplace'
+  },
 ];
 
 const Calendar: React.FC = () => {

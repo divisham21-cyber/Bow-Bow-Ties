@@ -143,16 +143,16 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <span className="text-2xl">🤝</span>
+                <span className="text-2xl">🛍️</span>
                 <div>
-                  <h3 className="font-semibold text-lg">Next Event: Bella's Voice</h3>
+                  <h3 className="font-semibold text-lg">Next Event: Bothell Pet Fair</h3>
                   <p className="text-sm opacity-75">
-                    Saturday, January 31, 2025 at 10:00AM-2:00PM
+                    Friday, June 12, 2026 at 11:00AM-2:00PM
                   </p>
                 </div>
               </div>
               <span className="text-xs uppercase font-medium px-3 py-1 rounded-full bg-white bg-opacity-50">
-                partner event
+                marketplace
               </span>
             </div>
           </div>
