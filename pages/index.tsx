@@ -1,8 +1,35 @@
 import Head from 'next/head'
 import { useState } from 'react'
+import MapComponent, { ProductLocation } from '../components/MapComponent'
 
 export default function Home() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
+  const productLocations: ProductLocation[] = [
+    {
+      name: 'Bobby Jo\'s Plants and Mercantile',
+      address: '2252 NE 65th St, Seattle, WA 98115',
+      lat: 47.67605272247147,
+      lng: -122.30344141627994
+    },
+    {
+      name: 'High Rock Meadow Sniffspot',
+      address: 'High Rock, Monroe, Washington',
+      lat: 47.809626204048435, 
+      lng: -121.97043592683498
+    },
+    {
+      name: 'A Pet Spa',
+      address: '12811 8th Ave W Suite C105, Everett, WA 98204',
+      lat: 47.88141182606392, 
+      lng: -122.24365766045187
+    },
+    {
+      name: 'The Dining Dog Cafe & Bakery',
+      address: '9691 Firdale Ave, Edmonds, WA 98020',
+      lat: 47.7790868650201, 
+      lng: -122.36206563162037
+    }
+  ]
 
   return (
     <>
@@ -327,6 +354,17 @@ export default function Home() {
                 "Making the world a better place one bow at a time"
               </p>
             </div>
+          </div>
+        </section>
+
+        {/* Locations Section */}
+        <section id="locations" className="py-12 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-10">
+              <h3 className="text-3xl font-bold text-gray-900 mb-4">Where To Find Our Products</h3>
+              <p className="text-lg text-gray-600">Explore Seattle-area retail locations carrying Bow-Bow Ties products.</p>
+            </div>
+            <MapComponent locations={productLocations} />
           </div>
         </section>
 
