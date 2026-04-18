@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import { useState } from 'react'
 import MapComponent, { ProductLocation } from '../components/MapComponent'
+import { getNextEvent, getEventTypeColor, getEventTypeIcon } from '../lib/events'
 
 export default function Home() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
@@ -165,25 +166,33 @@ export default function Home() {
           </div>
         </header>
 
-        {/* Marketplace Event Banner */}
-        <div className="bg-pink-100 text-pink-800 border-pink-200 border-b">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <span className="text-2xl">🛍️</span>
-                <div>
-                  <h3 className="font-semibold text-lg">Next Event: Bothell Pet Fair</h3>
-                  <p className="text-sm opacity-75">
-                    Friday, June 12, 2026 at 11:00AM-2:00PM
-                  </p>
+        {/* Upcoming Event Banner */}
+        {(() => {
+          const nextEvent = getNextEvent();
+          if (!nextEvent) return null;
+          return (
+            <div className={`${getEventTypeColor(nextEvent.type)} border-b`}>
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <span className="text-2xl">{getEventTypeIcon(nextEvent.type)}</span>
+                    <div>
+                      <h3 className="font-semibold text-lg">Next Event: {nextEvent.title}</h3>
+                      <p className="text-sm opacity-75">
+                        {new Date(nextEvent.date + 'T00:00:00').toLocaleDateString('en-US', {
+                          weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+                        })} at {nextEvent.time}
+                      </p>
+                    </div>
+                  </div>
+                  <span className="text-xs uppercase font-medium px-3 py-1 rounded-full bg-white bg-opacity-50">
+                    {nextEvent.type}
+                  </span>
                 </div>
               </div>
-              <span className="text-xs uppercase font-medium px-3 py-1 rounded-full bg-white bg-opacity-50">
-                marketplace
-              </span>
             </div>
-          </div>
-        </div>
+          );
+        })()}
 
         {/* Hero Section */}
         <section id="home" className="hero-section">
@@ -451,7 +460,7 @@ export default function Home() {
                     <p className="text-gray-600">I started by making bow ties and gifting them to local animal shelters. But I was not sure, if it was enough and I was looking to do more.</p>
                     <p className="text-gray-600">In Summer 2021, I decided to sell a few bow ties at a lemonade stand, where I got a positive response. I realized that this allowed me to raise funds for the shelters which might be more helpful than gifting the bow ties. I started participating in pop-up stalls, children's business fairs, and establishing an online presence, and donated 50% of my sale proceeds.</p>
                      <p className="text-gray-600">The best part of my job is dressing up my pup Trixie, my supermodel along with hundreds of adorable animals!</p>
-                    <p className="text-gray-600">Since starting in 2021, we have donated over $7,500 and supported over 15 animal shelters. I hope that with your support, we can help raise funds for even more animals in need!</p>
+                    <p className="text-gray-600">Since starting in 2021, we have donated over $9,250 and supported over 15 animal shelters. I hope that with your support, we can help raise funds for even more animals in need!</p>
                   </div>
                 </div>
               </div>
