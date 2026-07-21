@@ -286,6 +286,33 @@ export default function Home() {
               <p className="text-lg text-gray-600">See how your support has made a difference in the lives of animals</p>
             </div>
             
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
+              <div className="bg-yellow-100 rounded-lg p-6 text-center">
+                <div className="text-3xl font-bold text-yellow-600 mb-2">$10,000+</div>
+                <div className="text-lg font-medium text-gray-900">Amount Donated</div>              
+              </div>
+              
+              <div className="bg-blue-100 rounded-lg p-6 text-center">
+                <div className="text-3xl font-bold text-blue-600 mb-2">20+</div>
+                <div className="text-lg font-medium text-gray-900">Shelters Supported</div>  
+              </div>
+              
+              <div className="bg-green-100 rounded-lg p-6 text-center">
+                <div className="text-3xl font-bold text-green-600 mb-2">400+ LBs</div>
+                <div className="text-lg font-medium text-gray-900">Pet Food Donated</div>
+              </div>
+              
+              <div className="bg-purple-100 rounded-lg p-6 text-center">
+                <div className="text-3xl font-bold text-purple-600 mb-2">68</div>
+                <div className="text-lg font-medium text-gray-900">Dogs Microchipped</div>
+              </div>
+
+              <div className="bg-pink-100 rounded-lg p-6 text-center">
+                <div className="text-3xl font-bold text-pink-600 mb-2">2,000+</div>
+                <div className="text-lg font-medium text-gray-900">Products Sold/Donated</div>
+              </div>
+            </div>
+
             {/* Impact Photos Gallery */}
             <div className="mb-12">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -333,28 +360,6 @@ export default function Home() {
                   />
                   <p className="text-center text-sm text-gray-500 mt-2">Click to enlarge</p>
                 </div>
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="bg-yellow-100 rounded-lg p-6 text-center">
-                <div className="text-3xl font-bold text-yellow-600 mb-2">$9,250+</div>
-                <div className="text-lg font-medium text-gray-900">Amount Donated</div>              
-              </div>
-              
-              <div className="bg-blue-100 rounded-lg p-6 text-center">
-                <div className="text-3xl font-bold text-blue-600 mb-2">20+</div>
-                <div className="text-lg font-medium text-gray-900">Shelters Supported</div>  
-              </div>
-              
-              <div className="bg-green-100 rounded-lg p-6 text-center">
-                <div className="text-3xl font-bold text-green-600 mb-2">400+ LBs</div>
-                <div className="text-lg font-medium text-gray-900">Pet Food Donated</div>
-              </div>
-              
-              <div className="bg-purple-100 rounded-lg p-6 text-center">
-                <div className="text-3xl font-bold text-purple-600 mb-2">68</div>
-                <div className="text-lg font-medium text-gray-900">Dogs Microchipped</div>
               </div>
             </div>
             
@@ -460,7 +465,7 @@ export default function Home() {
                     <p className="text-gray-600">I started by making bow ties and gifting them to local animal shelters. But I was not sure, if it was enough and I was looking to do more.</p>
                     <p className="text-gray-600">In Summer 2021, I decided to sell a few bow ties at a lemonade stand, where I got a positive response. I realized that this allowed me to raise funds for the shelters which might be more helpful than gifting the bow ties. I started participating in pop-up stalls, children's business fairs, and establishing an online presence, and donated 50% of my sale proceeds.</p>
                      <p className="text-gray-600">The best part of my job is dressing up my pup Trixie, my supermodel along with hundreds of adorable animals!</p>
-                    <p className="text-gray-600">Since starting in 2021, we have donated over $9,250 and supported over 15 animal shelters. I hope that with your support, we can help raise funds for even more animals in need!</p>
+                    <p className="text-gray-600">Since starting in 2021, we have donated over $10,000 and supported over 15 animal shelters. I hope that with your support, we can help raise funds for even more animals in need!</p>
                   </div>
                 </div>
               </div>

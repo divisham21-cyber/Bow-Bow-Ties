@@ -80,6 +80,14 @@ export const events: Event[] = [
     description: "Marketplace event at the Rusty Pelican! Support several entrpreneurs on a Mother's day event.",
     type: 'marketplace'
   },
+  {
+    id: 10,
+    title: "Kenmore Children's Business Fair",
+    date: '2026-09-05',
+    time: 'All Day',
+    description: 'Marketplace event in Kenmore! Support young local entrepreneurs.',
+    type: 'marketplace'
+  },
 ];
 
 export function getNextEvent(): Event | null {
