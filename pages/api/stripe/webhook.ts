@@ -2,6 +2,8 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import Stripe from 'stripe'
 import { sendOrderEmails } from '../../../lib/email'
 import { createOrderFromCheckoutSession } from '../../../lib/orders'
+import { saveOrderToDb } from '../../../lib/orderRepository'
+import { getCatalogProductsForAdmin } from '../../../lib/catalogRepository'
 
 export const config = {
   api: {
@@ -50,7 +52,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       case 'checkout.session.async_payment_succeeded':
         {
           const session = event.data.object as Stripe.Checkout.Session
-          const order = createOrderFromCheckoutSession(session)
+          const products = await getCatalogProductsForAdmin()
+          const order = createOrderFromCheckoutSession(session, products)
+          await saveOrderToDb(order)
           console.log(`Stripe webhook processed order: ${order.id}`)
           await sendOrderEmails(order)
         }

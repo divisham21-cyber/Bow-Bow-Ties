@@ -113,6 +113,28 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out the [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
 
+## Supabase Catalog and Orders
+
+The site can run from the built-in catalog seed, but production catalog edits and order fulfillment updates should use Supabase.
+
+1. Create a Supabase project.
+2. Open the Supabase SQL Editor and run `supabase/schema.sql`.
+3. Add these environment variables locally and in Vercel:
+
+```bash
+SUPABASE_URL=your_project_url
+SUPABASE_SECRET_KEY=your_secret_server_key
+```
+
+`SUPABASE_SECRET_KEY` must stay server-only. Do not expose it with a `NEXT_PUBLIC_` prefix.
+
+After those are configured:
+
+- `/products` reads active products from Supabase, with the code catalog as fallback.
+- `/admin/catalog` loads the catalog, lets you upload one hero image per product to the `product-images` bucket, and saves products/variants to Supabase.
+- Stripe webhooks save paid orders into Supabase.
+- `/admin/orders` prefers Supabase orders and can save fulfillment/status updates.
+
 ## Future Enhancements
 
 - [ ] Shopping cart functionality

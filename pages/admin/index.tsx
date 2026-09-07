@@ -7,7 +7,7 @@ const adminTools = [
   {
     href: '/admin/catalog',
     title: 'Catalog',
-    description: 'Create products, edit category details, manage photos, validate Stripe lookup keys.',
+    description: 'Create products, edit categories, manage photos, pricing, and availability.',
   },
   {
     href: '/admin/orders',
@@ -29,7 +29,7 @@ export default function AdminHome() {
               <img src="/bow_bow_ties.jpg" alt="Bow-Bow-Ties Logo" className="h-12 w-12 rounded-full object-cover" />
               <div>
                 <h1 className="text-2xl font-bold text-gray-950">Admin</h1>
-                <p className="text-sm text-gray-600">Placeholder tools until auth and database are connected</p>
+                <p className="text-sm text-gray-600">Manage catalog, orders, and fulfillment</p>
               </div>
             </div>
             <div className="flex gap-3">

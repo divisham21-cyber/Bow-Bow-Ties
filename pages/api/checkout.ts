@@ -1,11 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import Stripe from 'stripe'
 import {
-  catalogProducts,
+  CatalogProduct,
   getOneTimePriceLookupKey,
   getSubscriptionPriceLookupKey,
 } from '../../lib/catalog'
 import { getRecurringShippingPriceLookupKey } from '../../lib/commerceConfig'
+import { getCatalogProductsForStorefront } from '../../lib/catalogRepository'
 
 interface CheckoutItemInput {
   productId: string
@@ -30,6 +31,7 @@ interface ValidatedCheckoutItem {
   planName?: string
   interval?: string
   intervalCount?: number
+  unitAmountCents: number
   quantity: number
   lookupKey: string
 }
@@ -46,7 +48,7 @@ function getOrigin(req: NextApiRequest) {
   return `${protocol}://${host}`
 }
 
-function validateItems(items: CheckoutItemInput[] = []) {
+function validateItems(products: CatalogProduct[], items: CheckoutItemInput[] = []) {
   if (!Array.isArray(items) || items.length === 0) {
     throw new Error('Your cart is empty.')
   }
@@ -56,7 +58,7 @@ function validateItems(items: CheckoutItemInput[] = []) {
   }
 
   return items.map((item): ValidatedCheckoutItem => {
-    const product = catalogProducts.find((candidate) => candidate.id === item.productId && candidate.active)
+    const product = products.find((candidate) => candidate.id === item.productId && candidate.active)
     if (!product) throw new Error('One of the products is no longer available.')
 
     const variant = product.variants.find((candidate) => candidate.id === item.variantId)
@@ -85,6 +87,7 @@ function validateItems(items: CheckoutItemInput[] = []) {
         planName: plan.label,
         interval: plan.interval,
         intervalCount: plan.intervalCount,
+        unitAmountCents: variant.priceCents * plan.intervalCount,
         quantity,
         lookupKey: getSubscriptionPriceLookupKey(product.id, variant.id, plan.id),
       }
@@ -96,6 +99,7 @@ function validateItems(items: CheckoutItemInput[] = []) {
       variantId: variant.id,
       variantName: variant.name,
       purchaseType: 'one-time',
+      unitAmountCents: variant.priceCents,
       quantity,
       lookupKey: getOneTimePriceLookupKey(product.id, variant.id),
     }
@@ -137,7 +141,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     const body = req.body as CheckoutRequestBody
     const fulfillmentMethod = body.fulfillmentMethod === 'pickup' ? 'pickup' : 'ship'
-    const items = validateItems(body.items)
+    const availableProducts = await getCatalogProductsForStorefront()
+    const items = validateItems(availableProducts, body.items)
     const subscriptionItems = items.filter((item) => item.purchaseType === 'subscription')
     const subscriptionIntervals = new Set(
       subscriptionItems.map((item) => `${item.interval}:${item.intervalCount}`)
@@ -158,6 +163,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     )
     const origin = getOrigin(req)
     const mode = subscriptionItems.length > 0 ? 'subscription' : 'payment'
+    const cartMetadata = JSON.stringify(
+      items.map((item) => ({
+        p: item.productId,
+        v: item.variantId,
+        t: item.purchaseType === 'subscription' ? 's' : 'o',
+        plan: item.planId,
+        q: item.quantity,
+      }))
+    )
+    const cartMetadataChunks = cartMetadata.match(/.{1,450}/g) || []
 
     if (mode === 'subscription' && fulfillmentMethod === 'ship') {
       const firstSubscription = subscriptionItems[0]
@@ -188,15 +203,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       metadata: {
         source: 'bow-bow-ties-website',
         fulfillmentMethod,
-        cart: JSON.stringify(
-          items.map((item) => ({
-            productId: item.productId,
-            variantId: item.variantId,
-            purchaseType: item.purchaseType,
-            planId: item.planId,
-            quantity: item.quantity,
-          }))
-        ),
+        cartParts: String(cartMetadataChunks.length),
+        ...Object.fromEntries(cartMetadataChunks.map((chunk, index) => [`cart_${index}`, chunk])),
       },
     }
 

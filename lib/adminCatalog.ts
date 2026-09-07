@@ -127,7 +127,7 @@ export function createCatalogExport(products: CatalogProduct[]): CatalogDraftExp
     exportedAt: new Date().toISOString(),
     products: products.map((product) => ({
       ...product,
-      images: product.images.filter(Boolean).slice(0, 5),
+      images: product.images.filter(Boolean).slice(0, 1),
       slug: product.slug || slugify(product.name),
     })),
   }

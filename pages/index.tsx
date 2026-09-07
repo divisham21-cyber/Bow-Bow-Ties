@@ -582,8 +582,8 @@ export default function Home() {
                       <span className="text-primary-600 text-xl">📧</span>
                       <div>
                         <p className="font-medium text-gray-900">Email</p>
-                        <a href="mailto:bowbowties21@gmail.com" className="text-primary-600 hover:text-primary-700">
-                          bowbowties21@gmail.com
+                        <a href="mailto:contact@bowbowties.us" className="text-primary-600 hover:text-primary-700">
+                          contact@bowbowties.us
                         </a>
                       </div>
                     </div>
@@ -719,7 +719,7 @@ export default function Home() {
               <div>
                 <h6 className="font-semibold mb-4">Contact</h6>
                 <ul className="space-y-2 text-gray-400">
-                  <li>📧 bowbowties21@gmail.com</li>
+                  <li>📧 contact@bowbowties.us</li>
                   <li>📍 Bothell, Washington</li>
                 </ul>
               </div>

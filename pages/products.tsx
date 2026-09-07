@@ -1,15 +1,16 @@
 import Head from 'next/head'
 import Link from 'next/link'
+import { GetServerSideProps } from 'next'
 import { useMemo, useState } from 'react'
 import {
   CatalogProduct,
   ProductCategoryId,
   PurchaseType,
   catalogCategories,
-  catalogProducts,
   formatPrice,
 } from '../lib/catalog'
 import { standardShipping } from '../lib/commerceConfig'
+import { getCatalogProductsForStorefront } from '../lib/catalogRepository'
 
 interface CartItem {
   id: string
@@ -34,7 +35,6 @@ interface ProductSelection {
 type CategoryFilter = 'all' | ProductCategoryId
 type FulfillmentMethod = 'ship' | 'pickup'
 
-const activeProducts = catalogProducts.filter((product) => product.active)
 const primaryButtonClass =
   'rounded-lg border border-sky-200 bg-sky-100 px-4 py-2 font-semibold text-slate-900 shadow-sm transition-colors hover:border-sky-300 hover:bg-sky-200 disabled:cursor-not-allowed disabled:border-slate-200 disabled:bg-slate-100 disabled:text-slate-400'
 const secondaryButtonClass =
@@ -68,14 +68,21 @@ function getCartItem(product: CatalogProduct, selection: ProductSelection): Cart
   }
 }
 
-export default function Products() {
+interface ProductsProps {
+  initialProducts: CatalogProduct[]
+}
+
+export default function Products({ initialProducts }: ProductsProps) {
+  const activeProducts = useMemo(
+    () => initialProducts.filter((product) => product.active),
+    [initialProducts]
+  )
   const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>('all')
   const [cartItems, setCartItems] = useState<CartItem[]>([])
   const [selections, setSelections] = useState<Record<string, ProductSelection>>(() =>
     Object.fromEntries(activeProducts.map((product) => [product.id, getDefaultSelection(product)]))
   )
   const [expandedDescriptions, setExpandedDescriptions] = useState<Record<string, boolean>>({})
-  const [selectedImages, setSelectedImages] = useState<Record<string, string>>({})
   const [fulfillmentMethod, setFulfillmentMethod] = useState<FulfillmentMethod>('ship')
   const [checkoutMessage, setCheckoutMessage] = useState<string | null>(null)
 
@@ -176,19 +183,72 @@ export default function Products() {
               </div>
 
               <nav className="flex flex-wrap justify-center gap-x-4 gap-y-2 mt-3 lg:mt-0 lg:gap-x-8">
-                <Link href="/" className="text-slate-700 hover:text-sky-600 transition-colors text-base lg:text-lg font-bold">
-                  Home
-                </Link>
                 <Link href="/products" className="text-sky-600 font-bold text-base lg:text-lg">
                   Products
                 </Link>
                 <a href="/#about" className="text-slate-700 hover:text-sky-600 transition-colors text-base lg:text-lg font-bold">
                   About
                 </a>
+                <a href="/#impact" className="text-slate-700 hover:text-sky-600 transition-colors text-base lg:text-lg font-bold">
+                  Impact
+                </a>
                 <Link href="/calendar" className="text-slate-700 hover:text-sky-600 transition-colors text-base lg:text-lg font-bold">
                   Calendar
                 </Link>
               </nav>
+
+              <div className="flex items-center justify-center space-x-3 mt-3 lg:mt-0 lg:space-x-4">
+                <a
+                  href="https://www.instagram.com/bow_bow_ties"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-transform hover:scale-110"
+                  aria-label="Follow us on Instagram"
+                >
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-600 via-pink-600 to-yellow-500 p-0.5">
+                    <div className="w-full h-full bg-white rounded-2xl flex items-center justify-center">
+                      <svg className="w-7 h-7" viewBox="0 0 24 24">
+                        <defs>
+                          <linearGradient id="instagram-gradient-products" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stopColor="#833ab4" />
+                            <stop offset="50%" stopColor="#fd1d1d" />
+                            <stop offset="100%" stopColor="#fcb045" />
+                          </linearGradient>
+                        </defs>
+                        <path fill="url(#instagram-gradient-products)" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                      </svg>
+                    </div>
+                  </div>
+                </a>
+                <a
+                  href="https://www.facebook.com/p/Bow-Bow-Ties-100071472273808/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-transform hover:scale-110"
+                  aria-label="Follow us on Facebook"
+                >
+                  <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center">
+                    <svg className="w-7 h-7" fill="white" viewBox="0 0 24 24">
+                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                    </svg>
+                  </div>
+                </a>
+                <a
+                  href="https://buymeacoffee.com/bowbowties"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-transform hover:scale-110"
+                  aria-label="Buy Me a Coffee"
+                >
+                  <div className="w-12 h-12 rounded-2xl overflow-hidden">
+                    <img
+                      src="/images/donate.jpeg"
+                      alt="Buy Me a Coffee"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </a>
+              </div>
             </div>
           </div>
         </header>
@@ -304,7 +364,7 @@ export default function Products() {
                         : selectedVariant.priceCents
                     const isDescriptionExpanded = Boolean(expandedDescriptions[product.id])
                     const shouldCollapseDescription = product.description.length > 180
-                    const heroImage = selectedImages[product.id] || product.images[0]
+                    const heroImage = product.images[0]
 
                     return (
                       <article key={product.id} className="flex h-full flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-md">
@@ -351,29 +411,6 @@ export default function Products() {
                               </button>
                             )}
                           </div>
-
-                          {product.images.length > 1 && (
-                            <div className="flex gap-2 mt-4">
-                              {product.images.slice(0, 5).map((image) => (
-                                <button
-                                  key={image}
-                                  type="button"
-                                  onClick={() =>
-                                    setSelectedImages((current) => ({
-                                      ...current,
-                                      [product.id]: image,
-                                    }))
-                                  }
-                                  className={`h-12 w-12 overflow-hidden rounded border bg-slate-100 ${
-                                    heroImage === image ? 'border-sky-300 ring-2 ring-sky-100' : 'border-slate-200'
-                                  }`}
-                                  aria-label={`Show image for ${product.name}`}
-                                >
-                                  <img src={image} alt="" className="h-full w-full object-cover" />
-                                </button>
-                              ))}
-                            </div>
-                          )}
 
                           <label className="mt-5 text-sm font-semibold text-slate-800" htmlFor={`${product.id}-variant`}>
                             Size or option
@@ -570,7 +607,7 @@ export default function Products() {
               <div>
                 <h6 className="font-semibold mb-4">Contact</h6>
                 <ul className="space-y-2 text-gray-400">
-                  <li>bowbowties21@gmail.com</li>
+                  <li>contact@bowbowties.us</li>
                   <li>Bothell, Washington</li>
                 </ul>
               </div>
@@ -583,4 +620,14 @@ export default function Products() {
       </div>
     </>
   )
+}
+
+export const getServerSideProps: GetServerSideProps<ProductsProps> = async () => {
+  const initialProducts = await getCatalogProductsForStorefront()
+
+  return {
+    props: {
+      initialProducts: JSON.parse(JSON.stringify(initialProducts)),
+    },
+  }
 }

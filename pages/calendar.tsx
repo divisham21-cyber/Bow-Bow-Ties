@@ -479,7 +479,7 @@ const Calendar: React.FC = () => {
               <div>
                 <h6 className="font-semibold mb-4">Contact</h6>
                 <ul className="space-y-2 text-gray-400">
-                  <li>📧 bowbowties21@gmail.com</li>
+                  <li>📧 contact@bowbowties.us</li>
                   <li>📍 Bothell, Washington</li>
                 </ul>
               </div>

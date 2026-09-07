@@ -29,20 +29,6 @@ const emptyFulfillment: FulfillmentInfo = {
   shippedAt: new Date().toISOString().slice(0, 10),
   note: '',
 }
-const storageKey = 'bow-bow-ties-admin-orders'
-
-function mergeLocalOrderEdits(stripeOrders: OrderSummary[], localOrders: OrderSummary[]) {
-  return stripeOrders.map((order) => {
-    const localOrder = localOrders.find((candidate) => candidate.stripeSessionId === order.stripeSessionId)
-    if (!localOrder) return order
-
-    return {
-      ...order,
-      status: localOrder.status,
-      fulfillment: localOrder.fulfillment,
-    }
-  })
-}
 
 export default function AdminOrders() {
   const [orders, setOrders] = useState<OrderSummary[]>([])
@@ -50,8 +36,11 @@ export default function AdminOrders() {
   const [fulfillmentDraft, setFulfillmentDraft] = useState<FulfillmentInfo>(emptyFulfillment)
   const [emailPreview, setEmailPreview] = useState('')
   const [statusMessage, setStatusMessage] = useState('Loading paid Stripe checkout orders...')
+  const [orderAction, setOrderAction] = useState<'refund' | 'cancel' | null>(null)
+  const [savingOrderId, setSavingOrderId] = useState<string | null>(null)
 
   const selectedOrder = orders.find((order) => order.id === selectedOrderId) || orders[0]
+  const isSavingSelectedOrder = selectedOrder ? savingOrderId === selectedOrder.id : false
   const fulfillmentQueue = orders.filter((order) =>
     ['paid', 'needs_fulfillment'].includes(order.status)
   ).length
@@ -66,15 +55,6 @@ export default function AdminOrders() {
 
   async function loadStripeOrders() {
     setStatusMessage('Loading paid Stripe checkout orders...')
-    const savedOrders = window.localStorage.getItem(storageKey)
-    let localOrders: OrderSummary[] = []
-
-    try {
-      localOrders = savedOrders ? JSON.parse(savedOrders) : []
-      if (!Array.isArray(localOrders)) localOrders = []
-    } catch {
-      window.localStorage.removeItem(storageKey)
-    }
 
     try {
       const response = await fetch('/api/admin/orders')
@@ -85,7 +65,8 @@ export default function AdminOrders() {
         return
       }
 
-      const nextOrders = mergeLocalOrderEdits(result.orders || [], localOrders)
+      const loadedOrders = (result.orders || []) as OrderSummary[]
+      const nextOrders = loadedOrders
       setOrders(nextOrders)
       setSelectedOrderId((current) =>
         nextOrders.some((order) => order.id === current) ? current : nextOrders[0]?.id || ''
@@ -94,8 +75,8 @@ export default function AdminOrders() {
       setEmailPreview('')
       setStatusMessage(
         nextOrders.length
-          ? `Loaded ${nextOrders.length} paid Stripe checkout order${nextOrders.length === 1 ? '' : 's'}.`
-          : 'No paid Stripe checkout orders found yet.'
+          ? `Loaded ${nextOrders.length} paid order${nextOrders.length === 1 ? '' : 's'}.`
+          : 'No paid orders found yet.'
       )
     } catch {
       setStatusMessage('Unable to load Stripe orders. Please try again.')
@@ -106,36 +87,110 @@ export default function AdminOrders() {
     loadStripeOrders()
   }, [])
 
-  useEffect(() => {
-    window.localStorage.setItem(storageKey, JSON.stringify(orders))
-  }, [orders])
-
   function selectOrder(order: OrderSummary) {
     setSelectedOrderId(order.id)
     setFulfillmentDraft(order.fulfillment || emptyFulfillment)
     setEmailPreview('')
   }
 
-  function updateOrder(nextOrder: OrderSummary) {
+  async function saveOrder(nextOrder: OrderSummary, successMessage = 'Order saved.') {
+    setSavingOrderId(nextOrder.id)
+    setStatusMessage('Saving order...')
+
+    try {
+      const response = await fetch('/api/admin/orders', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order: nextOrder }),
+      })
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Unable to save order.')
+      }
+
+      setStatusMessage(successMessage)
+      return true
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unable to save order.'
+      setStatusMessage(`${message} Local copy was still updated.`)
+      return false
+    } finally {
+      setSavingOrderId(null)
+    }
+  }
+
+  async function updateOrder(nextOrder: OrderSummary, successMessage?: string) {
     setOrders((current) => current.map((order) => (order.id === nextOrder.id ? nextOrder : order)))
+    await saveOrder(nextOrder, successMessage)
   }
 
-  function updateStatus(status: OrderStatus) {
+  async function runOrderAction(action: 'refund' | 'cancel') {
     if (!selectedOrder) return
 
-    updateOrder({ ...selectedOrder, status })
-    setStatusMessage(`Updated ${selectedOrder.id} to ${statusLabels[status]}.`)
+    const prompt =
+      action === 'refund'
+        ? `Refund payment for ${selectedOrder.customerName}?`
+        : selectedOrder.stripeSubscriptionId
+          ? `Cancel subscription for ${selectedOrder.customerName}?`
+          : `Cancel order for ${selectedOrder.customerName}? This will not refund payment.`
+
+    if (!window.confirm(prompt)) return
+
+    setOrderAction(action)
+    setStatusMessage(action === 'refund' ? 'Creating Stripe refund...' : 'Canceling order...')
+
+    try {
+      const response = await fetch('/api/admin/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action, order: selectedOrder }),
+      })
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Unable to update order.')
+      }
+
+      setOrders((current) => current.map((order) => (order.id === result.order.id ? result.order : order)))
+      setStatusMessage(result.message || (action === 'refund' ? 'Payment refunded.' : 'Order canceled.'))
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unable to update order.'
+      setStatusMessage(message)
+    } finally {
+      setOrderAction(null)
+    }
   }
 
-  function markFulfilled() {
+  async function updateStatus(status: OrderStatus) {
     if (!selectedOrder) return
 
-    updateOrder({
-      ...selectedOrder,
-      status: 'fulfilled',
-      fulfillment: fulfillmentDraft,
-    })
-    setStatusMessage('Fulfillment saved locally. This will persist after Supabase is connected.')
+    await updateOrder({ ...selectedOrder, status }, `Updated ${selectedOrder.id} to ${statusLabels[status]}.`)
+  }
+
+  async function markFulfilled() {
+    if (!selectedOrder) return
+
+    await updateOrder(
+      {
+        ...selectedOrder,
+        status: 'fulfilled',
+        fulfillment: fulfillmentDraft,
+      },
+      'Fulfillment saved and order marked fulfilled.'
+    )
+  }
+
+  async function saveFulfillment() {
+    if (!selectedOrder) return
+
+    await updateOrder(
+      {
+        ...selectedOrder,
+        fulfillment: fulfillmentDraft,
+      },
+      'Fulfillment details saved.'
+    )
   }
 
   function previewShippingEmail() {
@@ -148,16 +203,18 @@ export default function AdminOrders() {
     setStatusMessage('Shipping email preview generated.')
   }
 
-  function markCustomerNotified() {
+  async function markCustomerNotified() {
     if (!selectedOrder) return
 
-    updateOrder({
-      ...selectedOrder,
-      status: 'customer_notified',
-      fulfillment: fulfillmentDraft,
-    })
+    await updateOrder(
+      {
+        ...selectedOrder,
+        status: 'customer_notified',
+        fulfillment: fulfillmentDraft,
+      },
+      'Customer notification preview generated and order marked notified.'
+    )
     previewShippingEmail()
-    setStatusMessage('Customer notification preview generated and order marked notified locally.')
   }
 
   function resetOrders() {
@@ -165,15 +222,14 @@ export default function AdminOrders() {
     setSelectedOrderId('')
     setFulfillmentDraft(emptyFulfillment)
     setEmailPreview('')
-    window.localStorage.removeItem(storageKey)
-    setStatusMessage('Cleared local fulfillment edits. Refresh Stripe orders to reload paid sessions.')
+    setStatusMessage('Cleared the local view. Refresh orders to reload paid orders.')
   }
 
   return (
     <>
       <Head>
         <title>Orders Admin - Bow-Bow-Ties</title>
-        <meta name="description" content="Placeholder order fulfillment workspace for Bow-Bow-Ties." />
+        <meta name="description" content="Order fulfillment workspace for Bow-Bow-Ties." />
       </Head>
 
       <main className="min-h-screen bg-gray-50">
@@ -236,7 +292,7 @@ export default function AdminOrders() {
             <aside className="rounded-lg border border-gray-200 bg-white">
               <div className="border-b border-gray-200 p-4">
                 <h2 className="font-bold text-gray-950">Order queue</h2>
-                <p className="mt-1 text-sm text-gray-600">Paid Stripe checkout sessions, newest first.</p>
+                <p className="mt-1 text-sm text-gray-600">Paid orders, newest first.</p>
               </div>
               <div className="max-h-[720px] overflow-y-auto">
                 {orders.length ? orders.map((order) => (
@@ -260,7 +316,7 @@ export default function AdminOrders() {
                     </div>
                   </button>
                 )) : (
-                  <p className="p-4 text-sm text-gray-600">No paid Stripe orders loaded.</p>
+                  <p className="p-4 text-sm text-gray-600">No paid orders loaded.</p>
                 )}
               </div>
             </aside>
@@ -275,6 +331,9 @@ export default function AdminOrders() {
                       </p>
                       <h2 className="mt-2 text-2xl font-bold text-gray-950">{selectedOrder.customerName}</h2>
                       <p className="mt-1 text-gray-600">{selectedOrder.customerEmail || 'No buyer email on order'}</p>
+                      <p className="mt-1 text-sm text-gray-600">
+                        {selectedOrder.customerPhone ? `Phone: ${selectedOrder.customerPhone}` : 'No buyer phone on order'}
+                      </p>
                       <p className="mt-1 text-sm text-gray-500">
                         {new Date(selectedOrder.createdAt).toLocaleString()}
                       </p>
@@ -290,6 +349,7 @@ export default function AdminOrders() {
                         id="order-status"
                         value={selectedOrder.status}
                         onChange={(event) => updateStatus(event.target.value as OrderStatus)}
+                        disabled={isSavingSelectedOrder}
                         className="mt-2 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
                       >
                         {Object.entries(statusLabels).map(([status, label]) => (
@@ -299,6 +359,24 @@ export default function AdminOrders() {
                         ))}
                       </select>
                       <p className="mt-3 text-2xl font-bold text-primary-700">{getOrderTotalLabel(selectedOrder)}</p>
+                      <div className="mt-4 grid grid-cols-1 gap-2">
+                        <button
+                          type="button"
+                          onClick={() => runOrderAction('refund')}
+                          disabled={orderAction !== null || isSavingSelectedOrder || selectedOrder.status === 'refunded'}
+                          className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm font-bold text-red-700 hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                          {orderAction === 'refund' ? 'Refunding...' : 'Refund payment'}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => runOrderAction('cancel')}
+                          disabled={orderAction !== null || isSavingSelectedOrder || selectedOrder.status === 'canceled'}
+                          className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-bold text-gray-700 hover:border-red-200 hover:bg-red-50 hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                          {orderAction === 'cancel' ? 'Canceling...' : 'Cancel order'}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -345,9 +423,6 @@ export default function AdminOrders() {
                         ? 'No shipping address required. Coordinate pickup after payment.'
                         : formatShippingAddress(selectedOrder.shippingAddress) || 'No shipping address available.'}
                     </pre>
-                    {selectedOrder.customerPhone && (
-                      <p className="mt-3 text-sm text-gray-600">Phone: {selectedOrder.customerPhone}</p>
-                    )}
                   </div>
                 </div>
 
@@ -407,13 +482,21 @@ export default function AdminOrders() {
                     </label>
                   </div>
                   <div className="mt-5 flex flex-wrap gap-3">
-                    <button type="button" onClick={markFulfilled} className="btn-secondary">
+                    <button
+                      type="button"
+                      onClick={saveFulfillment}
+                      disabled={isSavingSelectedOrder}
+                      className="rounded-md border border-primary-600 bg-white px-4 py-2 font-semibold text-primary-700 hover:bg-primary-50 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      {isSavingSelectedOrder ? 'Saving...' : 'Save Fulfillment'}
+                    </button>
+                    <button type="button" onClick={markFulfilled} disabled={isSavingSelectedOrder} className="btn-secondary disabled:cursor-not-allowed disabled:opacity-50">
                       Mark Fulfilled
                     </button>
                     <button type="button" onClick={previewShippingEmail} className="rounded-md border border-primary-600 bg-white px-4 py-2 font-semibold text-primary-700 hover:bg-primary-50">
                       Preview Customer Email
                     </button>
-                    <button type="button" onClick={markCustomerNotified} className="btn-primary">
+                    <button type="button" onClick={markCustomerNotified} disabled={isSavingSelectedOrder} className="btn-primary disabled:cursor-not-allowed disabled:opacity-50">
                       Mark Customer Notified
                     </button>
                   </div>
@@ -431,7 +514,7 @@ export default function AdminOrders() {
             ) : (
               <section className="rounded-lg border border-gray-200 bg-white p-8 text-center">
                 <h2 className="text-xl font-bold text-gray-950">No orders yet</h2>
-                <p className="mt-2 text-gray-600">Paid Stripe orders will appear here after database storage is connected.</p>
+                <p className="mt-2 text-gray-600">Paid orders will appear here after checkout.</p>
               </section>
             )}
           </div>

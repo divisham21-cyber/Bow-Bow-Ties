@@ -1,5 +1,5 @@
 import Stripe from 'stripe'
-import { catalogProducts, formatPrice } from './catalog'
+import { CatalogProduct, catalogProducts, formatPrice } from './catalog'
 
 export type OrderStatus =
   | 'paid'
@@ -62,10 +62,19 @@ export interface OrderSummary {
 }
 
 interface CartMetadataItem {
+  p?: string
   productId: string
+  productName?: string
+  v?: string
   variantId: string
+  t?: 'o' | 's'
+  variantName?: string
   purchaseType: 'one-time' | 'subscription'
+  plan?: string
   planId?: string
+  planName?: string
+  q?: number
+  unitAmountCents?: number
   quantity: number
 }
 
@@ -76,12 +85,38 @@ type CheckoutSessionWithShipping = Stripe.Checkout.Session & {
   } | null
 }
 
-function parseCartMetadata(cart?: string | null) {
+function normalizeCartMetadataItem(item: Partial<CartMetadataItem>): CartMetadataItem | null {
+  const productId = item.productId || item.p
+  const variantId = item.variantId || item.v
+  const quantity = item.quantity || item.q || 1
+
+  if (!productId || !variantId) return null
+
+  return {
+    productId,
+    productName: item.productName,
+    variantId,
+    variantName: item.variantName,
+    purchaseType: item.purchaseType || (item.t === 's' ? 'subscription' : 'one-time'),
+    planId: item.planId || item.plan,
+    planName: item.planName,
+    quantity,
+    unitAmountCents: item.unitAmountCents,
+  }
+}
+
+function parseCartMetadata(metadata?: Stripe.Metadata | null) {
+  const cart =
+    metadata?.cart ||
+    Array.from({ length: Number(metadata?.cartParts || 0) }, (_, index) => metadata?.[`cart_${index}`] || '').join('')
+
   if (!cart) return []
 
   try {
-    const parsed = JSON.parse(cart) as CartMetadataItem[]
-    return Array.isArray(parsed) ? parsed : []
+    const parsed = JSON.parse(cart) as Array<Partial<CartMetadataItem>>
+    return Array.isArray(parsed)
+      ? parsed.map(normalizeCartMetadataItem).filter((item): item is CartMetadataItem => Boolean(item))
+      : []
   } catch {
     return []
   }
@@ -107,11 +142,27 @@ function getAddress(session: Stripe.Checkout.Session): ShippingAddress {
   }
 }
 
-function getCatalogLineItem(item: CartMetadataItem): OrderLineItem | null {
-  const product = catalogProducts.find((candidate) => candidate.id === item.productId)
+function getCatalogLineItem(item: CartMetadataItem, products: CatalogProduct[]): OrderLineItem | null {
+  const product = products.find((candidate) => candidate.id === item.productId)
   const variant = product?.variants.find((candidate) => candidate.id === item.variantId)
 
-  if (!product || !variant) return null
+  if (!product || !variant) {
+    if (!item.productName || !item.variantName) return null
+    const unitAmountCents = item.unitAmountCents || 0
+
+    return {
+      productId: item.productId,
+      productName: item.productName,
+      variantId: item.variantId,
+      variantName: item.variantName,
+      purchaseType: item.purchaseType,
+      planId: item.planId,
+      planName: item.planName,
+      quantity: item.quantity,
+      unitAmountCents,
+      totalAmountCents: unitAmountCents * item.quantity,
+    }
+  }
 
   const plan = product.subscriptionPlans?.find((candidate) => candidate.id === item.planId)
   const unitAmountCents =
@@ -133,12 +184,15 @@ function getCatalogLineItem(item: CartMetadataItem): OrderLineItem | null {
   }
 }
 
-export function createOrderFromCheckoutSession(session: Stripe.Checkout.Session): OrderSummary {
+export function createOrderFromCheckoutSession(
+  session: Stripe.Checkout.Session,
+  products: CatalogProduct[] = catalogProducts
+): OrderSummary {
   const sessionWithShipping = session as CheckoutSessionWithShipping
   const fulfillmentMethod = session.metadata?.fulfillmentMethod === 'pickup' ? 'pickup' : 'ship'
-  const cartItems = parseCartMetadata(session.metadata?.cart)
+  const cartItems = parseCartMetadata(session.metadata)
   const lineItems = cartItems
-    .map(getCatalogLineItem)
+    .map((item) => getCatalogLineItem(item, products))
     .filter((item): item is OrderLineItem => Boolean(item))
   const subtotalCents =
     session.amount_subtotal ||

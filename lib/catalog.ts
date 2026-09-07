@@ -189,7 +189,7 @@ function prioritizeImages(images: string[], optionIndex: number) {
   if (images.length < 2) return images
 
   const heroImage = images[optionIndex % images.length]
-  return [heroImage, ...images.filter((image) => image !== heroImage)].slice(0, 5)
+  return [heroImage]
 }
 
 function buildEtsyCatalogProducts() {

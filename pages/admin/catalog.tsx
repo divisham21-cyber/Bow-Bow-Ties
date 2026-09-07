@@ -29,7 +29,6 @@ type AdminFilter = 'all' | ProductCategoryId
 const categoryNames = Object.fromEntries(
   catalogCategories.map((category) => [category.id, category.name])
 ) as Record<ProductCategoryId, string>
-const storageKey = 'bow-bow-ties-admin-catalog-v3'
 
 function downloadJson(filename: string, payload: unknown) {
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' })
@@ -45,7 +44,10 @@ export default function AdminCatalog() {
   const [products, setProducts] = useState<CatalogProduct[]>(() => getInitialAdminProducts())
   const [selectedProductId, setSelectedProductId] = useState(products[0]?.id || '')
   const [filter, setFilter] = useState<AdminFilter>('all')
-  const [statusMessage, setStatusMessage] = useState('Placeholder admin workspace. Changes live in this browser session until a database is connected.')
+  const [statusMessage, setStatusMessage] = useState('Loading catalog...')
+  const [isSaving, setIsSaving] = useState(false)
+  const [isUploadingImage, setIsUploadingImage] = useState(false)
+  const [catalogSource, setCatalogSource] = useState('Unsaved changes')
 
   const selectedProduct = products.find((product) => product.id === selectedProductId) || products[0]
   const visibleProducts = useMemo(() => {
@@ -57,22 +59,38 @@ export default function AdminCatalog() {
   const subscriptionCount = products.filter((product) => product.subscriptionEnabled).length
 
   useEffect(() => {
-    const savedCatalog = window.localStorage.getItem(storageKey)
-    if (!savedCatalog) return
+    let ignore = false
 
-    try {
-      const importedProducts = readCatalogExport(savedCatalog)
-      setProducts(importedProducts)
-      setSelectedProductId(importedProducts[0]?.id || '')
-      setStatusMessage('Restored catalog draft from this browser.')
-    } catch {
-      window.localStorage.removeItem(storageKey)
+    async function loadCatalog() {
+      try {
+        const response = await fetch('/api/admin/catalog')
+        const result = await response.json()
+
+        if (!response.ok) {
+          throw new Error(result.message || 'Unable to load catalog.')
+        }
+
+        if (ignore) return
+
+        const nextProducts = result.products || []
+        setProducts(nextProducts)
+        setSelectedProductId(nextProducts[0]?.id || '')
+        setCatalogSource('Saved')
+        setStatusMessage('Loaded catalog.')
+      } catch (error) {
+        if (ignore) return
+
+        setCatalogSource('Code seed')
+        setStatusMessage(error instanceof Error ? error.message : 'Using the starter catalog.')
+      }
+    }
+
+    loadCatalog()
+
+    return () => {
+      ignore = true
     }
   }, [])
-
-  useEffect(() => {
-    window.localStorage.setItem(storageKey, JSON.stringify(createCatalogExport(products)))
-  }, [products])
 
   function updateSelectedProduct(nextProduct: CatalogProduct) {
     setProducts((current) =>
@@ -84,7 +102,7 @@ export default function AdminCatalog() {
     const draft = createProductDraft(categoryId)
     setProducts((current) => [draft, ...current])
     setSelectedProductId(draft.id)
-    setStatusMessage('Created a new draft product.')
+    setStatusMessage('Created a new product.')
   }
 
   function duplicateProduct(product: CatalogProduct) {
@@ -100,7 +118,7 @@ export default function AdminCatalog() {
 
     setProducts((current) => [duplicate, ...current])
     setSelectedProductId(duplicate.id)
-    setStatusMessage('Duplicated product as an unpublished draft.')
+    setStatusMessage('Duplicated product as inactive.')
   }
 
   function deactivateProduct(product: CatalogProduct) {
@@ -108,29 +126,82 @@ export default function AdminCatalog() {
     setStatusMessage('Product deactivated. It stays in admin but will not show on the storefront.')
   }
 
+  function activateProduct(product: CatalogProduct) {
+    updateSelectedProduct({ ...product, active: true })
+    setStatusMessage('Product activated. It will show on the storefront after saving.')
+  }
+
   function updateCategory(product: CatalogProduct, categoryId: ProductCategoryId) {
     updateSelectedProduct(normalizeProductForCategory(product, categoryId))
   }
 
-  function updateImage(index: number, value: string) {
+  function updateHeroImage(value: string) {
     if (!selectedProduct) return
 
-    const nextImages = [...selectedProduct.images]
-    nextImages[index] = value
-    updateSelectedProduct({ ...selectedProduct, images: nextImages.slice(0, 5) })
+    updateSelectedProduct({ ...selectedProduct, images: [value] })
   }
 
-  function addImageSlot() {
-    if (!selectedProduct || selectedProduct.images.length >= 5) return
+  async function saveCatalog() {
+    setIsSaving(true)
+    setStatusMessage('Saving catalog...')
 
-    updateSelectedProduct({ ...selectedProduct, images: [...selectedProduct.images, ''] })
+    try {
+      const response = await fetch('/api/admin/catalog', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(createCatalogExport(products)),
+      })
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Unable to save catalog.')
+      }
+
+      setCatalogSource('Saved')
+      setStatusMessage('Catalog saved. Storefront will use these active products.')
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unable to save catalog.'
+      setStatusMessage(message)
+    } finally {
+      setIsSaving(false)
+    }
   }
 
-  function removeImageSlot(index: number) {
-    if (!selectedProduct) return
+  async function uploadHeroImage(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0]
+    if (!file || !selectedProduct) return
 
-    const nextImages = selectedProduct.images.filter((_, imageIndex) => imageIndex !== index)
-    updateSelectedProduct({ ...selectedProduct, images: nextImages.length ? nextImages : [''] })
+    setIsUploadingImage(true)
+    setStatusMessage('Uploading hero image...')
+
+    const reader = new FileReader()
+    reader.onload = async () => {
+      try {
+        const response = await fetch('/api/admin/upload-product-image', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            productId: selectedProduct.id,
+            dataUrl: String(reader.result),
+          }),
+        })
+        const result = await response.json()
+
+        if (!response.ok) {
+          throw new Error(result.message || 'Unable to upload image.')
+        }
+
+        updateHeroImage(result.publicUrl)
+        setStatusMessage('Hero image uploaded. Save when ready.')
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'Unable to upload image.'
+        setStatusMessage(message)
+      } finally {
+        setIsUploadingImage(false)
+        event.target.value = ''
+      }
+    }
+    reader.readAsDataURL(file)
   }
 
   function updateVariantPrice(variantId: string, value: string) {
@@ -156,15 +227,15 @@ export default function AdminCatalog() {
 
   function exportCatalog() {
     downloadJson('bow-bow-ties-catalog-draft.json', createCatalogExport(products))
-    setStatusMessage('Exported catalog JSON draft.')
+    setStatusMessage('Exported catalog JSON.')
   }
 
   function resetCatalog() {
     const initialProducts = getInitialAdminProducts()
     setProducts(initialProducts)
     setSelectedProductId(initialProducts[0]?.id || '')
-    window.localStorage.removeItem(storageKey)
-    setStatusMessage('Reset placeholder catalog back to the code seed.')
+    setCatalogSource('Reset')
+    setStatusMessage('Reset catalog back to the starter version. Save when ready.')
   }
 
   function importCatalog(event: ChangeEvent<HTMLInputElement>) {
@@ -177,7 +248,8 @@ export default function AdminCatalog() {
         const importedProducts = readCatalogExport(String(reader.result))
         setProducts(importedProducts)
         setSelectedProductId(importedProducts[0]?.id || '')
-        setStatusMessage('Imported catalog JSON into this placeholder workspace.')
+        setCatalogSource('Unsaved changes')
+        setStatusMessage('Imported catalog JSON. Save when ready.')
       } catch (error) {
         const message = error instanceof Error ? error.message : 'Unable to import catalog JSON.'
         setStatusMessage(message)
@@ -190,7 +262,7 @@ export default function AdminCatalog() {
     <>
       <Head>
         <title>Catalog Admin - Bow-Bow-Ties</title>
-        <meta name="description" content="Placeholder catalog admin workspace for Bow-Bow-Ties." />
+        <meta name="description" content="Catalog admin workspace for Bow-Bow-Ties." />
       </Head>
 
       <main className="min-h-screen bg-gray-50">
@@ -200,7 +272,7 @@ export default function AdminCatalog() {
               <img src="/bow_bow_ties.jpg" alt="Bow-Bow-Ties Logo" className="h-12 w-12 rounded-full object-cover" />
               <div>
                 <h1 className="text-2xl font-bold text-gray-950">Catalog Admin</h1>
-                <p className="text-sm text-gray-600">Placeholder workspace for marketer catalog edits</p>
+                <p className="text-sm text-gray-600">Manage products, pricing, photos, and availability</p>
               </div>
             </div>
             <nav className="flex flex-wrap gap-3">
@@ -216,6 +288,9 @@ export default function AdminCatalog() {
               <button type="button" onClick={() => addProduct()} className="btn-primary">
                 New Product
               </button>
+              <button type="button" onClick={saveCatalog} disabled={isSaving} className="btn-secondary disabled:cursor-not-allowed disabled:opacity-60">
+                {isSaving ? 'Saving...' : 'Save'}
+              </button>
             </nav>
           </div>
         </header>
@@ -227,7 +302,7 @@ export default function AdminCatalog() {
               <p className="mt-2 text-3xl font-bold text-gray-950">{products.length}</p>
             </div>
             <div className="rounded-lg border border-gray-200 bg-white p-4">
-              <p className="text-sm font-semibold text-gray-500">Published</p>
+              <p className="text-sm font-semibold text-gray-500">Active</p>
               <p className="mt-2 text-3xl font-bold text-primary-700">{activeCount}</p>
             </div>
             <div className="rounded-lg border border-gray-200 bg-white p-4">
@@ -235,8 +310,8 @@ export default function AdminCatalog() {
               <p className="mt-2 text-3xl font-bold text-secondary-700">{subscriptionCount}</p>
             </div>
             <div className="rounded-lg border border-gray-200 bg-white p-4">
-              <p className="text-sm font-semibold text-gray-500">Storage</p>
-              <p className="mt-2 text-base font-bold text-gray-950">Browser session</p>
+              <p className="text-sm font-semibold text-gray-500">Catalog status</p>
+              <p className="mt-2 text-base font-bold text-gray-950">{catalogSource}</p>
             </div>
           </div>
 
@@ -288,7 +363,7 @@ export default function AdminCatalog() {
                         <p className="text-sm text-gray-600">{categoryNames[product.categoryId]}</p>
                         <div className="mt-1 flex flex-wrap gap-1">
                           <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${product.active ? 'bg-primary-100 text-primary-800' : 'bg-gray-100 text-gray-600'}`}>
-                            {product.active ? 'Published' : 'Draft'}
+                            {product.active ? 'Active' : 'Inactive'}
                           </span>
                           {product.subscriptionEnabled && (
                             <span className="rounded-full bg-secondary-100 px-2 py-0.5 text-xs font-semibold text-secondary-800">
@@ -309,7 +384,7 @@ export default function AdminCatalog() {
                   <div className="flex flex-col gap-3 border-b border-gray-200 pb-5 md:flex-row md:items-start md:justify-between">
                     <div>
                       <h2 className="text-xl font-bold text-gray-950">Product editor</h2>
-                      <p className="text-sm text-gray-600">Fields here mirror the future catalog database shape.</p>
+                      <p className="text-sm text-gray-600">Edit details, then save when the product is ready.</p>
                     </div>
                     <div className="flex flex-wrap gap-2">
                       <button
@@ -319,13 +394,23 @@ export default function AdminCatalog() {
                       >
                         Duplicate
                       </button>
-                      <button
-                        type="button"
-                        onClick={() => deactivateProduct(selectedProduct)}
-                        className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-800 hover:bg-amber-100"
-                      >
-                        Deactivate
-                      </button>
+                      {selectedProduct.active ? (
+                        <button
+                          type="button"
+                          onClick={() => deactivateProduct(selectedProduct)}
+                          className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-800 hover:bg-amber-100"
+                        >
+                          Deactivate
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => activateProduct(selectedProduct)}
+                          className="rounded-md border border-primary-200 bg-primary-50 px-3 py-2 text-sm font-semibold text-primary-800 hover:bg-primary-100"
+                        >
+                          Activate
+                        </button>
+                      )}
                     </div>
                   </div>
 
@@ -369,15 +454,7 @@ export default function AdminCatalog() {
                       </select>
                     </label>
 
-                    <div className="grid grid-cols-2 gap-3">
-                      <label className="flex items-center gap-2 rounded-md border border-gray-200 px-3 py-2">
-                        <input
-                          type="checkbox"
-                          checked={selectedProduct.active}
-                          onChange={(event) => updateSelectedProduct({ ...selectedProduct, active: event.target.checked })}
-                        />
-                        <span className="text-sm font-semibold text-gray-700">Published</span>
-                      </label>
+                    <div className="grid grid-cols-1 gap-3">
                       <label className="flex items-center gap-2 rounded-md border border-gray-200 px-3 py-2">
                         <input
                           type="checkbox"
@@ -411,47 +488,40 @@ export default function AdminCatalog() {
 
                 <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
                   <div className="rounded-lg border border-gray-200 bg-white p-5">
-                    <div className="flex items-center justify-between">
-                      <h3 className="font-bold text-gray-950">Photos</h3>
-                      <button
-                        type="button"
-                        onClick={addImageSlot}
-                        disabled={selectedProduct.images.length >= 5}
-                        className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-700 disabled:cursor-not-allowed disabled:opacity-50"
-                      >
-                        Add Photo Slot
-                      </button>
+                    <h3 className="font-bold text-gray-950">Hero image</h3>
+                    <div className="mt-4 grid grid-cols-[80px_1fr] gap-3">
+                      <div className="h-20 w-20 overflow-hidden rounded-md bg-gray-100">
+                        {selectedProduct.images[0] ? (
+                          <img src={selectedProduct.images[0]} alt="" className="h-full w-full object-cover" />
+                        ) : null}
+                      </div>
+                      <label>
+                        <span className="text-sm font-semibold text-gray-700">Hero image URL</span>
+                        <input
+                          value={selectedProduct.images[0] || ''}
+                          onChange={(event) => updateHeroImage(event.target.value)}
+                          placeholder="/images/example.jpeg"
+                          className="mt-2 h-10 w-full rounded-md border border-gray-300 px-3 text-sm"
+                        />
+                      </label>
                     </div>
-                    <div className="mt-4 space-y-3">
-                      {selectedProduct.images.map((image, index) => (
-                        <div key={`${selectedProduct.id}-image-${index}`} className="grid grid-cols-[64px_1fr_auto] gap-3">
-                          <div className="h-16 w-16 overflow-hidden rounded-md bg-gray-100">
-                            {image ? <img src={image} alt="" className="h-full w-full object-cover" /> : null}
-                          </div>
-                          <input
-                            value={image}
-                            onChange={(event) => updateImage(index, event.target.value)}
-                            placeholder="/images/example.jpeg"
-                            className="h-10 rounded-md border border-gray-300 px-3 text-sm"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => removeImageSlot(index)}
-                            className="h-10 rounded-md border border-gray-300 px-3 text-sm font-semibold text-gray-700"
-                          >
-                            Remove
-                          </button>
-                        </div>
-                      ))}
-                    </div>
+                    <label className="mt-4 inline-flex cursor-pointer rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:border-primary-500">
+                      {isUploadingImage ? 'Uploading...' : 'Upload Hero Image'}
+                      <input
+                        type="file"
+                        accept="image/png,image/jpeg,image/webp,image/gif"
+                        onChange={uploadHeroImage}
+                        disabled={isUploadingImage}
+                        className="sr-only"
+                      />
+                    </label>
                     <p className="mt-3 text-sm text-gray-500">
-                      For now, paste an external image URL or add a file to public/images and use /images/file-name.jpg.
-                      Supabase Storage can replace these text fields later.
+                      Upload a hero image, or paste an existing image URL.
                     </p>
                   </div>
 
                   <div className="rounded-lg border border-gray-200 bg-white p-5">
-                    <h3 className="font-bold text-gray-950">Pricing and Stripe lookup keys</h3>
+                    <h3 className="font-bold text-gray-950">Pricing</h3>
                     <div className="mt-4 space-y-4">
                       {selectedProduct.variants.map((variant) => (
                         <div key={variant.id} className="rounded-md border border-gray-200 p-3">
@@ -521,10 +591,10 @@ export default function AdminCatalog() {
 
                 <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1fr_360px]">
                   <div className="rounded-lg border border-gray-200 bg-white p-5">
-                    <h3 className="font-bold text-gray-950">Validation</h3>
+                    <h3 className="font-bold text-gray-950">Ready Check</h3>
                     {validation.valid ? (
                       <p className="mt-3 rounded-md bg-primary-50 px-3 py-2 text-sm font-semibold text-primary-800">
-                        Ready to publish when a real database is connected.
+                        Ready to save.
                       </p>
                     ) : (
                       <ul className="mt-3 space-y-2">
@@ -538,24 +608,27 @@ export default function AdminCatalog() {
                   </div>
 
                   <div className="rounded-lg border border-gray-200 bg-white p-5">
-                    <h3 className="font-bold text-gray-950">Draft exchange</h3>
+                    <h3 className="font-bold text-gray-950">Backup</h3>
                     <div className="mt-4 flex flex-col gap-3">
                       <button type="button" onClick={exportCatalog} className="btn-primary">
                         Export JSON
+                      </button>
+                      <button type="button" onClick={saveCatalog} disabled={isSaving} className="btn-secondary disabled:cursor-not-allowed disabled:opacity-60">
+                        {isSaving ? 'Saving...' : 'Save'}
                       </button>
                       <button
                         type="button"
                         onClick={resetCatalog}
                         className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:border-primary-500"
                       >
-                        Reset Draft
+                        Reset
                       </button>
                       <label className="rounded-md border border-gray-300 bg-white px-4 py-2 text-center text-sm font-semibold text-gray-700 hover:border-primary-500">
                         Import JSON
                         <input type="file" accept="application/json" onChange={importCatalog} className="sr-only" />
                       </label>
                     </div>
-                    <p className="mt-3 text-sm text-gray-500">Use exports as seed data until Supabase stores catalog changes.</p>
+                    <p className="mt-3 text-sm text-gray-500">Import/export remains useful for backup copies.</p>
                   </div>
                 </div>
 

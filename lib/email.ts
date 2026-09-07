@@ -12,8 +12,8 @@ export interface EmailMessage {
   text: string
 }
 
-const sellerEmail = process.env.SELLER_ORDER_EMAIL || 'bowbowties21@gmail.com'
-const fromEmail = process.env.ORDER_FROM_EMAIL || 'orders@bowbowties.local'
+const sellerEmail = process.env.SELLER_ORDER_EMAIL || 'contact@bowbowties.us'
+const fromEmail = process.env.ORDER_FROM_EMAIL || 'contact@bowbowties.us'
 const resendApiKey = process.env.RESEND_API_KEY
 
 function getLineItemsText(order: OrderSummary) {
@@ -93,7 +93,10 @@ export function buildShippingConfirmationEmail(
 
   return {
     to: order.customerEmail,
-    subject: `Your Bow-Bow-Ties order has shipped`,
+    subject:
+      order.fulfillmentMethod === 'pickup'
+        ? 'Your Bow-Bow-Ties order is ready for pickup'
+        : 'Your Bow-Bow-Ties order has shipped',
     text: [
       `Hi ${order.customerName},`,
       '',
