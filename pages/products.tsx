@@ -504,7 +504,7 @@ export default function Products({ initialProducts }: ProductsProps) {
                   </div>
 
                   {cartItems.length === 0 ? (
-                    <p className="mt-5 text-sm text-slate-600">Your cart is ready for bow ties, bandanas, treats, and beads.</p>
+                    <p className="mt-5 text-sm text-slate-600">Cart is Empty</p>
                   ) : (
                     <div className="mt-5 space-y-4">
                       {cartItems.map((item) => (

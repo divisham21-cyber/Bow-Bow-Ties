@@ -110,6 +110,23 @@ function createProductName(title, attributes) {
   return attributeText ? `${baseTitle} - ${attributeText}` : baseTitle
 }
 
+function createDisplayProductName(title, attributes) {
+  const attributeText = attributes.map((attribute) => attribute.value).join(' - ')
+
+  return attributeText || createProductName(title, attributes)
+}
+
+function createShortDescription(categoryId, attributes) {
+  const attributeText = attributes.map((attribute) => attribute.value).join(' / ')
+
+  if (categoryId === 'bow-bow-treats') return `${attributeText} 5 oz. natural dog treats.`
+  if (categoryId === 'tabitha-beads') return `${attributeText} handcrafted wooden bead necklace.`
+  if (categoryId === 'tote-bags') return `${attributeText} pet-themed tote bag.`
+  if (categoryId === 'bandanas') return `${attributeText} handmade pet accessory.`
+
+  return `${attributeText} handmade pet bow tie.`
+}
+
 function getCatalogPriceCents(categoryId, variantName) {
   const normalizedVariant = variantName.toLowerCase()
 
@@ -129,12 +146,11 @@ function buildEtsyCatalogProducts() {
     combinations(getProductVariations(listing)).map((attributes, optionIndex) => {
       const categoryId = categoryForListing(listing.title, attributes.map((attribute) => attribute.value))
       const sizeVariation = getSizeVariation(listing, categoryId)
-      const name = createProductName(listing.title, attributes)
-      const selectedOptions = attributes.map((attribute) => `${attribute.name}: ${attribute.value}`).join(', ')
-      const description = selectedOptions
-        ? `${listing.description}\n\nSelected options: ${selectedOptions}.`
-        : listing.description
-      const slug = slugify(name)
+      const name = createDisplayProductName(listing.title, attributes)
+      const catalogIdName = createProductName(listing.title, attributes)
+      const shortDescription = createShortDescription(categoryId, attributes)
+      const description = shortDescription
+      const slug = slugify(catalogIdName)
       const isTreat = categoryId === 'bow-bow-treats'
       const variants = sizeVariation
         ? sizeVariation.values.map((value) => ({

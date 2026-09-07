@@ -170,7 +170,7 @@ function getCatalogPriceCents(categoryId: ProductCategoryId, variantName: string
 function createShortDescription(categoryId: ProductCategoryId, attributes: Array<{ name: string; value: string }>) {
   const attributeText = attributes.map((attribute) => attribute.value).join(' / ')
 
-  if (categoryId === 'bow-bow-treats') return `${attributeText} 7 oz. natural dog treats.`
+  if (categoryId === 'bow-bow-treats') return `${attributeText} 5 oz. natural dog treats.`
   if (categoryId === 'tabitha-beads') return `${attributeText} handcrafted wooden bead necklace.`
   if (categoryId === 'tote-bags') return `${attributeText} pet-themed tote bag.`
   if (categoryId === 'bandanas') return `${attributeText} handmade pet accessory.`
@@ -183,6 +183,18 @@ function createProductName(title: string, attributes: Array<{ name: string; valu
   const attributeText = attributes.map((attribute) => attribute.value).join(' - ')
 
   return attributeText ? `${baseTitle} - ${attributeText}` : baseTitle
+}
+
+function createDisplayProductName(
+  title: string,
+  attributes: Array<{ name: string; value: string }>,
+  categoryId: ProductCategoryId
+) {
+  const attributeText = attributes.map((attribute) => attribute.value).join(' - ')
+
+  if (attributeText) return attributeText
+
+  return createProductName(title, attributes)
 }
 
 function prioritizeImages(images: string[], optionIndex: number) {
@@ -199,15 +211,11 @@ function buildEtsyCatalogProducts() {
     combinations(getProductVariations(listing)).map((attributes, optionIndex) => {
       const categoryId = categoryForListing(listing.title, attributes.map((attribute) => attribute.value))
       const sizeVariation = getSizeVariation(listing, categoryId)
-      const name = createProductName(listing.title, attributes)
-      const selectedOptions = attributes.map((attribute) => `${attribute.name}: ${attribute.value}`).join(', ')
-      const availableOptions = sizeVariation
-        ? `Available ${sizeVariation.name.toLowerCase()}: ${sizeVariation.values.join(', ')}.`
-        : ''
-      const description = selectedOptions
-        ? `${listing.description}\n\nSelected options: ${selectedOptions}. ${availableOptions}`.trim()
-        : listing.description
-      const slug = slugify(name)
+      const name = createDisplayProductName(listing.title, attributes, categoryId)
+      const catalogIdName = createProductName(listing.title, attributes)
+      const shortDescription = createShortDescription(categoryId, attributes)
+      const description = shortDescription
+      const slug = slugify(catalogIdName)
       const isTreat = categoryId === 'bow-bow-treats'
       const variants = sizeVariation
         ? sizeVariation.values.map((value) => ({
@@ -230,7 +238,7 @@ function buildEtsyCatalogProducts() {
         slug: slug || `etsy-product-${listingIndex + 1}-${optionIndex + 1}`,
         name,
         categoryId,
-        shortDescription: createShortDescription(categoryId, attributes),
+        shortDescription,
         description,
         images: prioritizeImages(listing.images, optionIndex),
         variants,
