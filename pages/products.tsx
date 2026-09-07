@@ -363,6 +363,8 @@ export default function Products({ initialProducts }: ProductsProps) {
                         ? selectedVariant.priceCents * selectedPlan.intervalCount
                         : selectedVariant.priceCents
                     const isDescriptionExpanded = Boolean(expandedDescriptions[product.id])
+                    const hasAdditionalDescription =
+                      product.description.trim() !== product.shortDescription.trim()
                     const shouldCollapseDescription = product.description.length > 180
                     const heroImage = product.images[0]
 
@@ -385,32 +387,34 @@ export default function Products({ initialProducts }: ProductsProps) {
                             )}
                           </div>
                           <p className="text-sm text-slate-600 mt-2">{product.shortDescription}</p>
-                          <div className="mt-3">
-                            <p
-                              className="whitespace-pre-line text-sm leading-6 text-slate-700"
-                              style={
-                                shouldCollapseDescription && !isDescriptionExpanded
-                                  ? {
-                                      display: '-webkit-box',
-                                      WebkitLineClamp: 3,
-                                      WebkitBoxOrient: 'vertical',
-                                      overflow: 'hidden',
-                                    }
-                                  : undefined
-                              }
-                            >
-                              {product.description}
-                            </p>
-                            {shouldCollapseDescription && (
-                              <button
-                                type="button"
-                                onClick={() => toggleDescription(product.id)}
-                                className="mt-2 text-sm font-bold text-slate-700 hover:text-slate-950"
+                          {hasAdditionalDescription && (
+                            <div className="mt-3">
+                              <p
+                                className="whitespace-pre-line text-sm leading-6 text-slate-700"
+                                style={
+                                  shouldCollapseDescription && !isDescriptionExpanded
+                                    ? {
+                                        display: '-webkit-box',
+                                        WebkitLineClamp: 3,
+                                        WebkitBoxOrient: 'vertical',
+                                        overflow: 'hidden',
+                                      }
+                                    : undefined
+                                }
                               >
-                                {isDescriptionExpanded ? 'See less' : 'See more'}
-                              </button>
-                            )}
-                          </div>
+                                {product.description}
+                              </p>
+                              {shouldCollapseDescription && (
+                                <button
+                                  type="button"
+                                  onClick={() => toggleDescription(product.id)}
+                                  className="mt-2 text-sm font-bold text-slate-700 hover:text-slate-950"
+                                >
+                                  {isDescriptionExpanded ? 'See less' : 'See more'}
+                                </button>
+                              )}
+                            </div>
+                          )}
 
                           <label className="mt-5 text-sm font-semibold text-slate-800" htmlFor={`${product.id}-variant`}>
                             Size or option
