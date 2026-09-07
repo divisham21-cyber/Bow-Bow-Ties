@@ -41,6 +41,10 @@ export default function AdminOrders() {
 
   const selectedOrder = orders.find((order) => order.id === selectedOrderId) || orders[0]
   const isSavingSelectedOrder = selectedOrder ? savingOrderId === selectedOrder.id : false
+  const selectedOrderIsFulfilled = selectedOrder
+    ? ['fulfilled', 'customer_notified'].includes(selectedOrder.status)
+    : false
+  const selectedOrderIsNotified = selectedOrder?.status === 'customer_notified'
   const fulfillmentQueue = orders.filter((order) =>
     ['paid', 'needs_fulfillment'].includes(order.status)
   ).length
@@ -340,6 +344,21 @@ export default function AdminOrders() {
                       <p className="mt-3 inline-block rounded-full bg-secondary-100 px-3 py-1 text-sm font-bold text-secondary-800">
                         {selectedOrder.fulfillmentMethod === 'pickup' ? 'Pick up order' : 'Ship order'}
                       </p>
+                      <p
+                        className={`ml-2 mt-3 inline-block rounded-full px-3 py-1 text-sm font-bold ${
+                          selectedOrderIsNotified
+                            ? 'bg-green-100 text-green-800'
+                            : selectedOrderIsFulfilled
+                              ? 'bg-blue-100 text-blue-800'
+                              : 'bg-amber-100 text-amber-800'
+                        }`}
+                      >
+                        {selectedOrderIsNotified
+                          ? 'Customer notified'
+                          : selectedOrderIsFulfilled
+                            ? 'Fulfilled'
+                            : 'Needs fulfillment'}
+                      </p>
                     </div>
                     <div className="rounded-lg bg-gray-50 p-4">
                       <label className="text-sm font-semibold text-gray-700" htmlFor="order-status">
@@ -427,7 +446,29 @@ export default function AdminOrders() {
                 </div>
 
                 <div className="rounded-lg border border-gray-200 bg-white p-5">
-                  <h3 className="font-bold text-gray-950">Fulfillment</h3>
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                      <h3 className="font-bold text-gray-950">Fulfillment</h3>
+                      <p className="mt-1 text-sm text-gray-600">
+                        {selectedOrderIsNotified
+                          ? 'This order is fulfilled and the customer notification has been prepared.'
+                          : selectedOrderIsFulfilled
+                            ? 'This order is marked fulfilled.'
+                            : 'Add fulfillment details, then mark the order fulfilled.'}
+                      </p>
+                    </div>
+                    <span
+                      className={`inline-flex w-fit rounded-full px-3 py-1 text-sm font-bold ${
+                        selectedOrderIsNotified
+                          ? 'bg-green-100 text-green-800'
+                          : selectedOrderIsFulfilled
+                            ? 'bg-blue-100 text-blue-800'
+                            : 'bg-amber-100 text-amber-800'
+                      }`}
+                    >
+                      {statusLabels[selectedOrder.status]}
+                    </span>
+                  </div>
                   <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
                     <label>
                       <span className="text-sm font-semibold text-gray-700">
@@ -490,14 +531,24 @@ export default function AdminOrders() {
                     >
                       {isSavingSelectedOrder ? 'Saving...' : 'Save Fulfillment'}
                     </button>
-                    <button type="button" onClick={markFulfilled} disabled={isSavingSelectedOrder} className="btn-secondary disabled:cursor-not-allowed disabled:opacity-50">
-                      Mark Fulfilled
+                    <button
+                      type="button"
+                      onClick={markFulfilled}
+                      disabled={isSavingSelectedOrder || selectedOrderIsFulfilled}
+                      className="btn-secondary disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      {selectedOrderIsFulfilled ? 'Fulfilled' : 'Mark Fulfilled'}
                     </button>
                     <button type="button" onClick={previewShippingEmail} className="rounded-md border border-primary-600 bg-white px-4 py-2 font-semibold text-primary-700 hover:bg-primary-50">
                       Preview Customer Email
                     </button>
-                    <button type="button" onClick={markCustomerNotified} disabled={isSavingSelectedOrder} className="btn-primary disabled:cursor-not-allowed disabled:opacity-50">
-                      Mark Customer Notified
+                    <button
+                      type="button"
+                      onClick={markCustomerNotified}
+                      disabled={isSavingSelectedOrder || selectedOrderIsNotified}
+                      className="btn-primary disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      {selectedOrderIsNotified ? 'Customer Notified' : 'Mark Customer Notified'}
                     </button>
                   </div>
                 </div>
