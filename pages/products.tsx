@@ -254,24 +254,31 @@ export default function Products({ initialProducts }: ProductsProps) {
         </header>
 
         <main>
-          <section className="border-b border-slate-200 bg-slate-100">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <section className="relative overflow-hidden border-b border-sky-100 bg-sky-50">
+            <img
+              src="/bowbowtiebanner.jpeg"
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover opacity-10"
+            />
+            <div className="absolute inset-0 bg-sky-50/90" />
+            <div className="absolute inset-0 bg-white/35" />
+            <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16">
               <div className="grid gap-8 lg:grid-cols-[1fr_360px] lg:items-end">
                 <div>
-                  <p className="text-sm font-semibold uppercase tracking-wide text-slate-600">Handmade pet accessories</p>
-                  <h2 className="text-4xl font-bold text-slate-950 mt-3">Shop Bow-Bow-Ties</h2>
-                  <p className="text-lg text-slate-700 mt-4 max-w-3xl">
+                  <p className="text-sm font-bold uppercase tracking-wide text-sky-700">Handmade pet accessories</p>
+                  <h2 className="mt-3 text-4xl font-bold text-slate-950 sm:text-5xl">Shop Bow-Bow-Ties</h2>
+                  <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-700">
                     Browse handcrafted pet accessories, choose sizes and subscription options, then finish with secure checkout.
                   </p>
-                  <p className="mt-3 text-sm font-semibold text-slate-600">
-                    Standard shipping is {formatPrice(standardShipping.priceCents)}, or choose local pickup at checkout.
-                  </p>
+                  <div className="mt-5 inline-flex max-w-full rounded-lg border border-sky-200 bg-white/80 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm">
+                    Standard shipping is {formatPrice(standardShipping.priceCents)}. Local pickup is available at checkout.
+                  </div>
                 </div>
 
-                <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+                <div className="rounded-lg border border-sky-100 bg-white p-5 shadow-sm">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-semibold text-slate-500">Cart</p>
+                      <p className="text-sm font-semibold text-slate-500">Cart summary</p>
                       <p className="text-2xl font-bold text-slate-950">{cartCount} item{cartCount === 1 ? '' : 's'}</p>
                     </div>
                     <div className="text-right">
