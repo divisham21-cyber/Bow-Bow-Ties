@@ -1,5 +1,17 @@
-import { CatalogProduct, ProductCategoryId, ProductVariant, SubscriptionPlan, catalogProducts } from './catalog'
+import {
+  CatalogProduct,
+  CategoryContent,
+  ProductCategoryId,
+  ProductVariant,
+  SubscriptionPlan,
+  catalogProducts,
+  defaultCategoryContent,
+} from './catalog'
 import { getSupabaseAdmin } from './supabaseAdmin'
+
+function isMissingTableError(error: { code?: string; message?: string }) {
+  return error.code === '42P01' || error.code === 'PGRST205' || error.message?.includes('catalog_category_content')
+}
 
 interface CatalogProductRow {
   id: string
@@ -23,6 +35,15 @@ interface CatalogVariantRow {
   name: string
   price_cents: number
   inventory_label: string | null
+  sort_order: number
+}
+
+interface CategoryContentRow {
+  category_id: ProductCategoryId
+  eyebrow: string
+  title: string
+  summary: string
+  body: string
   sort_order: number
 }
 
@@ -82,6 +103,27 @@ function productVariantsToRows(product: CatalogProduct) {
   }))
 }
 
+function categoryContentRowToContent(row: CategoryContentRow): CategoryContent {
+  return {
+    categoryId: row.category_id,
+    eyebrow: row.eyebrow,
+    title: row.title,
+    summary: row.summary,
+    body: row.body,
+  }
+}
+
+function categoryContentToRow(content: CategoryContent, sortOrder: number) {
+  return {
+    category_id: content.categoryId,
+    eyebrow: content.eyebrow,
+    title: content.title,
+    summary: content.summary,
+    body: content.body,
+    sort_order: sortOrder,
+  }
+}
+
 export async function getCatalogProductsFromDb(includeInactive = false) {
   const supabase = getSupabaseAdmin()
   if (!supabase) return null
@@ -108,6 +150,45 @@ export async function getCatalogProductsForStorefront() {
 export async function getCatalogProductsForAdmin() {
   const products = await getCatalogProductsFromDb(true)
   return products && products.length ? products : catalogProducts
+}
+
+export async function getCategoryContentFromDb() {
+  const supabase = getSupabaseAdmin()
+  if (!supabase) return null
+
+  const { data, error } = await supabase
+    .from('catalog_category_content')
+    .select('*')
+    .order('sort_order', { ascending: true })
+
+  if (error) {
+    if (isMissingTableError(error)) return null
+    throw error
+  }
+
+  return (data || []).map((row) => categoryContentRowToContent(row as CategoryContentRow))
+}
+
+export async function getCategoryContentForStorefront() {
+  const content = await getCategoryContentFromDb()
+  return content && content.length ? content : defaultCategoryContent
+}
+
+export async function saveCategoryContentToDb(categoryContent: CategoryContent[]) {
+  const supabase = getSupabaseAdmin()
+  if (!supabase) throw new Error('Supabase is not configured.')
+
+  const rows = categoryContent.map(categoryContentToRow)
+  const { error } = await supabase
+    .from('catalog_category_content')
+    .upsert(rows, { onConflict: 'category_id' })
+
+  if (error) {
+    if (isMissingTableError(error)) return false
+    throw error
+  }
+
+  return true
 }
 
 export async function saveCatalogProductsToDb(products: CatalogProduct[]) {

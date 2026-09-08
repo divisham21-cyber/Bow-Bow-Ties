@@ -9,6 +9,7 @@ import {
   OrderSummary,
   createOrderFromCheckoutSession,
   formatShippingAddress,
+  getCustomerOrderNumber,
   getOrderTotalLabel,
 } from '../../lib/orders'
 
@@ -19,6 +20,7 @@ interface CheckoutSuccessProps {
 
 export default function CheckoutSuccess({ order, errorMessage }: CheckoutSuccessProps) {
   const isPickup = order?.fulfillmentMethod === 'pickup'
+  const customerOrderNumber = order ? getCustomerOrderNumber(order) : ''
 
   return (
     <>
@@ -58,7 +60,7 @@ export default function CheckoutSuccess({ order, errorMessage }: CheckoutSuccess
                     {order.customerPhone && (
                       <p className="mt-1 text-sm text-slate-600">Phone: {order.customerPhone}</p>
                     )}
-                    <p className="mt-3 text-sm text-slate-500">Order: {order.stripeSessionId}</p>
+                    <p className="mt-3 text-sm font-semibold text-slate-700">Order: {customerOrderNumber}</p>
                     <p className="mt-1 text-sm text-slate-500">
                       Placed {new Date(order.createdAt).toLocaleString()}
                     </p>

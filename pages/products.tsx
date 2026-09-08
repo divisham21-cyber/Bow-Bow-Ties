@@ -3,14 +3,16 @@ import Link from 'next/link'
 import { GetServerSideProps } from 'next'
 import { useMemo, useState } from 'react'
 import {
+  CategoryContent,
   CatalogProduct,
   ProductCategoryId,
   PurchaseType,
   catalogCategories,
+  defaultCategoryContent,
   formatPrice,
 } from '../lib/catalog'
 import { standardShipping } from '../lib/commerceConfig'
-import { getCatalogProductsForStorefront } from '../lib/catalogRepository'
+import { getCatalogProductsForStorefront, getCategoryContentForStorefront } from '../lib/catalogRepository'
 
 interface CartItem {
   id: string
@@ -63,16 +65,24 @@ function getCartItem(product: CatalogProduct, selection: ProductSelection): Cart
     purchaseType: isSubscription ? 'subscription' : 'one-time',
     planId: isSubscription ? plan.id : undefined,
     planName: isSubscription ? plan.label : undefined,
-    priceCents: isSubscription ? variant.priceCents * plan.intervalCount : variant.priceCents,
+    priceCents: isSubscription ? plan.priceCents || variant.priceCents * plan.intervalCount : variant.priceCents,
     quantity: 1,
   }
 }
 
 interface ProductsProps {
   initialProducts: CatalogProduct[]
+  categoryContent: CategoryContent[]
 }
 
-export default function Products({ initialProducts }: ProductsProps) {
+const allProductsIntro = {
+  eyebrow: 'Shop the catalog',
+  title: 'Handcrafted accessories and treats with a purpose',
+  summary: 'Browse bow ties, bandanas, treats, beads, and totes made in small batches.',
+  body: 'Choose a category to see more detail about each product type, or shop the full catalog here. Standard shipping and local pickup options are available during checkout.',
+}
+
+export default function Products({ initialProducts, categoryContent }: ProductsProps) {
   const activeProducts = useMemo(
     () => initialProducts.filter((product) => product.active),
     [initialProducts]
@@ -83,9 +93,16 @@ export default function Products({ initialProducts }: ProductsProps) {
     Object.fromEntries(activeProducts.map((product) => [product.id, getDefaultSelection(product)]))
   )
   const [expandedDescriptions, setExpandedDescriptions] = useState<Record<string, boolean>>({})
+  const [categoryIntroExpanded, setCategoryIntroExpanded] = useState(false)
   const [fulfillmentMethod, setFulfillmentMethod] = useState<FulfillmentMethod>('ship')
   const [checkoutMessage, setCheckoutMessage] = useState<string | null>(null)
 
+  const selectedCategoryIntro =
+    selectedCategory === 'all'
+      ? allProductsIntro
+      : categoryContent.find((content) => content.categoryId === selectedCategory) ||
+        defaultCategoryContent.find((content) => content.categoryId === selectedCategory) ||
+        allProductsIntro
   const filteredProducts = useMemo(() => {
     if (selectedCategory === 'all') return activeProducts
     return activeProducts.filter((product) => product.categoryId === selectedCategory)
@@ -333,7 +350,10 @@ export default function Products({ initialProducts }: ProductsProps) {
               <div className="flex flex-wrap gap-2 mb-8">
                 <button
                   type="button"
-                  onClick={() => setSelectedCategory('all')}
+                  onClick={() => {
+                    setSelectedCategory('all')
+                    setCategoryIntroExpanded(false)
+                  }}
                   className={`rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
                     selectedCategory === 'all'
                       ? 'border-sky-200 bg-sky-100 text-slate-900'
@@ -346,7 +366,10 @@ export default function Products({ initialProducts }: ProductsProps) {
                   <button
                     key={category.id}
                     type="button"
-                    onClick={() => setSelectedCategory(category.id)}
+                    onClick={() => {
+                      setSelectedCategory(category.id)
+                      setCategoryIntroExpanded(false)
+                    }}
                     className={`rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
                       selectedCategory === category.id
                         ? 'border-sky-200 bg-sky-100 text-slate-900'
@@ -359,24 +382,59 @@ export default function Products({ initialProducts }: ProductsProps) {
               </div>
 
               <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_360px]">
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                  {filteredProducts.map((product) => {
-                    const selection = selections[product.id] || getDefaultSelection(product)
-                    const selectedVariant =
-                      product.variants.find((variant) => variant.id === selection.variantId) || product.variants[0]
-                    const selectedPlan = product.subscriptionPlans?.find((plan) => plan.id === selection.planId)
-                    const displayPrice =
-                      selection.purchaseType === 'subscription' && selectedPlan
-                        ? selectedVariant.priceCents * selectedPlan.intervalCount
-                        : selectedVariant.priceCents
-                    const isDescriptionExpanded = Boolean(expandedDescriptions[product.id])
-                    const hasAdditionalDescription =
-                      product.description.trim() !== product.shortDescription.trim()
-                    const shouldCollapseDescription = product.description.length > 180
-                    const heroImage = product.images[0]
+                <div>
+                  <section className="mb-6 rounded-lg border border-sky-100 bg-white p-5 shadow-sm">
+                    <p className="text-xs font-bold uppercase tracking-wide text-sky-700">
+                      {selectedCategoryIntro.eyebrow}
+                    </p>
+                    <h2 className="mt-2 text-2xl font-bold text-slate-950">{selectedCategoryIntro.title}</h2>
+                    <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-700">
+                      {selectedCategoryIntro.summary}
+                    </p>
+                    <div
+                      className="mt-3 max-w-3xl text-sm leading-6 text-slate-600"
+                      style={
+                        categoryIntroExpanded
+                          ? undefined
+                          : {
+                              display: '-webkit-box',
+                              WebkitLineClamp: 3,
+                              WebkitBoxOrient: 'vertical',
+                              overflow: 'hidden',
+                            }
+                      }
+                    >
+                      {selectedCategoryIntro.body}
+                    </div>
+                    {selectedCategoryIntro.body.length > 120 && (
+                      <button
+                        type="button"
+                        onClick={() => setCategoryIntroExpanded((current) => !current)}
+                        className="mt-3 text-sm font-bold text-sky-700 hover:text-sky-900"
+                      >
+                        {categoryIntroExpanded ? 'Show less' : 'More'}
+                      </button>
+                    )}
+                  </section>
 
-                    return (
-                      <article key={product.id} className="flex h-full flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-md">
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    {filteredProducts.map((product) => {
+                      const selection = selections[product.id] || getDefaultSelection(product)
+                      const selectedVariant =
+                        product.variants.find((variant) => variant.id === selection.variantId) || product.variants[0]
+                      const selectedPlan = product.subscriptionPlans?.find((plan) => plan.id === selection.planId)
+                      const displayPrice =
+                        selection.purchaseType === 'subscription' && selectedPlan
+                          ? selectedPlan.priceCents || selectedVariant.priceCents * selectedPlan.intervalCount
+                          : selectedVariant.priceCents
+                      const isDescriptionExpanded = Boolean(expandedDescriptions[product.id])
+                      const hasAdditionalDescription =
+                        product.description.trim() !== product.shortDescription.trim()
+                      const shouldCollapseDescription = product.description.length > 180
+                      const heroImage = product.images[0]
+
+                      return (
+                        <article key={product.id} className="flex h-full flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-md">
                         <div className="aspect-square bg-slate-100 overflow-hidden">
                           <img
                             src={heroImage}
@@ -472,7 +530,7 @@ export default function Products({ initialProducts }: ProductsProps) {
                                 >
                                   {product.subscriptionPlans.map((plan) => (
                                     <option key={plan.id} value={plan.id}>
-                                      {plan.label} - {formatPrice(selectedVariant.priceCents * plan.intervalCount)}
+                                      {plan.label} - {formatPrice(plan.priceCents || selectedVariant.priceCents * plan.intervalCount)}
                                     </option>
                                   ))}
                                 </select>
@@ -506,6 +564,7 @@ export default function Products({ initialProducts }: ProductsProps) {
                       </article>
                     )
                   })}
+                  </div>
                 </div>
 
                 <aside className="lg:sticky lg:top-6 h-fit rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
@@ -635,10 +694,12 @@ export default function Products({ initialProducts }: ProductsProps) {
 
 export const getServerSideProps: GetServerSideProps<ProductsProps> = async () => {
   const initialProducts = await getCatalogProductsForStorefront()
+  const categoryContent = await getCategoryContentForStorefront()
 
   return {
     props: {
       initialProducts: JSON.parse(JSON.stringify(initialProducts)),
+      categoryContent: JSON.parse(JSON.stringify(categoryContent)),
     },
   }
 }

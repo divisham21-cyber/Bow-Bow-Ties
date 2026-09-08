@@ -38,8 +38,8 @@ if (stripeSecretKey.startsWith('sk_live_') && !allowLiveSync) {
 const stripe = new Stripe(stripeSecretKey)
 
 const bowBowTreatSubscriptionPlans = [
-  { id: 'monthly', label: 'Monthly treat box', interval: 'month', intervalCount: 1 },
-  { id: 'quarterly', label: 'Quarterly treat box', interval: 'month', intervalCount: 3 },
+  { id: 'monthly', label: 'Monthly treat box', interval: 'month', intervalCount: 1, priceCents: 999 },
+  { id: 'quarterly', label: 'Quarterly variety pack', interval: 'month', intervalCount: 3, priceCents: 2999 },
 ]
 
 function slugify(value) {
@@ -135,7 +135,7 @@ function getCatalogPriceCents(categoryId, variantName) {
   }
 
   if (categoryId === 'bandanas') return 1499
-  if (categoryId === 'bow-bow-treats') return 999
+  if (categoryId === 'bow-bow-treats') return 1099
   if (categoryId === 'tabitha-beads') return normalizedVariant === 'big' ? 1499 : 999
 
   return 1299
@@ -260,7 +260,7 @@ async function upsertOneTimePrice(product, stripeProduct, variant) {
 
 async function upsertRecurringPrice(product, stripeProduct, variant, plan) {
   const lookupKey = subscriptionLookupKey(product.id, variant.id, plan.id)
-  const amount = variant.priceCents * plan.intervalCount
+  const amount = plan.priceCents || variant.priceCents * plan.intervalCount
   const recurring = {
     interval: plan.interval,
     interval_count: plan.intervalCount,

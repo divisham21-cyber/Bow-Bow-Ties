@@ -15,6 +15,14 @@ export interface ProductCategory {
   description: string
 }
 
+export interface CategoryContent {
+  categoryId: ProductCategoryId
+  eyebrow: string
+  title: string
+  summary: string
+  body: string
+}
+
 export interface ProductVariant {
   id: string
   name: string
@@ -27,6 +35,7 @@ export interface SubscriptionPlan {
   label: string
   interval: 'month'
   intervalCount: number
+  priceCents?: number
 }
 
 export interface CatalogProduct {
@@ -87,9 +96,47 @@ export const catalogCategories: ProductCategory[] = [
   },
 ]
 
+export const defaultCategoryContent: CategoryContent[] = [
+  {
+    categoryId: 'bow-ties',
+    eyebrow: 'Handmade bow ties',
+    title: 'Bow ties for everyday charm, photos, and celebrations',
+    summary: 'Soft, lightweight bow ties made for collars, portraits, parties, and daily walks.',
+    body: 'Each bow tie is handmade in small batches with playful prints and comfortable sizing. Choose Small or Big based on your pet, then add a polished pop of personality for birthdays, holidays, adoption days, family photos, or an ordinary walk that deserves a little flair.',
+  },
+  {
+    categoryId: 'bandanas',
+    eyebrow: 'Tie-on style',
+    title: 'Bandanas and scarves for pets and their humans',
+    summary: 'Easy tie-on accessories with soft seasonal patterns and a relaxed, giftable feel.',
+    body: 'Our bandanas are designed for flexible everyday styling: tie one on your pet, wear one yourself, or create a matching look. They are simple to adjust, easy to pack for outings, and made for customers who want pet accessories that feel cheerful without being fussy.',
+  },
+  {
+    categoryId: 'bow-bow-treats',
+    eyebrow: 'Small batch treats',
+    title: 'Oven-baked Bow Bow Treats',
+    summary: 'Crunchy 5 oz. dog treats in simple flavors, available as one-time orders or subscriptions.',
+    body: 'Bow Bow Treats are made for easy gifting, restocking, and happy routines. Pick a flavor for a single order, or subscribe monthly or quarterly so your dog has a fresh treat delivery on schedule.',
+  },
+  {
+    categoryId: 'tabitha-beads',
+    eyebrow: 'Tabitha Beads',
+    title: 'Handcrafted wooden bead necklaces with meaning',
+    summary: 'Adjustable wooden bead accessories in playful themes for pets and people.',
+    body: 'Tabitha Beads honor the collection story with colorful wooden bead designs, themed charms, and a handmade finish. They can be worn as pet necklaces or human accessories, with Small and Big options for the right fit.',
+  },
+  {
+    categoryId: 'tote-bags',
+    eyebrow: 'Reusable totes',
+    title: 'Pet-themed totes for errands, events, and gifts',
+    summary: 'Reusable canvas-style totes with pet-inspired designs and everyday utility.',
+    body: 'These totes are practical for markets, books, pet supplies, and event days. They keep the Bow-Bow-Ties mission visible while giving customers a useful accessory they can carry often.',
+  },
+]
+
 const bowBowTreatSubscriptionPlans: SubscriptionPlan[] = [
-  { id: 'monthly', label: 'Monthly treat box', interval: 'month', intervalCount: 1 },
-  { id: 'quarterly', label: 'Quarterly treat box', interval: 'month', intervalCount: 3 },
+  { id: 'monthly', label: 'Monthly treat box', interval: 'month', intervalCount: 1, priceCents: 999 },
+  { id: 'quarterly', label: 'Quarterly variety pack', interval: 'month', intervalCount: 3, priceCents: 2999 },
 ]
 
 function slugify(value: string) {
@@ -161,7 +208,7 @@ function getCatalogPriceCents(categoryId: ProductCategoryId, variantName: string
   }
 
   if (categoryId === 'bandanas') return 1499
-  if (categoryId === 'bow-bow-treats') return 999
+  if (categoryId === 'bow-bow-treats') return 1099
   if (categoryId === 'tabitha-beads') return normalizedVariant === 'big' ? 1499 : 999
 
   return 1299

@@ -167,7 +167,7 @@ function getCatalogLineItem(item: CartMetadataItem, products: CatalogProduct[]):
   const plan = product.subscriptionPlans?.find((candidate) => candidate.id === item.planId)
   const unitAmountCents =
     item.purchaseType === 'subscription' && plan
-      ? variant.priceCents * plan.intervalCount
+      ? plan.priceCents || variant.priceCents * plan.intervalCount
       : variant.priceCents
 
   return {
@@ -236,6 +236,19 @@ export function formatShippingAddress(address: ShippingAddress) {
 
 export function getOrderTotalLabel(order: OrderSummary) {
   return `${formatPrice(order.totalCents)} ${order.currency}`
+}
+
+export function getCustomerOrderNumber(order: Pick<OrderSummary, 'stripeSessionId' | 'createdAt'>) {
+  const date = new Date(order.createdAt)
+  const datePart = Number.isNaN(date.getTime())
+    ? new Date().toISOString().slice(0, 10).replace(/-/g, '')
+    : date.toISOString().slice(0, 10).replace(/-/g, '')
+  const reference = order.stripeSessionId
+    .replace(/[^a-z0-9]/gi, '')
+    .slice(-4)
+    .toUpperCase()
+
+  return `BBT-${datePart}-${reference || 'ORDER'}`
 }
 
 export function getPlaceholderOrders(): OrderSummary[] {

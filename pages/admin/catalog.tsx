@@ -4,8 +4,10 @@ import { GetServerSideProps } from 'next'
 import { ChangeEvent, useEffect, useMemo, useState } from 'react'
 import {
   CatalogProduct,
+  CategoryContent,
   ProductCategoryId,
   catalogCategories,
+  defaultCategoryContent,
   formatPrice,
   getOneTimePriceLookupKey,
   getSubscriptionPriceLookupKey,
@@ -17,6 +19,7 @@ import {
   createProductDraft,
   dollarsToCents,
   getInitialAdminProducts,
+  getInitialCategoryContent,
   normalizeProductForCategory,
   readCatalogExport,
   slugify,
@@ -48,8 +51,14 @@ export default function AdminCatalog() {
   const [isSaving, setIsSaving] = useState(false)
   const [isUploadingImage, setIsUploadingImage] = useState(false)
   const [catalogSource, setCatalogSource] = useState('Unsaved changes')
+  const [categoryContent, setCategoryContent] = useState<CategoryContent[]>(() => getInitialCategoryContent())
+  const [selectedCategoryContentId, setSelectedCategoryContentId] = useState<ProductCategoryId>('bow-ties')
 
   const selectedProduct = products.find((product) => product.id === selectedProductId) || products[0]
+  const selectedCategoryContent =
+    categoryContent.find((content) => content.categoryId === selectedCategoryContentId) ||
+    defaultCategoryContent.find((content) => content.categoryId === selectedCategoryContentId) ||
+    categoryContent[0]
   const visibleProducts = useMemo(() => {
     if (filter === 'all') return products
     return products.filter((product) => product.categoryId === filter)
@@ -73,7 +82,9 @@ export default function AdminCatalog() {
         if (ignore) return
 
         const nextProducts = result.products || []
+        const nextCategoryContent = result.categoryContent || getInitialCategoryContent()
         setProducts(nextProducts)
+        setCategoryContent(nextCategoryContent)
         setSelectedProductId(nextProducts[0]?.id || '')
         setCatalogSource('Saved')
         setStatusMessage('Loaded catalog.')
@@ -95,6 +106,14 @@ export default function AdminCatalog() {
   function updateSelectedProduct(nextProduct: CatalogProduct) {
     setProducts((current) =>
       current.map((product) => (product.id === nextProduct.id ? nextProduct : product))
+    )
+  }
+
+  function updateSelectedCategoryContent(nextContent: CategoryContent) {
+    setCategoryContent((current) =>
+      current.map((content) =>
+        content.categoryId === nextContent.categoryId ? nextContent : content
+      )
     )
   }
 
@@ -149,7 +168,7 @@ export default function AdminCatalog() {
       const response = await fetch('/api/admin/catalog', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(createCatalogExport(products)),
+        body: JSON.stringify(createCatalogExport(products, categoryContent)),
       })
       const result = await response.json()
 
@@ -158,7 +177,11 @@ export default function AdminCatalog() {
       }
 
       setCatalogSource('Saved')
-      setStatusMessage('Catalog saved. Storefront will use these active products.')
+      setStatusMessage(
+        result.categoryContentSaved === false
+          ? 'Catalog saved. Run the category content SQL in Supabase to save category copy edits.'
+          : 'Catalog saved. Storefront will use these active products and category copy.'
+      )
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unable to save catalog.'
       setStatusMessage(message)
@@ -215,25 +238,44 @@ export default function AdminCatalog() {
     })
   }
 
+  function updateSubscriptionPlan(
+    planId: string,
+    patch: Partial<NonNullable<CatalogProduct['subscriptionPlans']>[number]>
+  ) {
+    if (!selectedProduct?.subscriptionPlans) return
+
+    updateSelectedProduct({
+      ...selectedProduct,
+      subscriptionPlans: selectedProduct.subscriptionPlans.map((plan) =>
+        plan.id === planId ? { ...plan, ...patch } : plan
+      ),
+    })
+  }
+
   function toggleSubscription(enabled: boolean) {
     if (!selectedProduct || selectedProduct.categoryId !== 'bow-bow-treats') return
 
     updateSelectedProduct({
       ...selectedProduct,
       subscriptionEnabled: enabled,
-      subscriptionPlans: enabled ? bowBowTreatSubscriptionPlans : undefined,
+      subscriptionPlans: enabled
+        ? selectedProduct.subscriptionPlans || bowBowTreatSubscriptionPlans.map((plan) => ({ ...plan }))
+        : undefined,
     })
   }
 
   function exportCatalog() {
-    downloadJson('bow-bow-ties-catalog-draft.json', createCatalogExport(products))
+    downloadJson('bow-bow-ties-catalog-draft.json', createCatalogExport(products, categoryContent))
     setStatusMessage('Exported catalog JSON.')
   }
 
   function resetCatalog() {
     const initialProducts = getInitialAdminProducts()
+    const initialCategoryContent = getInitialCategoryContent()
     setProducts(initialProducts)
+    setCategoryContent(initialCategoryContent)
     setSelectedProductId(initialProducts[0]?.id || '')
+    setSelectedCategoryContentId(initialCategoryContent[0]?.categoryId || 'bow-ties')
     setCatalogSource('Reset')
     setStatusMessage('Reset catalog back to the starter version. Save when ready.')
   }
@@ -245,8 +287,12 @@ export default function AdminCatalog() {
     const reader = new FileReader()
     reader.onload = () => {
       try {
+        const imported = JSON.parse(String(reader.result))
         const importedProducts = readCatalogExport(String(reader.result))
         setProducts(importedProducts)
+        setCategoryContent(
+          Array.isArray(imported.categoryContent) ? imported.categoryContent : getInitialCategoryContent()
+        )
         setSelectedProductId(importedProducts[0]?.id || '')
         setCatalogSource('Unsaved changes')
         setStatusMessage('Imported catalog JSON. Save when ready.')
@@ -318,6 +364,87 @@ export default function AdminCatalog() {
           {statusMessage && (
             <div className="mt-5 rounded-lg border border-primary-200 bg-primary-50 px-4 py-3 text-sm font-medium text-primary-900">
               {statusMessage}
+            </div>
+          )}
+
+          {selectedCategoryContent && (
+            <div className="mt-6 rounded-lg border border-gray-200 bg-white p-5">
+              <div className="flex flex-col gap-4 border-b border-gray-200 pb-5 md:flex-row md:items-start md:justify-between">
+                <div>
+                  <h2 className="text-xl font-bold text-gray-950">Category storefront copy</h2>
+                  <p className="text-sm text-gray-600">This text appears above each category on the products page.</p>
+                </div>
+                <label className="md:w-72">
+                  <span className="text-sm font-semibold text-gray-700">Category</span>
+                  <select
+                    value={selectedCategoryContentId}
+                    onChange={(event) => setSelectedCategoryContentId(event.target.value as ProductCategoryId)}
+                    className="mt-2 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
+                  >
+                    {catalogCategories.map((category) => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+
+              <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2">
+                <label>
+                  <span className="text-sm font-semibold text-gray-700">Eyebrow</span>
+                  <input
+                    value={selectedCategoryContent.eyebrow}
+                    onChange={(event) =>
+                      updateSelectedCategoryContent({
+                        ...selectedCategoryContent,
+                        eyebrow: event.target.value,
+                      })
+                    }
+                    className="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                  />
+                </label>
+                <label>
+                  <span className="text-sm font-semibold text-gray-700">Title</span>
+                  <input
+                    value={selectedCategoryContent.title}
+                    onChange={(event) =>
+                      updateSelectedCategoryContent({
+                        ...selectedCategoryContent,
+                        title: event.target.value,
+                      })
+                    }
+                    className="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                  />
+                </label>
+                <label className="md:col-span-2">
+                  <span className="text-sm font-semibold text-gray-700">Summary</span>
+                  <input
+                    value={selectedCategoryContent.summary}
+                    onChange={(event) =>
+                      updateSelectedCategoryContent({
+                        ...selectedCategoryContent,
+                        summary: event.target.value,
+                      })
+                    }
+                    className="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                  />
+                </label>
+                <label className="md:col-span-2">
+                  <span className="text-sm font-semibold text-gray-700">More text</span>
+                  <textarea
+                    value={selectedCategoryContent.body}
+                    onChange={(event) =>
+                      updateSelectedCategoryContent({
+                        ...selectedCategoryContent,
+                        body: event.target.value,
+                      })
+                    }
+                    rows={4}
+                    className="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                  />
+                </label>
+              </div>
             </div>
           )}
 
@@ -559,15 +686,50 @@ export default function AdminCatalog() {
                     <div>
                       <h3 className="font-bold text-gray-950">Subscription rules</h3>
                       <p className="mt-2 text-sm text-gray-600">
-                        Subscriptions are limited to Bow Bow Treats. Monthly and quarterly plans are generated from the selected product price.
+                        Subscriptions are limited to Bow Bow Treats. Monthly and quarterly plan prices are managed separately from the one-time product price.
+                      </p>
+                      <p className="mt-2 text-sm font-semibold text-amber-700">
+                        After changing subscription prices, sync Stripe prices before taking orders.
                       </p>
                       {selectedProduct.subscriptionEnabled && selectedProduct.subscriptionPlans?.length ? (
-                        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                        <div className="mt-4 grid grid-cols-1 gap-3">
                           {selectedProduct.subscriptionPlans.map((plan) => (
                             <div key={plan.id} className="rounded-md border border-secondary-200 bg-secondary-50 p-3">
-                              <p className="font-semibold text-secondary-900">{plan.label}</p>
-                              <p className="text-sm text-secondary-800">
-                                Every {plan.intervalCount === 1 ? 'month' : `${plan.intervalCount} months`}
+                              <div className="grid gap-3 md:grid-cols-[1fr_120px_120px]">
+                                <label>
+                                  <span className="text-xs font-bold uppercase tracking-wide text-secondary-800">Plan label</span>
+                                  <input
+                                    value={plan.label}
+                                    onChange={(event) => updateSubscriptionPlan(plan.id, { label: event.target.value })}
+                                    className="mt-1 w-full rounded-md border border-secondary-200 bg-white px-3 py-2 text-sm"
+                                  />
+                                </label>
+                                <label>
+                                  <span className="text-xs font-bold uppercase tracking-wide text-secondary-800">Price</span>
+                                  <input
+                                    value={centsToDollars(plan.priceCents || 0)}
+                                    onChange={(event) =>
+                                      updateSubscriptionPlan(plan.id, { priceCents: dollarsToCents(event.target.value) })
+                                    }
+                                    className="mt-1 w-full rounded-md border border-secondary-200 bg-white px-3 py-2 text-sm"
+                                  />
+                                </label>
+                                <label>
+                                  <span className="text-xs font-bold uppercase tracking-wide text-secondary-800">Every</span>
+                                  <select
+                                    value={plan.intervalCount}
+                                    onChange={(event) =>
+                                      updateSubscriptionPlan(plan.id, { intervalCount: Number(event.target.value) })
+                                    }
+                                    className="mt-1 w-full rounded-md border border-secondary-200 bg-white px-3 py-2 text-sm"
+                                  >
+                                    <option value={1}>1 month</option>
+                                    <option value={3}>3 months</option>
+                                  </select>
+                                </label>
+                              </div>
+                              <p className="mt-2 text-xs font-semibold text-secondary-800">
+                                Storefront: {formatPrice(plan.priceCents || 0)} every {plan.intervalCount === 1 ? 'month' : `${plan.intervalCount} months`}
                               </p>
                             </div>
                           ))}

@@ -1,15 +1,18 @@
 import {
+  CategoryContent,
   CatalogProduct,
   ProductCategoryId,
   ProductVariant,
   SubscriptionPlan,
   catalogProducts,
+  defaultCategoryContent,
 } from './catalog'
 
 export interface CatalogDraftExport {
   version: 1
   exportedAt: string
   products: CatalogProduct[]
+  categoryContent?: CategoryContent[]
 }
 
 export interface CatalogValidationResult {
@@ -23,7 +26,7 @@ export const defaultVariantsByCategory: Record<ProductCategoryId, ProductVariant
     { id: 'big', name: 'Big', priceCents: 1199 },
   ],
   bandanas: [{ id: 'standard', name: 'Standard', priceCents: 1499 }],
-  'bow-bow-treats': [{ id: 'standard', name: 'Standard', priceCents: 999 }],
+  'bow-bow-treats': [{ id: 'standard', name: 'Standard', priceCents: 1099 }],
   'tabitha-beads': [
     { id: 'small', name: 'Small', priceCents: 999 },
     { id: 'big', name: 'Big', priceCents: 1499 },
@@ -32,8 +35,8 @@ export const defaultVariantsByCategory: Record<ProductCategoryId, ProductVariant
 }
 
 export const bowBowTreatSubscriptionPlans: SubscriptionPlan[] = [
-  { id: 'monthly', label: 'Monthly treat box', interval: 'month', intervalCount: 1 },
-  { id: 'quarterly', label: 'Quarterly treat box', interval: 'month', intervalCount: 3 },
+  { id: 'monthly', label: 'Monthly treat box', interval: 'month', intervalCount: 1, priceCents: 999 },
+  { id: 'quarterly', label: 'Quarterly variety pack', interval: 'month', intervalCount: 3, priceCents: 2999 },
 ]
 
 export function slugify(value: string) {
@@ -104,6 +107,22 @@ export function validateProduct(product: CatalogProduct, allProducts: CatalogPro
     errors.push('Subscriptions are only enabled for Bow Bow Treats.')
   }
 
+  if (product.subscriptionEnabled && product.categoryId === 'bow-bow-treats') {
+    if (!product.subscriptionPlans?.length) {
+      errors.push('Bow Bow Treat subscriptions need at least one plan.')
+    }
+
+    product.subscriptionPlans?.forEach((plan) => {
+      if (!plan.label.trim()) errors.push('Every subscription plan needs a label.')
+      if (![1, 3].includes(plan.intervalCount)) {
+        errors.push(`${plan.label || 'A subscription plan'} needs a monthly or quarterly cadence.`)
+      }
+      if (!Number.isInteger(plan.priceCents) || plan.priceCents < 50) {
+        errors.push(`${plan.label || 'A subscription plan'} needs a valid price.`)
+      }
+    })
+  }
+
   product.variants.forEach((variant) => {
     if (!variant.name.trim()) errors.push('Every option needs a name.')
     if (!variant.id.trim()) errors.push('Every option needs an ID.')
@@ -121,7 +140,10 @@ export function validateProduct(product: CatalogProduct, allProducts: CatalogPro
   }
 }
 
-export function createCatalogExport(products: CatalogProduct[]): CatalogDraftExport {
+export function createCatalogExport(
+  products: CatalogProduct[],
+  categoryContent: CategoryContent[] = defaultCategoryContent
+): CatalogDraftExport {
   return {
     version: 1,
     exportedAt: new Date().toISOString(),
@@ -130,6 +152,7 @@ export function createCatalogExport(products: CatalogProduct[]): CatalogDraftExp
       images: product.images.filter(Boolean).slice(0, 1),
       slug: product.slug || slugify(product.name),
     })),
+    categoryContent,
   }
 }
 
@@ -145,4 +168,8 @@ export function readCatalogExport(raw: string) {
 
 export function getInitialAdminProducts() {
   return catalogProducts.map((product) => ({ ...product }))
+}
+
+export function getInitialCategoryContent() {
+  return defaultCategoryContent.map((content) => ({ ...content }))
 }

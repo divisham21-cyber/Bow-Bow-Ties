@@ -2,6 +2,7 @@ import {
   FulfillmentInfo,
   OrderSummary,
   formatShippingAddress,
+  getCustomerOrderNumber,
   getOrderTotalLabel,
 } from './orders'
 import { formatPrice } from './catalog'
@@ -27,6 +28,7 @@ function getLineItemsText(order: OrderSummary) {
 
 export function buildBuyerOrderEmail(order: OrderSummary): EmailMessage | null {
   if (!order.customerEmail) return null
+  const customerOrderNumber = getCustomerOrderNumber(order)
 
   return {
     to: order.customerEmail,
@@ -35,6 +37,8 @@ export function buildBuyerOrderEmail(order: OrderSummary): EmailMessage | null {
       `Hi ${order.customerName},`,
       '',
       'Thank you for your Bow-Bow-Ties order. We received your payment and will prepare your items for shipment.',
+      '',
+      `Order: ${customerOrderNumber}`,
       '',
       'Items:',
       getLineItemsText(order),
@@ -57,13 +61,16 @@ export function buildBuyerOrderEmail(order: OrderSummary): EmailMessage | null {
 }
 
 export function buildSellerOrderEmail(order: OrderSummary): EmailMessage {
+  const customerOrderNumber = getCustomerOrderNumber(order)
+
   return {
     to: sellerEmail,
     subject: `New Bow-Bow-Ties order: ${order.customerName}`,
     text: [
       'New paid order received.',
       '',
-      `Order ID: ${order.id}`,
+      `Customer order: ${customerOrderNumber}`,
+      `Internal order ID: ${order.id}`,
       `Stripe session: ${order.stripeSessionId}`,
       order.stripeSubscriptionId ? `Stripe subscription: ${order.stripeSubscriptionId}` : '',
       '',
@@ -90,6 +97,7 @@ export function buildShippingConfirmationEmail(
   fulfillment: FulfillmentInfo
 ): EmailMessage | null {
   if (!order.customerEmail) return null
+  const customerOrderNumber = getCustomerOrderNumber(order)
 
   return {
     to: order.customerEmail,
@@ -99,6 +107,8 @@ export function buildShippingConfirmationEmail(
         : 'Your Bow-Bow-Ties order has shipped',
     text: [
       `Hi ${order.customerName},`,
+      '',
+      `Order: ${customerOrderNumber}`,
       '',
       order.fulfillmentMethod === 'pickup'
         ? 'Your Bow-Bow-Ties order is ready for pickup.'

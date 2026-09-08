@@ -1,7 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { isAdminAuthenticated } from '../../../lib/adminAuth'
-import { getCatalogProductsForAdmin, saveCatalogProductsToDb } from '../../../lib/catalogRepository'
-import { CatalogProduct } from '../../../lib/catalog'
+import {
+  getCatalogProductsForAdmin,
+  getCategoryContentForStorefront,
+  saveCatalogProductsToDb,
+  saveCategoryContentToDb,
+} from '../../../lib/catalogRepository'
+import { CatalogProduct, CategoryContent } from '../../../lib/catalog'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (!isAdminAuthenticated(req)) {
@@ -12,19 +17,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     if (req.method === 'GET') {
       const products = await getCatalogProductsForAdmin()
-      res.status(200).json({ products })
+      const categoryContent = await getCategoryContentForStorefront()
+      res.status(200).json({ products, categoryContent })
       return
     }
 
     if (req.method === 'PUT') {
       const products = req.body?.products as CatalogProduct[] | undefined
+      const categoryContent = req.body?.categoryContent as CategoryContent[] | undefined
       if (!Array.isArray(products)) {
         res.status(400).json({ message: 'Products payload is required.' })
         return
       }
 
       await saveCatalogProductsToDb(products)
-      res.status(200).json({ ok: true, products })
+      let categoryContentSaved: boolean | undefined
+      if (Array.isArray(categoryContent)) {
+        categoryContentSaved = await saveCategoryContentToDb(categoryContent)
+      }
+
+      res.status(200).json({ ok: true, products, categoryContent, categoryContentSaved })
       return
     }
 
@@ -35,4 +47,3 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(500).json({ message })
   }
 }
-

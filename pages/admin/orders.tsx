@@ -9,6 +9,7 @@ import {
   OrderStatus,
   OrderSummary,
   formatShippingAddress,
+  getCustomerOrderNumber,
   getOrderTotalLabel,
 } from '../../lib/orders'
 import { formatPrice } from '../../lib/catalog'
@@ -312,7 +313,8 @@ export default function AdminOrders() {
                       <div className="min-w-0">
                         <p className="truncate font-bold text-gray-950">{order.customerName}</p>
                         <p className="text-sm text-gray-600">{order.customerEmail || 'No email'}</p>
-                        <p className="mt-1 text-xs font-semibold text-gray-500">{order.id}</p>
+                        <p className="mt-1 text-xs font-bold text-primary-700">{getCustomerOrderNumber(order)}</p>
+                        <p className="mt-0.5 truncate text-xs font-semibold text-gray-500">{order.stripeSessionId}</p>
                       </div>
                       <span className="shrink-0 rounded-full bg-gray-100 px-2 py-1 text-xs font-bold text-gray-700">
                         {statusLabels[order.status]}
@@ -331,7 +333,7 @@ export default function AdminOrders() {
                   <div className="grid gap-5 lg:grid-cols-[1fr_260px]">
                     <div>
                       <p className="text-sm font-semibold uppercase tracking-wide text-primary-700">
-                        {selectedOrder.stripeSessionId}
+                        Customer order {getCustomerOrderNumber(selectedOrder)}
                       </p>
                       <h2 className="mt-2 text-2xl font-bold text-gray-950">{selectedOrder.customerName}</h2>
                       <p className="mt-1 text-gray-600">{selectedOrder.customerEmail || 'No buyer email on order'}</p>
@@ -340,6 +342,9 @@ export default function AdminOrders() {
                       </p>
                       <p className="mt-1 text-sm text-gray-500">
                         {new Date(selectedOrder.createdAt).toLocaleString()}
+                      </p>
+                      <p className="mt-2 break-all text-xs font-semibold text-gray-500">
+                        Stripe session: {selectedOrder.stripeSessionId}
                       </p>
                       <p className="mt-3 inline-block rounded-full bg-secondary-100 px-3 py-1 text-sm font-bold text-secondary-800">
                         {selectedOrder.fulfillmentMethod === 'pickup' ? 'Pick up order' : 'Ship order'}

@@ -87,7 +87,7 @@ function validateItems(products: CatalogProduct[], items: CheckoutItemInput[] = 
         planName: plan.label,
         interval: plan.interval,
         intervalCount: plan.intervalCount,
-        unitAmountCents: variant.priceCents * plan.intervalCount,
+        unitAmountCents: plan.priceCents || variant.priceCents * plan.intervalCount,
         quantity,
         lookupKey: getSubscriptionPriceLookupKey(product.id, variant.id, plan.id),
       }
