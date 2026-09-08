@@ -1,6 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const Stripe = require('stripe')
+const { createClient } = require('@supabase/supabase-js')
 const etsyCatalogSeed = require('../lib/etsyCatalogSeed.json')
 
 const envPath = path.join(__dirname, '..', '.env.local')
@@ -24,6 +25,8 @@ function readEnv(filePath) {
 const env = readEnv(envPath)
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY || env.STRIPE_SECRET_KEY
 const allowLiveSync = process.env.STRIPE_SYNC_ALLOW_LIVE === 'true'
+const supabaseUrl = process.env.SUPABASE_URL || env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseKey = process.env.SUPABASE_SECRET_KEY || env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || env.SUPABASE_SERVICE_ROLE_KEY
 
 if (!stripeSecretKey || (!stripeSecretKey.startsWith('sk_test_') && !stripeSecretKey.startsWith('sk_live_'))) {
   console.error('Expected STRIPE_SECRET_KEY with a Stripe secret key.')
@@ -36,6 +39,14 @@ if (stripeSecretKey.startsWith('sk_live_') && !allowLiveSync) {
 }
 
 const stripe = new Stripe(stripeSecretKey)
+const supabase = supabaseUrl && supabaseKey
+  ? createClient(supabaseUrl, supabaseKey, {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
+    })
+  : null
 
 const bowBowTreatSubscriptionPlans = [
   { id: 'monthly', label: 'Monthly treat box', interval: 'month', intervalCount: 1, priceCents: 999 },
@@ -171,8 +182,6 @@ function buildEtsyCatalogProducts() {
   )
 }
 
-const products = buildEtsyCatalogProducts()
-
 function oneTimeLookupKey(productId, variantId) {
   return `bbt_${productId}_${variantId}_one_time`
 }
@@ -201,11 +210,14 @@ async function searchPrice(lookupKey) {
 
 async function upsertProduct(product) {
   const existing = await searchProduct(product.id)
+  const images = product.images?.length ? product.images.slice(0, 1) : undefined
+
   if (existing) {
     await stripe.products.update(existing.id, {
       name: product.name,
       description: product.description,
       active: true,
+      ...(images ? { images } : {}),
     })
 
     return { product: existing, created: false }
@@ -214,6 +226,7 @@ async function upsertProduct(product) {
   const created = await stripe.products.create({
     name: product.name,
     description: product.description,
+    ...(images ? { images } : {}),
     metadata: {
       catalog_id: product.id,
       source: 'bow-bow-ties-website',
@@ -290,8 +303,51 @@ async function upsertRecurringPrice(product, stripeProduct, variant, plan) {
   return { lookupKey, stripePriceId: created.id, created: true }
 }
 
+function rowToProduct(row) {
+  const variants = [...(row.catalog_product_variants || [])]
+    .sort((a, b) => a.sort_order - b.sort_order)
+    .map((variant) => ({
+      id: variant.variant_id,
+      name: variant.name,
+      priceCents: variant.price_cents,
+    }))
+
+  return {
+    id: row.id,
+    name: row.name,
+    description: row.short_description || row.description,
+    images: row.hero_image_url ? [row.hero_image_url] : [],
+    variants,
+    plans: row.subscription_enabled ? row.subscription_plans || [] : [],
+  }
+}
+
+async function loadSupabaseCatalogProducts() {
+  if (!supabase) return null
+
+  const { data, error } = await supabase
+    .from('catalog_products')
+    .select('id, name, short_description, description, hero_image_url, subscription_enabled, subscription_plans, sort_order, catalog_product_variants(product_id, variant_id, name, price_cents, sort_order)')
+    .eq('active', true)
+    .order('sort_order', { ascending: true })
+
+  if (error) throw error
+
+  return (data || []).map(rowToProduct).filter((product) => product.variants.length)
+}
+
+async function loadProducts() {
+  const dbProducts = await loadSupabaseCatalogProducts()
+  if (dbProducts?.length) {
+    return { products: dbProducts, source: 'supabase' }
+  }
+
+  return { products: buildEtsyCatalogProducts(), source: 'etsy-seed' }
+}
+
 async function main() {
   const summary = []
+  const { products, source } = await loadProducts()
 
   for (const product of products) {
     const productResult = await upsertProduct(product)
@@ -320,6 +376,7 @@ async function main() {
   )
 
   console.log(JSON.stringify({
+    source,
     products: summary.length,
     createdProducts,
     createdPrices,

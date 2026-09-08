@@ -111,9 +111,11 @@ export default function AdminCatalog() {
 
   function updateSelectedCategoryContent(nextContent: CategoryContent) {
     setCategoryContent((current) =>
-      current.map((content) =>
-        content.categoryId === nextContent.categoryId ? nextContent : content
-      )
+      current.some((content) => content.categoryId === nextContent.categoryId)
+        ? current.map((content) =>
+            content.categoryId === nextContent.categoryId ? nextContent : content
+          )
+        : [...current, nextContent]
     )
   }
 

@@ -117,7 +117,7 @@ export function validateProduct(product: CatalogProduct, allProducts: CatalogPro
       if (![1, 3].includes(plan.intervalCount)) {
         errors.push(`${plan.label || 'A subscription plan'} needs a monthly or quarterly cadence.`)
       }
-      if (!Number.isInteger(plan.priceCents) || plan.priceCents < 50) {
+      if (!Number.isInteger(plan.priceCents) || (plan.priceCents ?? 0) < 50) {
         errors.push(`${plan.label || 'A subscription plan'} needs a valid price.`)
       }
     })
