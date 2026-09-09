@@ -196,6 +196,12 @@ export default function AdminCatalog() {
     const file = event.target.files?.[0]
     if (!file || !selectedProduct) return
 
+    if (file.size > 4 * 1024 * 1024) {
+      setStatusMessage('Image must be 4 MB or smaller. Try a smaller or compressed photo.')
+      event.target.value = ''
+      return
+    }
+
     setIsUploadingImage(true)
     setStatusMessage('Uploading hero image...')
 

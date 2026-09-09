@@ -3,6 +3,15 @@ import { isAdminAuthenticated } from '../../../lib/adminAuth'
 import { getSupabaseAdmin } from '../../../lib/supabaseAdmin'
 
 const bucketName = 'product-images'
+const maxImageBytes = 4 * 1024 * 1024
+
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '6mb',
+    },
+  },
+}
 
 function getExtension(contentType: string) {
   if (contentType === 'image/png') return 'png'
@@ -44,7 +53,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const dataUrl = String(req.body?.dataUrl || '')
     const { contentType, buffer } = parseDataUrl(dataUrl)
 
-    if (buffer.byteLength > 4 * 1024 * 1024) {
+    if (buffer.byteLength > maxImageBytes) {
       res.status(400).json({ message: 'Image must be 4 MB or smaller.' })
       return
     }
@@ -69,4 +78,3 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(500).json({ message })
   }
 }
-
