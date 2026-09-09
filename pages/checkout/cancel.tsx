@@ -19,7 +19,7 @@ export default function CheckoutCancel() {
             No payment was completed. Customers can return to the shop and adjust their cart.
           </p>
           <Link href="/products" className="btn-primary mt-8 inline-block">
-            Return to Products
+            Return to Shop
           </Link>
         </div>
       </main>

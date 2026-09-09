@@ -120,7 +120,7 @@ const Calendar: React.FC = () => {
               {/* Mobile Navigation */}
               <nav className="flex md:hidden justify-center space-x-4 mt-2 mb-2">
                 <Link href="/" className="text-gray-700 hover:text-primary-600 transition-colors text-base font-bold">Home</Link>
-                <Link href="/products" className="text-gray-700 hover:text-primary-600 transition-colors text-base font-bold">Products</Link>
+                <Link href="/products" className="text-gray-700 hover:text-primary-600 transition-colors text-base font-bold">Shop</Link>
                 <a href="/#about" className="text-gray-700 hover:text-primary-600 transition-colors text-base font-bold">About</a>
                 <Link href="/calendar" className="text-primary-600 font-bold text-base">Calendar</Link>
               </nav>
@@ -128,7 +128,7 @@ const Calendar: React.FC = () => {
               {/* Tablet Navigation */}
               <nav className="hidden md:flex lg:hidden justify-center space-x-6 mt-2 mb-2">
                 <Link href="/" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Home</Link>
-                <Link href="/products" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Products</Link>
+                <Link href="/products" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Shop</Link>
                 <a href="/#about" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">About</a>
                 <Link href="/calendar" className="text-primary-600 font-bold text-lg">Calendar</Link>
               </nav>
@@ -136,7 +136,7 @@ const Calendar: React.FC = () => {
               {/* Desktop Navigation */}
               <nav className="hidden lg:flex space-x-8">
                 <Link href="/" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Home</Link>
-                <Link href="/products" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Products</Link>
+                <Link href="/products" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Shop</Link>
                 <a href="/#about" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">About</a>
                 <Link href="/calendar" className="text-primary-600 font-bold text-lg">Calendar</Link>
               </nav>
@@ -470,7 +470,7 @@ const Calendar: React.FC = () => {
                 <h6 className="font-semibold mb-4">Quick Links</h6>
                 <ul className="space-y-2 text-gray-400">
                   <li><Link href="/" className="hover:text-white transition-colors">Home</Link></li>
-                  <li><Link href="/products" className="hover:text-white transition-colors">Products</Link></li>
+                  <li><Link href="/products" className="hover:text-white transition-colors">Shop</Link></li>
                   <li><a href="/#about" className="hover:text-white transition-colors">About</a></li>
                   <li><Link href="/calendar" className="hover:text-white transition-colors">Calendar</Link></li>
                   <li><a href="/#contact" className="hover:text-white transition-colors">Contact</a></li>

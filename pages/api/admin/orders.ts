@@ -1,9 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import Stripe from 'stripe'
 import { isAdminAuthenticated } from '../../../lib/adminAuth'
-import { createOrderFromCheckoutSession, OrderSummary } from '../../../lib/orders'
+import { OrderSummary } from '../../../lib/orders'
 import { getOrdersFromDb, saveOrderToDb } from '../../../lib/orderRepository'
-import { getCatalogProductsForAdmin } from '../../../lib/catalogRepository'
 
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY
 const stripe = stripeSecretKey ? new Stripe(stripeSecretKey) : null
@@ -104,53 +103,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const dbOrders = (await getOrdersFromDb()) || []
-
-    const sessions: Stripe.Checkout.Session[] = []
-    let startingAfter: string | undefined
-
-    if (stripe) {
-      while (sessions.length < 100) {
-        const page = await stripe.checkout.sessions.list({
-          limit: Math.min(100 - sessions.length, 50),
-          starting_after: startingAfter,
-          expand: ['data.payment_intent', 'data.subscription'],
-        })
-
-        sessions.push(...page.data)
-        if (!page.has_more || !page.data.length) break
-
-        startingAfter = page.data[page.data.length - 1].id
-      }
-    }
-
-    const products = await getCatalogProductsForAdmin()
-    const stripeOrders = sessions
-      .filter((session) => session.status === 'complete' && session.payment_status === 'paid')
-      .map((session) => createOrderFromCheckoutSession(session, products))
-    const dbOrdersBySessionId = new Map(dbOrders.map((order) => [order.stripeSessionId, order]))
-    const mergedStripeOrders = stripeOrders.map((stripeOrder) => {
-      const dbOrder = dbOrdersBySessionId.get(stripeOrder.stripeSessionId)
-      if (!dbOrder) return stripeOrder
-
-      return {
-        ...stripeOrder,
-        status: dbOrder.status,
-        fulfillment: dbOrder.fulfillment,
-      }
-    })
-    const stripeSessionIds = new Set(stripeOrders.map((order) => order.stripeSessionId))
-    const savedOnlyOrders = dbOrders.filter((order) => !stripeSessionIds.has(order.stripeSessionId))
-    const orders = [...mergedStripeOrders, ...savedOnlyOrders].sort(
+    const orders = dbOrders.sort(
       (a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
     )
 
-    for (const order of mergedStripeOrders) {
-      if (!dbOrdersBySessionId.has(order.stripeSessionId)) {
-        await saveOrderToDb(order)
-      }
-    }
-
-    res.status(200).json({ orders, source: stripe ? 'stripe+supabase' : 'supabase' })
+    res.status(200).json({
+      orders,
+      source: 'supabase',
+    })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unable to load Stripe orders.'
     res.status(500).json({ message })

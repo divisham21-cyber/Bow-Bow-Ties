@@ -57,7 +57,7 @@ export default function Home() {
               
               {/* Mobile Navigation */}
               <nav className="flex md:hidden justify-center space-x-4 mt-2 mb-2">
-                <a href="/products" className="text-gray-700 hover:text-primary-600 transition-colors text-base font-bold">Products</a>
+                <a href="/products" className="text-gray-700 hover:text-primary-600 transition-colors text-base font-bold">Shop</a>
                 <a href="#about" className="text-gray-700 hover:text-primary-600 transition-colors text-base font-bold">About</a>
                 <a href="#impact" className="text-gray-700 hover:text-primary-600 transition-colors text-base font-bold">Impact</a>
                 <a href="/calendar" className="text-gray-700 hover:text-primary-600 transition-colors text-base font-bold">Calendar</a>
@@ -65,7 +65,7 @@ export default function Home() {
               
               {/* Tablet Navigation */}
               <nav className="hidden md:flex lg:hidden justify-center space-x-6 mt-2 mb-2">
-                <a href="/products" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Products</a>
+                <a href="/products" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Shop</a>
                 <a href="#about" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">About</a>
                 <a href="#impact" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Impact</a>
                 <a href="/calendar" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Calendar</a>
@@ -73,7 +73,7 @@ export default function Home() {
               
               {/* Desktop Navigation */}
               <nav className="hidden lg:flex space-x-8">
-                <a href="/products" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Products</a>
+                <a href="/products" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Shop</a>
                 <a href="#about" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">About</a>
                 <a href="#impact" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Impact</a>
                 <a href="/calendar" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Calendar</a>
@@ -710,7 +710,7 @@ export default function Home() {
                 <h6 className="font-semibold mb-4">Quick Links</h6>
                 <ul className="space-y-2 text-gray-400">
                   <li><a href="#home" className="hover:text-white transition-colors">Home</a></li>
-                  <li><a href="/products" className="hover:text-white transition-colors">Products</a></li>
+                  <li><a href="/products" className="hover:text-white transition-colors">Shop</a></li>
                   <li><a href="#about" className="hover:text-white transition-colors">About</a></li>
                   <li><a href="/calendar" className="hover:text-white transition-colors">Calendar</a></li>
                   <li><a href="#contact" className="hover:text-white transition-colors">Contact</a></li>

@@ -201,7 +201,7 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
 
               <nav className="flex flex-wrap justify-center gap-x-4 gap-y-2 mt-3 lg:mt-0 lg:gap-x-8">
                 <Link href="/products" className="text-sky-600 font-bold text-base lg:text-lg">
-                  Products
+                  Shop
                 </Link>
                 <a href="/#about" className="text-slate-700 hover:text-sky-600 transition-colors text-base lg:text-lg font-bold">
                   About
@@ -666,7 +666,7 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                 <h6 className="font-semibold mb-4">Quick Links</h6>
                 <ul className="space-y-2 text-gray-400">
                   <li><Link href="/" className="hover:text-white transition-colors">Home</Link></li>
-                  <li><Link href="/products" className="hover:text-white transition-colors">Products</Link></li>
+                  <li><Link href="/products" className="hover:text-white transition-colors">Shop</Link></li>
                   <li><Link href="/admin/catalog" className="hover:text-white transition-colors">Catalog Admin</Link></li>
                   <li><Link href="/admin/orders" className="hover:text-white transition-colors">Orders Admin</Link></li>
                   <li><a href="/#about" className="hover:text-white transition-colors">About</a></li>
