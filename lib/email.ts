@@ -3,6 +3,7 @@ import {
   OrderSummary,
   formatShippingAddress,
   getCustomerOrderNumber,
+  getOrderDiscountCents,
   getOrderTotalLabel,
 } from './orders'
 import { formatPrice } from './catalog'
@@ -46,6 +47,7 @@ export function buildBuyerOrderEmail(order: OrderSummary): EmailMessage | null {
       `Subtotal: ${formatPrice(order.subtotalCents)}`,
       `Shipping: ${formatPrice(order.shippingCents)}`,
       `Tax: ${formatPrice(order.taxCents)}`,
+      getOrderDiscountCents(order) > 0 ? `Discount: -${formatPrice(getOrderDiscountCents(order))}` : '',
       `Total: ${getOrderTotalLabel(order)}`,
       '',
       order.fulfillmentMethod === 'pickup' ? 'Fulfillment: Pick up order' : 'Shipping to:',

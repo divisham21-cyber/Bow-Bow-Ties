@@ -10,6 +10,7 @@ import {
   OrderSummary,
   formatShippingAddress,
   getCustomerOrderNumber,
+  getOrderDiscountCents,
   getOrderTotalLabel,
 } from '../../lib/orders'
 import { formatPrice } from '../../lib/catalog'
@@ -444,6 +445,12 @@ export default function AdminOrders() {
                       <div className="flex justify-between"><span>Subtotal</span><span>{formatPrice(selectedOrder.subtotalCents)}</span></div>
                       <div className="flex justify-between"><span>Shipping</span><span>{formatPrice(selectedOrder.shippingCents)}</span></div>
                       <div className="flex justify-between"><span>Tax</span><span>{formatPrice(selectedOrder.taxCents)}</span></div>
+                      {getOrderDiscountCents(selectedOrder) > 0 && (
+                        <div className="flex justify-between font-semibold text-emerald-700">
+                          <span>Discount</span>
+                          <span>-{formatPrice(getOrderDiscountCents(selectedOrder))}</span>
+                        </div>
+                      )}
                       <div className="flex justify-between text-base font-bold"><span>Total</span><span>{getOrderTotalLabel(selectedOrder)}</span></div>
                     </div>
                   </div>

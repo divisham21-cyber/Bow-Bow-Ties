@@ -10,6 +10,7 @@ import {
   OrderSummary,
   createOrderFromCheckoutSession,
   formatShippingAddress,
+  getOrderDiscountCents,
   getCustomerOrderNumber,
   getOrderTotalLabel,
 } from '../../lib/orders'
@@ -23,6 +24,7 @@ interface CheckoutSuccessProps {
 export default function CheckoutSuccess({ order, errorMessage, sessionId }: CheckoutSuccessProps) {
   const isPickup = order?.fulfillmentMethod === 'pickup'
   const customerOrderNumber = order ? getCustomerOrderNumber(order) : ''
+  const discountCents = order ? getOrderDiscountCents(order) : 0
   const [petName, setPetName] = useState(order?.petDetails?.petName || '')
   const [specialDate, setSpecialDate] = useState(order?.petDetails?.specialDate || '')
   const [instagramHandle, setInstagramHandle] = useState(order?.petDetails?.instagramHandle || '')
@@ -195,6 +197,12 @@ export default function CheckoutSuccess({ order, errorMessage, sessionId }: Chec
                           <span>Tax</span>
                           <span>{formatPrice(order.taxCents)}</span>
                         </div>
+                        {discountCents > 0 && (
+                          <div className="flex justify-between gap-3 font-semibold text-emerald-700">
+                            <span>Discount</span>
+                            <span>-{formatPrice(discountCents)}</span>
+                          </div>
+                        )}
                         <div className="flex justify-between gap-3 border-t border-slate-200 pt-2 font-bold text-slate-950">
                           <span>Total</span>
                           <span>{getOrderTotalLabel(order)}</span>

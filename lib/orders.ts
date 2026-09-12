@@ -61,6 +61,7 @@ export interface OrderSummary {
   subtotalCents: number
   shippingCents: number
   taxCents: number
+  discountCents?: number
   totalCents: number
   currency: string
   createdAt: string
@@ -206,7 +207,9 @@ export function createOrderFromCheckoutSession(
     lineItems.reduce((sum, item) => sum + item.totalAmountCents, 0)
   const taxCents = session.total_details?.amount_tax || 0
   const shippingCents = session.total_details?.amount_shipping || 0
-  const totalCents = session.amount_total || subtotalCents + taxCents + shippingCents
+  const discountCents = session.total_details?.amount_discount || 0
+  const calculatedTotalCents = Math.max(subtotalCents + taxCents + shippingCents - discountCents, 0)
+  const totalCents = session.amount_total ?? calculatedTotalCents
 
   return {
     id: `order-${session.id}`,
@@ -223,6 +226,7 @@ export function createOrderFromCheckoutSession(
     subtotalCents,
     shippingCents,
     taxCents,
+    discountCents,
     totalCents,
     currency: (session.currency || 'usd').toUpperCase(),
     createdAt: new Date((session.created || Math.floor(Date.now() / 1000)) * 1000).toISOString(),
@@ -242,7 +246,29 @@ export function formatShippingAddress(address: ShippingAddress) {
 }
 
 export function getOrderTotalLabel(order: OrderSummary) {
-  return `${formatPrice(order.totalCents)} ${order.currency}`
+  const discountCents = getOrderDiscountCents(order)
+  const calculatedTotalCents = Math.max(order.subtotalCents + order.shippingCents + order.taxCents - discountCents, 0)
+  const totalCents =
+    order.taxCents > 0 && discountCents === 0 && order.totalCents === order.subtotalCents + order.shippingCents
+      ? calculatedTotalCents
+      : order.totalCents || calculatedTotalCents
+
+  return `${formatPrice(totalCents)} ${order.currency}`
+}
+
+export function getOrderDiscountCents(order: OrderSummary) {
+  if (order.discountCents) return order.discountCents
+
+  const totalBeforeDiscount = order.subtotalCents + order.shippingCents + order.taxCents
+  if (order.taxCents > 0 && order.totalCents === order.subtotalCents + order.shippingCents) {
+    return 0
+  }
+
+  if (order.totalCents > 0 && order.totalCents < totalBeforeDiscount) {
+    return totalBeforeDiscount - order.totalCents
+  }
+
+  return 0
 }
 
 export function getCustomerOrderNumber(order: Pick<OrderSummary, 'stripeSessionId' | 'createdAt'>) {
