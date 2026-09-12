@@ -34,11 +34,10 @@ interface ProductSelection {
   planId?: string
 }
 
-type CategoryFilter = 'all' | ProductCategoryId
 type FulfillmentMethod = 'ship' | 'pickup'
 
 const primaryButtonClass =
-  'rounded-lg border border-sky-200 bg-sky-100 px-4 py-2 font-semibold text-slate-900 shadow-sm transition-colors hover:border-sky-300 hover:bg-sky-200 disabled:cursor-not-allowed disabled:border-slate-200 disabled:bg-slate-100 disabled:text-slate-400'
+  'rounded-lg border border-teal-700 bg-teal-700 px-4 py-2 font-semibold text-white shadow-sm transition-colors hover:border-teal-800 hover:bg-teal-800 disabled:cursor-not-allowed disabled:border-slate-200 disabled:bg-slate-100 disabled:text-slate-400'
 const secondaryButtonClass =
   'rounded-lg border border-amber-300 bg-amber-300 px-4 py-2 font-semibold text-slate-950 shadow-sm transition-colors hover:border-amber-400 hover:bg-amber-400'
 
@@ -82,30 +81,49 @@ const allProductsIntro = {
   body: 'Choose a category to see more detail about each product type, or shop the full catalog here. Standard shipping and local pickup options are available during checkout.',
 }
 
+const categoryPillStyles: Record<ProductCategoryId, { active: string; inactive: string }> = {
+  'bow-ties': {
+    active: 'border-sky-400 bg-sky-200 text-sky-950 shadow-sm',
+    inactive: 'border-sky-200 bg-sky-50 text-sky-900 hover:border-sky-300 hover:bg-sky-100',
+  },
+  bandanas: {
+    active: 'border-rose-400 bg-rose-200 text-rose-950 shadow-sm',
+    inactive: 'border-rose-200 bg-rose-50 text-rose-900 hover:border-rose-300 hover:bg-rose-100',
+  },
+  'bow-bow-treats': {
+    active: 'border-amber-400 bg-amber-200 text-amber-950 shadow-sm',
+    inactive: 'border-amber-200 bg-amber-50 text-amber-900 hover:border-amber-300 hover:bg-amber-100',
+  },
+  'tabitha-beads': {
+    active: 'border-teal-400 bg-teal-200 text-teal-950 shadow-sm',
+    inactive: 'border-teal-200 bg-teal-50 text-teal-900 hover:border-teal-300 hover:bg-teal-100',
+  },
+  'tote-bags': {
+    active: 'border-violet-400 bg-violet-200 text-violet-950 shadow-sm',
+    inactive: 'border-violet-200 bg-violet-50 text-violet-900 hover:border-violet-300 hover:bg-violet-100',
+  },
+}
+
 export default function Products({ initialProducts, categoryContent }: ProductsProps) {
   const activeProducts = useMemo(
     () => initialProducts.filter((product) => product.active),
     [initialProducts]
   )
-  const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>('all')
+  const [selectedCategory, setSelectedCategory] = useState<ProductCategoryId>('bow-ties')
   const [cartItems, setCartItems] = useState<CartItem[]>([])
   const [selections, setSelections] = useState<Record<string, ProductSelection>>(() =>
     Object.fromEntries(activeProducts.map((product) => [product.id, getDefaultSelection(product)]))
   )
-  const [expandedDescriptions, setExpandedDescriptions] = useState<Record<string, boolean>>({})
   const [categoryIntroExpanded, setCategoryIntroExpanded] = useState(false)
   const [fulfillmentMethod, setFulfillmentMethod] = useState<FulfillmentMethod>('ship')
   const [checkoutMessage, setCheckoutMessage] = useState<string | null>(null)
   const [isMobileCartOpen, setIsMobileCartOpen] = useState(false)
 
   const selectedCategoryIntro =
-    selectedCategory === 'all'
-      ? allProductsIntro
-      : categoryContent.find((content) => content.categoryId === selectedCategory) ||
-        defaultCategoryContent.find((content) => content.categoryId === selectedCategory) ||
-        allProductsIntro
+    categoryContent.find((content) => content.categoryId === selectedCategory) ||
+    defaultCategoryContent.find((content) => content.categoryId === selectedCategory) ||
+    allProductsIntro
   const filteredProducts = useMemo(() => {
-    if (selectedCategory === 'all') return activeProducts
     return activeProducts.filter((product) => product.categoryId === selectedCategory)
   }, [activeProducts, selectedCategory])
 
@@ -119,13 +137,6 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
         ...current[productId],
         ...nextSelection,
       },
-    }))
-  }
-
-  function toggleDescription(productId: string) {
-    setExpandedDescriptions((current) => ({
-      ...current,
-      [productId]: !current[productId],
     }))
   }
 
@@ -273,29 +284,21 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
         </header>
 
         <main>
-          <section className="relative overflow-hidden border-b border-sky-100 bg-sky-50">
-            <img
-              src="/bowbowtiebanner.jpeg"
-              alt=""
-              className="absolute inset-0 h-full w-full object-cover opacity-10"
-            />
-            <div className="absolute inset-0 bg-sky-50/90" />
-            <div className="absolute inset-0 bg-white/35" />
-            <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16">
+          <section className="hero-section !py-8 sm:!py-10">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div>
-                <p className="text-sm font-bold uppercase tracking-wide text-sky-700">Handmade pet accessories</p>
-                <h2 className="mt-3 text-4xl font-bold text-slate-950 sm:text-5xl">Shop Bow-Bow-Ties</h2>
-                <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-700">
-                  Browse handcrafted pet accessories, choose sizes and subscription options, then finish with secure checkout.
+                <h2 className="text-4xl font-bold text-slate-950 sm:text-5xl">Shop Bow-Bow-Ties</h2>
+                <p className="mt-3 max-w-3xl text-lg leading-6 text-slate-700">
+                  From handmade accessories to wholesome treats, everything we create is made to bring joy to pets while helping animals in need.
                 </p>
                 <div className="mt-5 inline-flex max-w-full rounded-lg border border-sky-200 bg-white/80 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm">
-                  Standard shipping is {formatPrice(standardShipping.priceCents)}. Local pickup is available at checkout.
+                  Standard shipping is {formatPrice(standardShipping.priceCents)}. Local pickup from South Bothell or at in-person events is available.
                 </div>
               </div>
             </div>
           </section>
 
-          <section className="py-10">
+          <section className="py-6">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               {checkoutMessage && (
                 <div className="mb-6 rounded-lg border border-sky-100 bg-sky-50 px-4 py-3 text-slate-800">
@@ -303,38 +306,26 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                 </div>
               )}
 
-              <div className="flex flex-wrap gap-2 mb-8">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSelectedCategory('all')
-                    setCategoryIntroExpanded(false)
-                  }}
-                  className={`rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
-                    selectedCategory === 'all'
-                      ? 'border-sky-200 bg-sky-100 text-slate-900'
-                      : 'border-slate-300 bg-white text-slate-700 hover:border-sky-200 hover:bg-sky-50'
-                  }`}
-                >
-                  All
-                </button>
-                {catalogCategories.map((category) => (
-                  <button
-                    key={category.id}
-                    type="button"
-                    onClick={() => {
-                      setSelectedCategory(category.id)
-                      setCategoryIntroExpanded(false)
-                    }}
-                    className={`rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
-                      selectedCategory === category.id
-                        ? 'border-sky-200 bg-sky-100 text-slate-900'
-                        : 'border-slate-300 bg-white text-slate-700 hover:border-sky-200 hover:bg-sky-50'
-                    }`}
-                  >
-                    {category.name}
-                  </button>
-                ))}
+              <div className="mb-5 flex flex-wrap gap-3">
+                {catalogCategories.map((category) => {
+                  const pillStyle = categoryPillStyles[category.id]
+
+                  return (
+                    <button
+                      key={category.id}
+                      type="button"
+                      onClick={() => {
+                        setSelectedCategory(category.id)
+                        setCategoryIntroExpanded(false)
+                      }}
+                      className={`rounded-full border px-5 py-2.5 text-base font-semibold transition-colors ${
+                        selectedCategory === category.id ? pillStyle.active : pillStyle.inactive
+                      }`}
+                    >
+                      {category.name}
+                    </button>
+                  )
+                })}
               </div>
 
               <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_360px]">
@@ -383,10 +374,6 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                         selection.purchaseType === 'subscription' && selectedPlan
                           ? selectedPlan.priceCents || selectedVariant.priceCents * selectedPlan.intervalCount
                           : selectedVariant.priceCents
-                      const isDescriptionExpanded = Boolean(expandedDescriptions[product.id])
-                      const hasAdditionalDescription =
-                        product.description.trim() !== product.shortDescription.trim()
-                      const shouldCollapseDescription = product.description.length > 180
                       const heroImage = product.images[0]
 
                       return (
@@ -408,34 +395,6 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                             )}
                           </div>
                           <p className="text-sm text-slate-600 mt-2">{product.shortDescription}</p>
-                          {hasAdditionalDescription && (
-                            <div className="mt-3">
-                              <p
-                                className="whitespace-pre-line text-sm leading-6 text-slate-700"
-                                style={
-                                  shouldCollapseDescription && !isDescriptionExpanded
-                                    ? {
-                                        display: '-webkit-box',
-                                        WebkitLineClamp: 3,
-                                        WebkitBoxOrient: 'vertical',
-                                        overflow: 'hidden',
-                                      }
-                                    : undefined
-                                }
-                              >
-                                {product.description}
-                              </p>
-                              {shouldCollapseDescription && (
-                                <button
-                                  type="button"
-                                  onClick={() => toggleDescription(product.id)}
-                                  className="mt-2 text-sm font-bold text-slate-700 hover:text-slate-950"
-                                >
-                                  {isDescriptionExpanded ? 'See less' : 'See more'}
-                                </button>
-                              )}
-                            </div>
-                          )}
 
                           <label className="mt-5 text-sm font-semibold text-slate-800" htmlFor={`${product.id}-variant`}>
                             Size or option
@@ -498,7 +457,7 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
 
                           <div className="mt-auto pt-5">
                             <div className="flex items-center justify-between">
-                              <span className="text-2xl font-bold text-slate-900">{formatPrice(displayPrice)}</span>
+                              <span className="text-lg font-bold text-slate-900">{formatPrice(displayPrice)}</span>
                               <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                                 {selection.purchaseType === 'subscription' ? 'Subscription' : 'One-time'}
                               </span>
@@ -520,18 +479,29 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                   </div>
                 </div>
 
-                <aside className="hidden h-fit rounded-lg border border-slate-200 bg-white p-5 shadow-sm lg:sticky lg:top-6 lg:block">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-xl font-bold text-slate-950">Cart</h3>
-                    <span className="text-sm font-semibold text-slate-500">{cartCount} item{cartCount === 1 ? '' : 's'}</span>
+                <aside className="hidden h-fit rounded-lg border border-sky-100 bg-sky-50 p-5 shadow-sm lg:sticky lg:top-6 lg:block">
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <span className="flex h-11 w-11 items-center justify-center rounded-full bg-amber-300 text-xl shadow-sm" aria-hidden="true">
+                        🛒
+                      </span>
+                      <div>
+                        <p className="text-xs font-bold uppercase tracking-wide text-sky-700">Order Summary</p>
+                        <h3 className="text-xl font-bold text-slate-950">Cart</h3>
+                      </div>
+                    </div>
+                    <span className="rounded-full bg-white px-3 py-1 text-sm font-bold text-slate-700 shadow-sm">{cartCount} item{cartCount === 1 ? '' : 's'}</span>
                   </div>
 
                   {cartItems.length === 0 ? (
-                    <p className="mt-5 text-sm text-slate-600">Cart is Empty</p>
+                    <div className="mt-5 rounded-lg border border-sky-100 bg-white p-4 text-center shadow-sm">
+                      <p className="text-sm font-bold text-slate-800">Cart is Empty</p>
+                      <p className="mt-1 text-xs leading-5 text-slate-500">Add an item to choose shipping or pickup and checkout.</p>
+                    </div>
                   ) : (
                     <div className="mt-5 space-y-4">
                       {cartItems.map((item) => (
-                        <div key={item.id} className="grid grid-cols-[64px_1fr] gap-3 border-b border-slate-100 pb-4">
+                        <div key={item.id} className="grid grid-cols-[64px_1fr] gap-3 rounded-lg border border-sky-100 bg-white p-3 shadow-sm">
                           <div className="h-16 w-16 overflow-hidden rounded-md bg-slate-100">
                             <img src={item.image} alt="" className="h-full w-full object-cover" />
                           </div>
@@ -567,11 +537,18 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                         </div>
                       ))}
 
-                      <div className="flex items-center justify-between pt-2 text-lg font-bold">
-                        <span>Item subtotal</span>
-                        <span>{formatPrice(cartTotal)}</span>
+                      <div className="rounded-lg border border-amber-100 bg-amber-50 p-3">
+                        <div className="flex items-center justify-between text-sm font-semibold text-slate-700">
+                          <span>Items</span>
+                          <span>{cartCount}</span>
+                        </div>
+                        <div className="mt-2 flex items-center justify-between text-lg font-bold text-slate-950">
+                          <span>Subtotal</span>
+                          <span>{formatPrice(cartTotal)}</span>
+                        </div>
+                        <p className="mt-1 text-xs text-slate-500">Shipping and tax are calculated in checkout.</p>
                       </div>
-                      <div className="space-y-2 rounded-md bg-slate-50 p-3">
+                      <div className="space-y-2 rounded-md border border-sky-100 bg-white p-3">
                         <p className="text-sm font-semibold text-slate-700">Fulfillment</p>
                         <label className="flex items-center justify-between gap-3 text-sm text-slate-700">
                           <span>Ship with Standard shipping</span>
@@ -615,6 +592,7 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
             className="fixed bottom-5 right-5 z-40 flex items-center gap-3 rounded-full border border-amber-400 bg-amber-400 px-5 py-3 font-bold text-slate-950 shadow-lg transition-colors hover:bg-amber-500"
             aria-label={`Open cart with ${cartCount} item${cartCount === 1 ? '' : 's'}`}
           >
+            <span aria-hidden="true">🛒</span>
             <span>Cart</span>
             <span className="flex h-7 min-w-7 items-center justify-center rounded-full bg-white px-2 text-sm">
               {cartCount}
@@ -629,29 +607,38 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                 onClick={() => setIsMobileCartOpen(false)}
                 aria-label="Close cart"
               />
-              <div className="absolute inset-x-0 bottom-0 max-h-[86vh] overflow-y-auto rounded-t-2xl bg-white p-5 shadow-2xl">
+              <div className="absolute inset-x-0 bottom-0 max-h-[86vh] overflow-y-auto rounded-t-2xl bg-sky-50 p-5 shadow-2xl">
                 <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <h3 className="text-xl font-bold text-slate-950">Cart</h3>
-                    <p className="text-sm font-semibold text-slate-500">
-                      {cartCount} item{cartCount === 1 ? '' : 's'}
-                    </p>
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-11 w-11 items-center justify-center rounded-full bg-amber-300 text-xl shadow-sm" aria-hidden="true">
+                      🛒
+                    </span>
+                    <div>
+                      <p className="text-xs font-bold uppercase tracking-wide text-sky-700">Order Summary</p>
+                      <h3 className="text-xl font-bold text-slate-950">Cart</h3>
+                      <p className="text-sm font-semibold text-slate-500">
+                        {cartCount} item{cartCount === 1 ? '' : 's'}
+                      </p>
+                    </div>
                   </div>
                   <button
                     type="button"
                     onClick={() => setIsMobileCartOpen(false)}
-                    className="rounded-full border border-slate-200 px-3 py-1 text-sm font-bold text-slate-700"
+                    className="rounded-full border border-sky-200 bg-white px-3 py-1 text-sm font-bold text-slate-700 shadow-sm"
                   >
                     Close
                   </button>
                 </div>
 
                 {cartItems.length === 0 ? (
-                  <p className="mt-6 rounded-lg bg-slate-50 p-4 text-sm font-semibold text-slate-600">Cart is Empty</p>
+                  <div className="mt-6 rounded-lg border border-sky-100 bg-white p-4 text-center shadow-sm">
+                    <p className="text-sm font-bold text-slate-800">Cart is Empty</p>
+                    <p className="mt-1 text-xs leading-5 text-slate-500">Add an item to choose shipping or pickup and checkout.</p>
+                  </div>
                 ) : (
                   <div className="mt-5 space-y-4">
                     {cartItems.map((item) => (
-                      <div key={item.id} className="grid grid-cols-[72px_1fr] gap-3 rounded-lg border border-slate-200 p-3">
+                      <div key={item.id} className="grid grid-cols-[72px_1fr] gap-3 rounded-lg border border-sky-100 bg-white p-3 shadow-sm">
                         <div className="h-16 w-16 overflow-hidden rounded-md bg-slate-100">
                           <img src={item.image} alt="" className="h-full w-full object-cover" />
                         </div>
@@ -696,11 +683,18 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                       </div>
                     ))}
 
-                    <div className="flex items-center justify-between border-t border-slate-100 pt-4 text-lg font-bold">
-                      <span>Item subtotal</span>
-                      <span>{formatPrice(cartTotal)}</span>
+                    <div className="rounded-lg border border-amber-100 bg-amber-50 p-3">
+                      <div className="flex items-center justify-between text-sm font-semibold text-slate-700">
+                        <span>Items</span>
+                        <span>{cartCount}</span>
+                      </div>
+                      <div className="mt-2 flex items-center justify-between text-lg font-bold text-slate-950">
+                        <span>Subtotal</span>
+                        <span>{formatPrice(cartTotal)}</span>
+                      </div>
+                      <p className="mt-1 text-xs text-slate-500">Shipping and tax are calculated in checkout.</p>
                     </div>
-                    <div className="space-y-2 rounded-md bg-slate-50 p-3">
+                    <div className="space-y-2 rounded-md border border-sky-100 bg-white p-3">
                       <p className="text-sm font-semibold text-slate-700">Fulfillment</p>
                       <label className="flex items-center justify-between gap-3 text-sm text-slate-700">
                         <span>Ship with Standard shipping</span>

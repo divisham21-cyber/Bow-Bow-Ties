@@ -168,11 +168,12 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
               <h2 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-                Pet Accessories with a 
-                <span className="gradient-text"> Purpose</span>
+                For Pets We Love. For Animals in Need.
               </h2>
               <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-                Make your furry friend the most dapper companion with our handmade collection of accessories, while providing for an animal in need. 
+                A youth-led, purpose driven pet brand. Handmade pet accessories and wholesome dog treats created with love and a purpose.
+                <br />
+                Every purchase helps support animals in need.
               </p>
               <div className="flex justify-center">
                 <a
@@ -187,55 +188,62 @@ export default function Home() {
         </section>
 
         {/* Products Preview Section */}
-        <section id="products" className="py-12 bg-white">
+        <section id="products" className="py-8 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h3 className="text-3xl font-bold text-gray-900 mb-4">Why Choose Bow-Bow Ties?</h3>
-              <p className="text-lg text-gray-600 mb-8">For pets, by hearts that care — every piece supports an animal in need.</p>
+            <div className="text-center">
+              <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Why Pet Parents Choose Bow-Bow Ties</h3>
+              <p className="text-base text-gray-600 mb-5">Little things for your pet. A bigger difference for animals in need.</p>
               
-              <div className="bg-primary-50 rounded-lg p-8 max-w-4xl mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-8 items-center">
-                  <div className="text-center">
-                    <span className="text-6xl mb-4 block">💰</span>
-                    <h4 className="text-xl font-semibold text-gray-900">Donation</h4>
-                    <p className="text-gray-600">We donate 50% of our sales proceeds to animal shelter</p>
+              <div className="bg-primary-50 rounded-lg p-4 sm:p-5 max-w-4xl mx-auto">
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                  <div className="flex items-center gap-3 rounded-lg bg-white/70 p-3 text-left shadow-sm">
+                    <span className="flex h-12 w-14 shrink-0 items-center justify-center text-3xl">💰</span>
+                    <div>
+                      <h4 className="text-base font-semibold text-gray-900">Every Purchase Gives Back</h4>
+                      <p className="mt-0.5 text-sm leading-5 text-gray-600">Whether you shop accessories or treats, your purchase helps us support animals in need.</p>
+                    </div>
                   </div>
-                  <div className="text-center">
-                    <span className="text-6xl mb-4 block">🛍️</span>
-                    <h4 className="text-xl font-semibold text-gray-900">Collections</h4>
-                    <p className="text-gray-600">We make pet bow ties, bandanas, necklaces, and neckbands</p>
+                  <div className="flex items-center gap-3 rounded-lg bg-white/70 p-3 text-left shadow-sm">
+                    <span className="flex h-12 w-14 shrink-0 items-center justify-center text-3xl">🪡</span>
+                    <div>
+                      <h4 className="text-base font-semibold text-gray-900">Made With Care</h4>
+                      <p className="mt-0.5 text-sm leading-5 text-gray-600">Thoughtfully made pet accessories created by a young entrepreneur who loves animals.</p>
+                    </div>
                   </div>
-                  <div className="text-center">
-                    <span className="text-6xl mb-4 block">🪡</span>
-                    <h4 className="text-xl font-semibold text-gray-900">Handmade</h4>
-                    <p className="text-gray-600">Handmade by a youth entrepreneur with a passion for animals</p>
+                  <div className="flex items-center gap-3 rounded-lg bg-white/70 p-3 text-left shadow-sm">
+                    <span className="flex h-12 w-14 shrink-0 items-center justify-center">
+                      <img
+                        src="/images/dog-biscuit.png"
+                        alt=""
+                        className="h-9 w-14 object-contain"
+                      />
+                    </span>
+                    <div>
+                      <h4 className="text-base font-semibold text-gray-900">Wholesome Treats</h4>
+                      <p className="mt-0.5 text-sm leading-5 text-gray-600">Simple, recognizable ingredients with no corn, wheat, or soy.</p>
+                    </div>
                   </div>
-                  <div className="text-center">
-                    <span className="text-6xl mb-4 block">❤️</span>
-                    <h4 className="text-xl font-semibold text-gray-900">Cause</h4>
-                    <p className="text-gray-600">Our cause is to help animals in the shelter get adopted</p>
+                  <div className="flex items-center gap-3 rounded-lg bg-white/70 p-3 text-left shadow-sm">
+                    <span className="flex h-12 w-14 shrink-0 items-center justify-center text-3xl">❤️</span>
+                    <div>
+                      <h4 className="text-base font-semibold text-gray-900">Something Special for Every Pup</h4>
+                      <p className="mt-0.5 text-sm leading-5 text-gray-600">Shop bow ties, bandanas, necklaces, and delicious treats.</p>
+                    </div>
                   </div>
                 </div>
 
-                <div className="text-center mt-8">
-                  <div className="inline-flex items-center space-x-2 bg-white rounded-full px-6 py-3 shadow-sm">
-                    <span className="text-lg font-semibold text-gray-900">Be Part of the Change. Dress your Pet with Purpose.</span>
+                <div className="text-center mt-5">
+                  <div className="inline-flex items-center space-x-2 bg-white rounded-full px-5 py-2 shadow-sm">
+                    <span className="text-base font-semibold text-gray-900">You can make a Difference. Shop with Purpose.</span>
                   </div>
                 </div>
-                
-                
-                <div className="mt-8 flex justify-center space-x-4">
+
+                <div className="mt-5 flex justify-center">
                   <a 
                     href="/products"
-                    className="btn-primary text-lg px-8 py-3 inline-block"
+                    className="btn-primary px-7 py-2.5 inline-block"
                   >
-                    View All Products
-                  </a>
-                  <a
-                    href="/products"
-                    className="bg-white border-2 border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white font-semibold py-3 px-8 rounded-lg transition-all duration-200"
-                  >
-                    Shop Direct
+                    Shop Now
                   </a>
                 </div>
               </div>
@@ -330,7 +338,7 @@ export default function Home() {
             
             <div className="text-center mt-8">
               <p className="text-gray-600 italic">
-                "Making the world a better place one bow at a time"
+                "Making the world a better place for animals"
               </p>
             </div>
           </div>

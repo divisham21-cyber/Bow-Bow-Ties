@@ -29,9 +29,24 @@ export default function CheckoutSuccess({ order, errorMessage, sessionId }: Chec
   const [petDetailsStatus, setPetDetailsStatus] = useState('')
   const [isSavingPetDetails, setIsSavingPetDetails] = useState(false)
 
+  function updateSpecialDate(value: string) {
+    const digits = value.replace(/\D/g, '').slice(0, 4)
+    setSpecialDate(digits.length > 2 ? `${digits.slice(0, 2)}/${digits.slice(2)}` : digits)
+  }
+
   async function savePetDetails(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (!sessionId) return
+
+    if (!petName.trim()) {
+      setPetDetailsStatus('Please add your pet name before saving.')
+      return
+    }
+
+    if (specialDate.trim() && !/^(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01])$/.test(specialDate.trim())) {
+      setPetDetailsStatus('Birthday or Gotcha Day should be in MM/DD format.')
+      return
+    }
 
     setIsSavingPetDetails(true)
     setPetDetailsStatus('Saving pet details...')
@@ -67,24 +82,24 @@ export default function CheckoutSuccess({ order, errorMessage, sessionId }: Chec
       <Head>
         <title>Order Confirmed - Bow-Bow-Ties</title>
       </Head>
-      <main className="min-h-screen bg-slate-50 px-4 py-10 sm:py-14">
+      <main className="min-h-screen bg-sky-50 px-4 py-10 sm:py-14">
         <div className="mx-auto max-w-4xl">
-          <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-            <div className="flex flex-col gap-5 border-b border-slate-100 pb-6 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-center gap-4">
-                <img
-                  src="/bow_bow_ties.jpg"
-                  alt="Bow-Bow-Ties Logo"
-                  className="h-16 w-16 rounded-full object-cover"
-                />
-                <div>
-                  <p className="text-sm font-bold uppercase tracking-wide text-primary-700">Order confirmed</p>
-                  <h1 className="mt-1 text-3xl font-bold text-slate-950">Thank you for your order</h1>
+          <div className="rounded-lg border border-sky-100 bg-white p-6 shadow-sm sm:p-8">
+            <div className="rounded-lg border border-sky-100 bg-sky-50 p-5 shadow-sm">
+              <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-center gap-4">
+                  <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-amber-300 text-3xl shadow-sm" aria-hidden="true">
+                    ✓
+                  </span>
+                  <div>
+                    <p className="text-sm font-bold uppercase tracking-wide text-sky-700">Order confirmed</p>
+                    <h1 className="mt-1 text-3xl font-bold text-slate-950">Thank you for your order</h1>
+                  </div>
                 </div>
+                <Link href="/products" className="rounded-lg border border-teal-700 bg-teal-700 px-4 py-2 text-center font-semibold text-white shadow-sm transition-colors hover:bg-teal-800">
+                  Continue Shopping
+                </Link>
               </div>
-              <Link href="/products" className="btn-primary inline-block text-center">
-                Continue Shopping
-              </Link>
             </div>
 
             {errorMessage || !order ? (
@@ -106,7 +121,7 @@ export default function CheckoutSuccess({ order, errorMessage, sessionId }: Chec
                     </p>
                   </div>
 
-                  <div className="rounded-lg bg-slate-100 p-4">
+                  <div className="rounded-lg border border-amber-100 bg-amber-50 p-4 shadow-sm">
                     <p className="text-sm font-semibold text-slate-600">Order total</p>
                     <p className="mt-1 text-3xl font-bold text-slate-950">{getOrderTotalLabel(order)}</p>
                     <p className="mt-3 rounded-full bg-white px-3 py-1 text-sm font-bold text-slate-700">
@@ -122,7 +137,7 @@ export default function CheckoutSuccess({ order, errorMessage, sessionId }: Chec
                       {order.lineItems.map((item) => (
                         <div
                           key={`${item.productId}-${item.variantId}-${item.planId || 'single'}`}
-                          className="rounded-lg border border-slate-200 p-4"
+                          className="rounded-lg border border-sky-100 bg-sky-50/60 p-4"
                         >
                           <div className="flex items-start justify-between gap-4">
                             <div>
@@ -148,7 +163,7 @@ export default function CheckoutSuccess({ order, errorMessage, sessionId }: Chec
                   </section>
 
                   <aside className="space-y-5">
-                    <section className="rounded-lg border border-slate-200 p-4">
+                    <section className="rounded-lg border border-sky-100 bg-white p-4 shadow-sm">
                       <h2 className="font-bold text-slate-950">
                         {isPickup ? 'Pickup Details' : 'Shipping Details'}
                       </h2>
@@ -159,7 +174,7 @@ export default function CheckoutSuccess({ order, errorMessage, sessionId }: Chec
                       </p>
                     </section>
 
-                    <section className="rounded-lg border border-slate-200 p-4">
+                    <section className="rounded-lg border border-amber-100 bg-amber-50 p-4 shadow-sm">
                       <h2 className="font-bold text-slate-950">Summary</h2>
                       <div className="mt-3 space-y-2 text-sm text-slate-700">
                         <div className="flex justify-between gap-3">
@@ -183,7 +198,7 @@ export default function CheckoutSuccess({ order, errorMessage, sessionId }: Chec
                   </aside>
                 </div>
 
-                <div className="mt-8 rounded-lg border border-primary-100 bg-primary-50 p-5 text-sm text-primary-950">
+                <div className="mt-8 rounded-lg border border-sky-100 bg-sky-50 p-5 text-sm text-slate-800 shadow-sm">
                   <h2 className="font-bold">What happens next</h2>
                   <p className="mt-2 leading-6">
                     We will prepare your Bow-Bow-Ties order. {isPickup ? 'For pickup orders, we will contact you with pickup details.' : 'For shipped orders, tracking details will be shared after fulfillment.'}
@@ -195,51 +210,51 @@ export default function CheckoutSuccess({ order, errorMessage, sessionId }: Chec
 
                 <form
                   onSubmit={savePetDetails}
-                  className="mt-8 rounded-lg border border-sky-100 bg-sky-50 p-5"
+                  className="mt-8 rounded-lg border border-amber-200 bg-amber-50 p-5 shadow-sm"
                 >
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                    <div>
-                      <h2 className="font-bold text-slate-950">Tell us about your pet</h2>
-                      <p className="mt-1 text-sm leading-6 text-slate-600">
-                        Optional details help us personalize notes, birthday wishes, and social shoutouts.
-                      </p>
-                    </div>
-                    <Link
-                      href="/products"
-                      className="rounded-md border border-sky-200 bg-white px-4 py-2 text-center text-sm font-bold text-sky-700 hover:bg-sky-100"
-                    >
-                      Back to Shop
-                    </Link>
+                  <div>
+                    <h2 className="flex items-center gap-2 text-2xl font-bold sm:text-3xl">
+                      <span className="bg-gradient-to-r from-amber-700 via-rose-600 to-sky-700 bg-clip-text text-transparent">
+                        Join the Pack
+                      </span>
+                      <span className="flex h-10 w-10 items-center justify-center rounded-full border border-amber-200 bg-white text-xl shadow-sm sm:h-11 sm:w-11 sm:text-2xl" aria-hidden="true">
+                        🐾
+                      </span>
+                    </h2>
+                    <p className="mt-2 text-sm leading-6 text-slate-700">
+                      Get first dibs on new treats and accessories, behind-the-scenes stories from Divisha, and a little something special for your pup&apos;s big day.
+                    </p>
                   </div>
 
                   <div className="mt-5 grid gap-4 md:grid-cols-3">
                     <label>
-                      <span className="text-sm font-semibold text-slate-700">Pet name</span>
+                      <span className="text-sm font-semibold text-slate-700">Pet Name</span>
                       <input
                         value={petName}
                         onChange={(event) => setPetName(event.target.value)}
                         maxLength={80}
-                        className="mt-2 h-11 w-full rounded-md border border-sky-200 bg-white px-3 text-sm"
+                        className="mt-2 h-11 w-full rounded-md border border-amber-200 bg-white px-3 text-sm focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-100"
                         placeholder="Tabitha"
                       />
                     </label>
                     <label>
-                      <span className="text-sm font-semibold text-slate-700">Birthday or gotcha day</span>
+                      <span className="text-sm font-semibold text-slate-700">Birthday or Gotcha Day</span>
                       <input
                         value={specialDate}
-                        onChange={(event) => setSpecialDate(event.target.value)}
-                        maxLength={40}
-                        className="mt-2 h-11 w-full rounded-md border border-sky-200 bg-white px-3 text-sm"
-                        placeholder="June 12"
+                        onChange={(event) => updateSpecialDate(event.target.value)}
+                        maxLength={5}
+                        inputMode="numeric"
+                        className="mt-2 h-11 w-full rounded-md border border-amber-200 bg-white px-3 text-sm focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-100"
+                        placeholder="MM/DD"
                       />
                     </label>
                     <label>
-                      <span className="text-sm font-semibold text-slate-700">Instagram handle</span>
+                      <span className="text-sm font-semibold text-slate-700">Instagram Handle</span>
                       <input
                         value={instagramHandle}
                         onChange={(event) => setInstagramHandle(event.target.value)}
                         maxLength={60}
-                        className="mt-2 h-11 w-full rounded-md border border-sky-200 bg-white px-3 text-sm"
+                        className="mt-2 h-11 w-full rounded-md border border-amber-200 bg-white px-3 text-sm focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-100"
                         placeholder="@bowbowbestie"
                       />
                     </label>
@@ -249,7 +264,7 @@ export default function CheckoutSuccess({ order, errorMessage, sessionId }: Chec
                     <button
                       type="submit"
                       disabled={isSavingPetDetails}
-                      className="btn-primary disabled:cursor-not-allowed disabled:opacity-60"
+                      className="rounded-lg border border-amber-500 bg-amber-400 px-4 py-2 font-semibold text-slate-950 shadow-sm transition-colors hover:border-amber-600 hover:bg-amber-500 disabled:cursor-not-allowed disabled:opacity-60"
                     >
                       {isSavingPetDetails ? 'Saving...' : 'Save Pet Details'}
                     </button>

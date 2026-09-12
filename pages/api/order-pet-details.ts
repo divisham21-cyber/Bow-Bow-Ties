@@ -16,10 +16,19 @@ function normalizeInstagramHandle(value: unknown) {
   return handle ? `@${handle}` : ''
 }
 
+function getErrorMessage(error: unknown) {
+  if (error instanceof Error) return error.message
+  if (error && typeof error === 'object' && 'message' in error) {
+    const message = (error as { message?: unknown }).message
+    if (typeof message === 'string' && message.trim()) return message
+  }
+  return 'Unable to save pet details.'
+}
+
 function getPetDetails(body: NextApiRequest['body']): PetDetails {
   return {
     petName: cleanValue(body?.petName, 80),
-    specialDate: cleanValue(body?.specialDate, 40),
+    specialDate: cleanValue(body?.specialDate, 5),
     instagramHandle: normalizeInstagramHandle(body?.instagramHandle),
   }
 }
@@ -44,8 +53,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const petDetails = getPetDetails(req.body)
-    if (!petDetails.petName && !petDetails.specialDate && !petDetails.instagramHandle) {
-      res.status(400).json({ message: 'Add at least one pet detail before saving.' })
+    if (!petDetails.petName) {
+      res.status(400).json({ message: 'Please add your pet name before saving.' })
+      return
+    }
+
+    if (petDetails.specialDate && !/^(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01])$/.test(petDetails.specialDate)) {
+      res.status(400).json({ message: 'Birthday or Gotcha Day should be in MM/DD format.' })
       return
     }
 
@@ -65,7 +79,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     await saveOrderToDb(order)
     res.status(200).json({ ok: true, petDetails })
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unable to save pet details.'
-    res.status(500).json({ message })
+    res.status(500).json({ message: getErrorMessage(error) })
   }
 }
