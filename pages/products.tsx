@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import { GetServerSideProps } from 'next'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   CategoryContent,
   CatalogProduct,
@@ -11,7 +11,7 @@ import {
   defaultCategoryContent,
   formatPrice,
 } from '../lib/catalog'
-import { standardShipping } from '../lib/commerceConfig'
+import { pickupLocation, standardShipping } from '../lib/commerceConfig'
 import { getCatalogProductsForStorefront, getCategoryContentForStorefront } from '../lib/catalogRepository'
 
 interface CartItem {
@@ -35,6 +35,8 @@ interface ProductSelection {
 }
 
 type FulfillmentMethod = 'ship' | 'pickup'
+
+const savedCartKey = 'bow-bow-ties-cart'
 
 const primaryButtonClass =
   'rounded-lg border border-teal-700 bg-teal-700 px-4 py-2 font-semibold text-white shadow-sm transition-colors hover:border-teal-800 hover:bg-teal-800 disabled:cursor-not-allowed disabled:border-slate-200 disabled:bg-slate-100 disabled:text-slate-400'
@@ -81,6 +83,17 @@ const allProductsIntro = {
   body: 'Choose a category to see more detail about each product type, or shop the full catalog here. Standard shipping and local pickup options are available during checkout.',
 }
 
+function normalizeCategoryText(value: string) {
+  return value.replace(/\\n/g, '\n').trim()
+}
+
+function getCategoryParagraphs(value: string) {
+  return normalizeCategoryText(value)
+    .split(/\n{2,}/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean)
+}
+
 const categoryPillStyles: Record<ProductCategoryId, { active: string; inactive: string }> = {
   'bow-ties': {
     active: 'border-sky-400 bg-sky-200 text-sky-950 shadow-sm',
@@ -118,11 +131,51 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
   const [fulfillmentMethod, setFulfillmentMethod] = useState<FulfillmentMethod>('ship')
   const [checkoutMessage, setCheckoutMessage] = useState<string | null>(null)
   const [isMobileCartOpen, setIsMobileCartOpen] = useState(false)
+  const [cartStorageReady, setCartStorageReady] = useState(false)
+
+  useEffect(() => {
+    try {
+      const savedCart = window.localStorage.getItem(savedCartKey)
+      if (!savedCart) return
+
+      const parsed = JSON.parse(savedCart) as {
+        items?: CartItem[]
+        fulfillmentMethod?: FulfillmentMethod
+      }
+      const activeProductIds = new Set(activeProducts.map((product) => product.id))
+      const restoredItems = Array.isArray(parsed.items)
+        ? parsed.items.filter((item) => activeProductIds.has(item.productId))
+        : []
+
+      setCartItems(restoredItems)
+      if (parsed.fulfillmentMethod === 'ship' || parsed.fulfillmentMethod === 'pickup') {
+        setFulfillmentMethod(parsed.fulfillmentMethod)
+      }
+    } catch {
+      window.localStorage.removeItem(savedCartKey)
+    } finally {
+      setCartStorageReady(true)
+    }
+  }, [activeProducts])
+
+  useEffect(() => {
+    if (!cartStorageReady) return
+
+    window.localStorage.setItem(
+      savedCartKey,
+      JSON.stringify({
+        items: cartItems,
+        fulfillmentMethod,
+      })
+    )
+  }, [cartItems, cartStorageReady, fulfillmentMethod])
 
   const selectedCategoryIntro =
     categoryContent.find((content) => content.categoryId === selectedCategory) ||
     defaultCategoryContent.find((content) => content.categoryId === selectedCategory) ||
     allProductsIntro
+  const selectedCategoryIntroBody = normalizeCategoryText(selectedCategoryIntro.body)
+  const selectedCategoryIntroParagraphs = getCategoryParagraphs(selectedCategoryIntro.body)
   const filteredProducts = useMemo(() => {
     return activeProducts.filter((product) => product.categoryId === selectedCategory)
   }, [activeProducts, selectedCategory])
@@ -177,6 +230,13 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
       const result = await response.json()
 
       if (result.url) {
+        window.localStorage.setItem(
+          savedCartKey,
+          JSON.stringify({
+            items,
+            fulfillmentMethod: method,
+          })
+        )
         window.location.href = result.url
         return
       }
@@ -292,7 +352,7 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                   From handmade accessories to wholesome treats, everything we create is made to bring joy to pets while helping animals in need.
                 </p>
                 <div className="mt-5 inline-flex max-w-full rounded-lg border border-sky-200 bg-white/80 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm">
-                  Standard shipping is {formatPrice(standardShipping.priceCents)}. Local pickup from South Bothell or at in-person events is available.
+                  Standard shipping is {formatPrice(standardShipping.priceCents)}. FREE local pickup from {pickupLocation.label} or at in-person events is available.
                 </div>
               </div>
             </div>
@@ -339,7 +399,7 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                       {selectedCategoryIntro.summary}
                     </p>
                     <div
-                      className="mt-3 max-w-3xl text-sm leading-6 text-slate-600"
+                      className="mt-3 max-w-3xl whitespace-pre-line break-words text-sm leading-6 text-slate-600"
                       style={
                         categoryIntroExpanded
                           ? undefined
@@ -351,9 +411,19 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                             }
                       }
                     >
-                      {selectedCategoryIntro.body}
+                      {categoryIntroExpanded ? (
+                        <div className="space-y-4">
+                          {selectedCategoryIntroParagraphs.map((paragraph, index) => (
+                            <p key={`${selectedCategory}-${index}`} className="whitespace-pre-line">
+                              {paragraph}
+                            </p>
+                          ))}
+                        </div>
+                      ) : (
+                        selectedCategoryIntroBody
+                      )}
                     </div>
-                    {selectedCategoryIntro.body.length > 120 && (
+                    {selectedCategoryIntroBody.length > 120 && (
                       <button
                         type="button"
                         onClick={() => setCategoryIntroExpanded((current) => !current)}
@@ -571,7 +641,7 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                         <p className="text-xs text-slate-500">
                           {fulfillmentMethod === 'ship'
                             ? `Standard shipping is ${formatPrice(standardShipping.priceCents)} plus applicable tax.`
-                            : 'Pickup has no shipping charge. We will coordinate pickup after payment.'}
+                            : `FREE local pickup from ${pickupLocation.label}. We will coordinate pickup after payment.`}
                         </p>
                       </div>
                       <button type="button" className={`${primaryButtonClass} w-full`} onClick={() => startCheckout(cartItems)}>
@@ -717,7 +787,7 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                       <p className="text-xs text-slate-500">
                         {fulfillmentMethod === 'ship'
                           ? `Standard shipping is ${formatPrice(standardShipping.priceCents)} plus applicable tax.`
-                          : 'Pickup has no shipping charge. We will coordinate pickup after payment.'}
+                          : `FREE local pickup from ${pickupLocation.label}. We will coordinate pickup after payment.`}
                       </p>
                     </div>
                     <button
@@ -738,16 +808,24 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div>
-                <h5 className="text-xl font-bold mb-4">Bow-Bow-Ties</h5>
-                <p className="text-gray-400">Handcrafted pet accessories with purpose.</p>
+                <h5 className="text-xl font-bold mb-1">Bow-Bow-Ties</h5>
+                <p className="text-gray-400">For Pets We Love. For Animals in Need.</p>
+                <div className="mt-5 text-sm leading-6 text-gray-400">
+                  <h6 className="font-semibold text-white">Refund Policy</h6>
+                  <p className="mt-2">
+                    All sales are final, as a portion of our proceeds is regularly donated to help animals in need. However, if you have any issue with your purchase, please contact us at{' '}
+                    <a href="mailto:contact@bowbowties.us" className="font-semibold text-white hover:text-amber-200">
+                      contact@bowbowties.us
+                    </a>{' '}
+                    and we&apos;ll be happy to help.
+                  </p>
+                </div>
               </div>
               <div>
                 <h6 className="font-semibold mb-4">Quick Links</h6>
                 <ul className="space-y-2 text-gray-400">
                   <li><Link href="/" className="hover:text-white transition-colors">Home</Link></li>
                   <li><Link href="/products" className="hover:text-white transition-colors">Shop</Link></li>
-                  <li><Link href="/admin/catalog" className="hover:text-white transition-colors">Catalog Admin</Link></li>
-                  <li><Link href="/admin/orders" className="hover:text-white transition-colors">Orders Admin</Link></li>
                   <li><a href="/#about" className="hover:text-white transition-colors">About</a></li>
                   <li><Link href="/calendar" className="hover:text-white transition-colors">Calendar</Link></li>
                   <li><a href="/#contact" className="hover:text-white transition-colors">Contact</a></li>
@@ -756,7 +834,11 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
               <div>
                 <h6 className="font-semibold mb-4">Contact</h6>
                 <ul className="space-y-2 text-gray-400">
-                  <li>contact@bowbowties.us</li>
+                  <li>
+                    <a href="mailto:contact@bowbowties.us" className="hover:text-white transition-colors">
+                      contact@bowbowties.us
+                    </a>
+                  </li>
                   <li>Bothell, Washington</li>
                 </ul>
               </div>

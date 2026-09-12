@@ -5,7 +5,7 @@ import {
   getOneTimePriceLookupKey,
   getSubscriptionPriceLookupKey,
 } from '../../lib/catalog'
-import { getRecurringShippingPriceLookupKey } from '../../lib/commerceConfig'
+import { getRecurringShippingPriceLookupKey, pickupLocation } from '../../lib/commerceConfig'
 import { getCatalogProductsForStorefront } from '../../lib/catalogRepository'
 
 interface CheckoutItemInput {
@@ -121,6 +121,28 @@ async function getPriceId(lookupKey: string) {
   return price.id
 }
 
+async function createPickupTaxCustomer() {
+  if (!stripe) throw new Error('Stripe is not configured.')
+
+  const customer = await stripe.customers.create({
+    address: {
+      city: pickupLocation.city,
+      country: pickupLocation.country,
+      postal_code: pickupLocation.postalCode,
+      state: pickupLocation.state,
+    },
+    description: 'Bow-Bow-Ties local pickup tax location',
+    metadata: {
+      source: 'bow-bow-ties-website',
+      fulfillmentMethod: 'pickup',
+      pickupLocation: pickupLocation.label,
+      pickupPostalCode: pickupLocation.postalCode,
+    },
+  })
+
+  return customer.id
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST')
@@ -133,14 +155,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return
   }
 
-  if (!standardShippingRateId) {
-    res.status(500).json({ message: 'Stripe standard shipping rate is not configured on the server.' })
-    return
-  }
-
   try {
     const body = req.body as CheckoutRequestBody
     const fulfillmentMethod = body.fulfillmentMethod === 'pickup' ? 'pickup' : 'ship'
+
+    if (fulfillmentMethod === 'ship' && !standardShippingRateId) {
+      res.status(500).json({ message: 'Stripe standard shipping rate is not configured on the server.' })
+      return
+    }
+
     const availableProducts = await getCatalogProductsForStorefront()
     const items = validateItems(availableProducts, body.items)
     const subscriptionItems = items.filter((item) => item.purchaseType === 'subscription')
@@ -206,6 +229,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         cartParts: String(cartMetadataChunks.length),
         ...Object.fromEntries(cartMetadataChunks.map((chunk, index) => [`cart_${index}`, chunk])),
       },
+    }
+
+    if (fulfillmentMethod === 'pickup') {
+      sessionParams.customer = await createPickupTaxCustomer()
     }
 
     if (mode === 'payment') {

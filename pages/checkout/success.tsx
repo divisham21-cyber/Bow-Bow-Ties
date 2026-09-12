@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import { GetServerSideProps } from 'next'
-import { FormEvent, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import Stripe from 'stripe'
 import { formatPrice } from '../../lib/catalog'
 import { getCatalogProductsForAdmin } from '../../lib/catalogRepository'
@@ -28,6 +28,12 @@ export default function CheckoutSuccess({ order, errorMessage, sessionId }: Chec
   const [instagramHandle, setInstagramHandle] = useState(order?.petDetails?.instagramHandle || '')
   const [petDetailsStatus, setPetDetailsStatus] = useState('')
   const [isSavingPetDetails, setIsSavingPetDetails] = useState(false)
+
+  useEffect(() => {
+    if (order) {
+      window.localStorage.removeItem('bow-bow-ties-cart')
+    }
+  }, [order])
 
   function updateSpecialDate(value: string) {
     const digits = value.replace(/\D/g, '').slice(0, 4)

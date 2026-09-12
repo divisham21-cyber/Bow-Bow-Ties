@@ -448,8 +448,8 @@ export default function AdminCatalog() {
                         body: event.target.value,
                       })
                     }
-                    rows={4}
-                    className="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                    rows={8}
+                    className="mt-2 w-full rounded-md border border-gray-300 px-3 py-2 text-sm leading-6"
                   />
                 </label>
               </div>
