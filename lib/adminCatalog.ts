@@ -104,12 +104,12 @@ export function validateProduct(product: CatalogProduct, allProducts: CatalogPro
   if (imageCount < 1) errors.push('At least one image is required.')
   if (imageCount > 5) errors.push('A product can have at most 5 images.')
   if (product.subscriptionEnabled && product.categoryId !== 'bow-bow-treats') {
-    errors.push('Subscriptions are only enabled for Bow Bow Treats.')
+    errors.push('Subscriptions are only enabled for Dog Treats.')
   }
 
   if (product.subscriptionEnabled && product.categoryId === 'bow-bow-treats') {
     if (!product.subscriptionPlans?.length) {
-      errors.push('Bow Bow Treat subscriptions need at least one plan.')
+      errors.push('Dog Treat subscriptions need at least one plan.')
     }
 
     product.subscriptionPlans?.forEach((plan) => {

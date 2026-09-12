@@ -19,6 +19,7 @@ interface OrderRow {
   total_cents: number
   currency: string
   fulfillment: OrderSummary['fulfillment'] | null
+  pet_details: OrderSummary['petDetails'] | null
   created_at: string
 }
 
@@ -46,11 +47,12 @@ function rowToOrder(row: OrderRow): OrderSummary {
     currency: row.currency,
     createdAt: row.created_at,
     fulfillment: row.fulfillment || undefined,
+    petDetails: row.pet_details || undefined,
   }
 }
 
 function orderToRow(order: OrderSummary) {
-  return {
+  const row = {
     id: order.id,
     stripe_session_id: order.stripeSessionId,
     stripe_payment_intent_id: order.stripePaymentIntentId || null,
@@ -70,6 +72,8 @@ function orderToRow(order: OrderSummary) {
     fulfillment: order.fulfillment || null,
     created_at: order.createdAt,
   }
+
+  return order.petDetails ? { ...row, pet_details: order.petDetails } : row
 }
 
 export async function saveOrderToDb(order: OrderSummary, options: SaveOrderOptions = {}) {

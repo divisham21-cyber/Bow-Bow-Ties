@@ -40,6 +40,12 @@ export interface FulfillmentInfo {
   note: string
 }
 
+export interface PetDetails {
+  petName: string
+  specialDate: string
+  instagramHandle: string
+}
+
 export interface OrderSummary {
   id: string
   stripeSessionId: string
@@ -59,6 +65,7 @@ export interface OrderSummary {
   currency: string
   createdAt: string
   fulfillment?: FulfillmentInfo
+  petDetails?: PetDetails
 }
 
 interface CartMetadataItem {

@@ -96,6 +96,7 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
   const [categoryIntroExpanded, setCategoryIntroExpanded] = useState(false)
   const [fulfillmentMethod, setFulfillmentMethod] = useState<FulfillmentMethod>('ship')
   const [checkoutMessage, setCheckoutMessage] = useState<string | null>(null)
+  const [isMobileCartOpen, setIsMobileCartOpen] = useState(false)
 
   const selectedCategoryIntro =
     selectedCategory === 'all'
@@ -106,7 +107,7 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
   const filteredProducts = useMemo(() => {
     if (selectedCategory === 'all') return activeProducts
     return activeProducts.filter((product) => product.categoryId === selectedCategory)
-  }, [selectedCategory])
+  }, [activeProducts, selectedCategory])
 
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0)
   const cartTotal = cartItems.reduce((sum, item) => sum + item.priceCents * item.quantity, 0)
@@ -135,20 +136,21 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
       if (!existing) return [...current, item]
 
       return current.map((cartItem) =>
-        cartItem.id === item.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
+        cartItem.id === item.id ? { ...cartItem, quantity: Math.min(cartItem.quantity + 1, 6) } : cartItem
       )
     })
     setCheckoutMessage(`${product.name} was added to cart.`)
   }
 
   function updateQuantity(itemId: string, quantity: number) {
-    if (quantity < 1) {
+    if (!Number.isFinite(quantity) || quantity < 1) {
       setCartItems((current) => current.filter((item) => item.id !== itemId))
       return
     }
 
+    const nextQuantity = Math.min(Math.max(Math.floor(quantity), 1), 6)
     setCartItems((current) =>
-      current.map((item) => (item.id === itemId ? { ...item, quantity } : item))
+      current.map((item) => (item.id === itemId ? { ...item, quantity: nextQuantity } : item))
     )
   }
 
@@ -180,7 +182,7 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
         <title>Shop Pet Accessories - Bow-Bow-Ties</title>
         <meta
           name="description"
-          content="Shop handcrafted pet bow ties, bandanas, Bow Bow Treats, and Tabitha Beads directly from Bow-Bow-Ties."
+          content="Shop handcrafted pet bow ties, bandanas, dog treats, and Tabitha Beads directly from Bow-Bow-Ties."
         />
       </Head>
 
@@ -280,60 +282,14 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
             <div className="absolute inset-0 bg-sky-50/90" />
             <div className="absolute inset-0 bg-white/35" />
             <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16">
-              <div className="grid gap-8 lg:grid-cols-[1fr_360px] lg:items-end">
-                <div>
-                  <p className="text-sm font-bold uppercase tracking-wide text-sky-700">Handmade pet accessories</p>
-                  <h2 className="mt-3 text-4xl font-bold text-slate-950 sm:text-5xl">Shop Bow-Bow-Ties</h2>
-                  <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-700">
-                    Browse handcrafted pet accessories, choose sizes and subscription options, then finish with secure checkout.
-                  </p>
-                  <div className="mt-5 inline-flex max-w-full rounded-lg border border-sky-200 bg-white/80 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm">
-                    Standard shipping is {formatPrice(standardShipping.priceCents)}. Local pickup is available at checkout.
-                  </div>
-                </div>
-
-                <div className="rounded-lg border border-sky-100 bg-white p-5 shadow-sm">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-semibold text-slate-500">Cart summary</p>
-                      <p className="text-2xl font-bold text-slate-950">{cartCount} item{cartCount === 1 ? '' : 's'}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-semibold text-slate-500">Item subtotal</p>
-                      <p className="text-2xl font-bold text-slate-900">{formatPrice(cartTotal)}</p>
-                      <p className="text-xs text-slate-500">Before shipping and tax</p>
-                    </div>
-                  </div>
-                  <div className="mt-4 grid grid-cols-2 gap-2 rounded-lg bg-slate-100 p-2">
-                    <label className={`cursor-pointer rounded-md px-3 py-2 text-center text-sm font-semibold transition-colors ${fulfillmentMethod === 'ship' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'}`}>
-                      <input
-                        type="radio"
-                        name="hero-fulfillment-method"
-                        checked={fulfillmentMethod === 'ship'}
-                        onChange={() => setFulfillmentMethod('ship')}
-                        className="sr-only"
-                      />
-                      Ship
-                    </label>
-                    <label className={`cursor-pointer rounded-md px-3 py-2 text-center text-sm font-semibold transition-colors ${fulfillmentMethod === 'pickup' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'}`}>
-                      <input
-                        type="radio"
-                        name="hero-fulfillment-method"
-                        checked={fulfillmentMethod === 'pickup'}
-                        onChange={() => setFulfillmentMethod('pickup')}
-                        className="sr-only"
-                      />
-                      Pick Up
-                    </label>
-                  </div>
-                  <button
-                    type="button"
-                    className={`${primaryButtonClass} w-full mt-4`}
-                    disabled={cartItems.length === 0}
-                    onClick={() => startCheckout(cartItems)}
-                  >
-                    Checkout
-                  </button>
+              <div>
+                <p className="text-sm font-bold uppercase tracking-wide text-sky-700">Handmade pet accessories</p>
+                <h2 className="mt-3 text-4xl font-bold text-slate-950 sm:text-5xl">Shop Bow-Bow-Ties</h2>
+                <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-700">
+                  Browse handcrafted pet accessories, choose sizes and subscription options, then finish with secure checkout.
+                </p>
+                <div className="mt-5 inline-flex max-w-full rounded-lg border border-sky-200 bg-white/80 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm">
+                  Standard shipping is {formatPrice(standardShipping.priceCents)}. Local pickup is available at checkout.
                 </div>
               </div>
             </div>
@@ -547,16 +503,13 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                                 {selection.purchaseType === 'subscription' ? 'Subscription' : 'One-time'}
                               </span>
                             </div>
-                            <div className="grid grid-cols-2 gap-3 mt-4">
-                              <button type="button" className={secondaryButtonClass} onClick={() => addToCart(product)}>
-                                Add to Cart
-                              </button>
+                            <div className="mt-4 flex justify-center">
                               <button
                                 type="button"
-                                className={primaryButtonClass}
-                                onClick={() => startCheckout([getCartItem(product, selection)], fulfillmentMethod)}
+                                className={`${secondaryButtonClass} min-w-[180px] px-6`}
+                                onClick={() => addToCart(product)}
                               >
-                                Buy Now
+                                Add to Cart
                               </button>
                             </div>
                           </div>
@@ -567,7 +520,7 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                   </div>
                 </div>
 
-                <aside className="lg:sticky lg:top-6 h-fit rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+                <aside className="hidden h-fit rounded-lg border border-slate-200 bg-white p-5 shadow-sm lg:sticky lg:top-6 lg:block">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xl font-bold text-slate-950">Cart</h3>
                     <span className="text-sm font-semibold text-slate-500">{cartCount} item{cartCount === 1 ? '' : 's'}</span>
@@ -654,6 +607,138 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
             </div>
           </section>
         </main>
+
+        <div className="lg:hidden">
+          <button
+            type="button"
+            onClick={() => setIsMobileCartOpen(true)}
+            className="fixed bottom-5 right-5 z-40 flex items-center gap-3 rounded-full border border-amber-400 bg-amber-400 px-5 py-3 font-bold text-slate-950 shadow-lg transition-colors hover:bg-amber-500"
+            aria-label={`Open cart with ${cartCount} item${cartCount === 1 ? '' : 's'}`}
+          >
+            <span>Cart</span>
+            <span className="flex h-7 min-w-7 items-center justify-center rounded-full bg-white px-2 text-sm">
+              {cartCount}
+            </span>
+          </button>
+
+          {isMobileCartOpen && (
+            <div className="fixed inset-0 z-50">
+              <button
+                type="button"
+                className="absolute inset-0 bg-slate-950/40"
+                onClick={() => setIsMobileCartOpen(false)}
+                aria-label="Close cart"
+              />
+              <div className="absolute inset-x-0 bottom-0 max-h-[86vh] overflow-y-auto rounded-t-2xl bg-white p-5 shadow-2xl">
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <h3 className="text-xl font-bold text-slate-950">Cart</h3>
+                    <p className="text-sm font-semibold text-slate-500">
+                      {cartCount} item{cartCount === 1 ? '' : 's'}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setIsMobileCartOpen(false)}
+                    className="rounded-full border border-slate-200 px-3 py-1 text-sm font-bold text-slate-700"
+                  >
+                    Close
+                  </button>
+                </div>
+
+                {cartItems.length === 0 ? (
+                  <p className="mt-6 rounded-lg bg-slate-50 p-4 text-sm font-semibold text-slate-600">Cart is Empty</p>
+                ) : (
+                  <div className="mt-5 space-y-4">
+                    {cartItems.map((item) => (
+                      <div key={item.id} className="grid grid-cols-[72px_1fr] gap-3 rounded-lg border border-slate-200 p-3">
+                        <div className="h-16 w-16 overflow-hidden rounded-md bg-slate-100">
+                          <img src={item.image} alt="" className="h-full w-full object-cover" />
+                        </div>
+                        <div>
+                          <div className="flex items-start justify-between gap-2">
+                            <div>
+                              <p className="font-bold leading-snug text-slate-950">{item.productName}</p>
+                              <p className="mt-1 text-sm text-slate-600">
+                                {item.variantName}
+                                {item.planName ? `, ${item.planName}` : ''}
+                              </p>
+                            </div>
+                            <button
+                              type="button"
+                              className="text-sm font-bold text-red-600"
+                              onClick={() => updateQuantity(item.id, 0)}
+                            >
+                              Remove
+                            </button>
+                          </div>
+                          <div className="mt-3 flex items-center justify-between gap-3">
+                            <label className="text-sm font-semibold text-slate-700">
+                              Qty
+                              <select
+                                value={item.quantity}
+                                onChange={(event) => updateQuantity(item.id, Number(event.target.value))}
+                                className="ml-2 rounded-md border border-slate-300 bg-white px-2 py-1 text-sm"
+                                aria-label={`Quantity for ${item.productName}`}
+                              >
+                                {[1, 2, 3, 4, 5, 6].map((quantity) => (
+                                  <option key={quantity} value={quantity}>
+                                    {quantity}
+                                  </option>
+                                ))}
+                              </select>
+                            </label>
+                            <span className="font-bold text-slate-900">
+                              {formatPrice(item.priceCents * item.quantity)}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+
+                    <div className="flex items-center justify-between border-t border-slate-100 pt-4 text-lg font-bold">
+                      <span>Item subtotal</span>
+                      <span>{formatPrice(cartTotal)}</span>
+                    </div>
+                    <div className="space-y-2 rounded-md bg-slate-50 p-3">
+                      <p className="text-sm font-semibold text-slate-700">Fulfillment</p>
+                      <label className="flex items-center justify-between gap-3 text-sm text-slate-700">
+                        <span>Ship with Standard shipping</span>
+                        <input
+                          type="radio"
+                          name="mobile-fulfillment-method"
+                          checked={fulfillmentMethod === 'ship'}
+                          onChange={() => setFulfillmentMethod('ship')}
+                        />
+                      </label>
+                      <label className="flex items-center justify-between gap-3 text-sm text-slate-700">
+                        <span>Pick up order</span>
+                        <input
+                          type="radio"
+                          name="mobile-fulfillment-method"
+                          checked={fulfillmentMethod === 'pickup'}
+                          onChange={() => setFulfillmentMethod('pickup')}
+                        />
+                      </label>
+                      <p className="text-xs text-slate-500">
+                        {fulfillmentMethod === 'ship'
+                          ? `Standard shipping is ${formatPrice(standardShipping.priceCents)} plus applicable tax.`
+                          : 'Pickup has no shipping charge. We will coordinate pickup after payment.'}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      className={`${primaryButtonClass} w-full`}
+                      onClick={() => startCheckout(cartItems)}
+                    >
+                      Checkout
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
 
         <footer className="bg-gray-900 text-white py-12 pb-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

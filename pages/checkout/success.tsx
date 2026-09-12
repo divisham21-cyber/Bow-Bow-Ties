@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import { GetServerSideProps } from 'next'
+import { FormEvent, useState } from 'react'
 import Stripe from 'stripe'
 import { formatPrice } from '../../lib/catalog'
 import { getCatalogProductsForAdmin } from '../../lib/catalogRepository'
@@ -16,11 +17,50 @@ import {
 interface CheckoutSuccessProps {
   order: OrderSummary | null
   errorMessage?: string
+  sessionId?: string
 }
 
-export default function CheckoutSuccess({ order, errorMessage }: CheckoutSuccessProps) {
+export default function CheckoutSuccess({ order, errorMessage, sessionId }: CheckoutSuccessProps) {
   const isPickup = order?.fulfillmentMethod === 'pickup'
   const customerOrderNumber = order ? getCustomerOrderNumber(order) : ''
+  const [petName, setPetName] = useState(order?.petDetails?.petName || '')
+  const [specialDate, setSpecialDate] = useState(order?.petDetails?.specialDate || '')
+  const [instagramHandle, setInstagramHandle] = useState(order?.petDetails?.instagramHandle || '')
+  const [petDetailsStatus, setPetDetailsStatus] = useState('')
+  const [isSavingPetDetails, setIsSavingPetDetails] = useState(false)
+
+  async function savePetDetails(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    if (!sessionId) return
+
+    setIsSavingPetDetails(true)
+    setPetDetailsStatus('Saving pet details...')
+
+    try {
+      const response = await fetch('/api/order-pet-details', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId,
+          petName,
+          specialDate,
+          instagramHandle,
+        }),
+      })
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Unable to save pet details.')
+      }
+
+      setPetDetailsStatus('Pet details saved. Thank you!')
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unable to save pet details.'
+      setPetDetailsStatus(message)
+    } finally {
+      setIsSavingPetDetails(false)
+    }
+  }
 
   return (
     <>
@@ -152,10 +192,82 @@ export default function CheckoutSuccess({ order, errorMessage }: CheckoutSuccess
                     Questions? Email <a href="mailto:contact@bowbowties.us" className="font-bold underline">contact@bowbowties.us</a>.
                   </p>
                 </div>
+
+                <form
+                  onSubmit={savePetDetails}
+                  className="mt-8 rounded-lg border border-sky-100 bg-sky-50 p-5"
+                >
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div>
+                      <h2 className="font-bold text-slate-950">Tell us about your pet</h2>
+                      <p className="mt-1 text-sm leading-6 text-slate-600">
+                        Optional details help us personalize notes, birthday wishes, and social shoutouts.
+                      </p>
+                    </div>
+                    <Link
+                      href="/products"
+                      className="rounded-md border border-sky-200 bg-white px-4 py-2 text-center text-sm font-bold text-sky-700 hover:bg-sky-100"
+                    >
+                      Back to Shop
+                    </Link>
+                  </div>
+
+                  <div className="mt-5 grid gap-4 md:grid-cols-3">
+                    <label>
+                      <span className="text-sm font-semibold text-slate-700">Pet name</span>
+                      <input
+                        value={petName}
+                        onChange={(event) => setPetName(event.target.value)}
+                        maxLength={80}
+                        className="mt-2 h-11 w-full rounded-md border border-sky-200 bg-white px-3 text-sm"
+                        placeholder="Tabitha"
+                      />
+                    </label>
+                    <label>
+                      <span className="text-sm font-semibold text-slate-700">Birthday or gotcha day</span>
+                      <input
+                        value={specialDate}
+                        onChange={(event) => setSpecialDate(event.target.value)}
+                        maxLength={40}
+                        className="mt-2 h-11 w-full rounded-md border border-sky-200 bg-white px-3 text-sm"
+                        placeholder="June 12"
+                      />
+                    </label>
+                    <label>
+                      <span className="text-sm font-semibold text-slate-700">Instagram handle</span>
+                      <input
+                        value={instagramHandle}
+                        onChange={(event) => setInstagramHandle(event.target.value)}
+                        maxLength={60}
+                        className="mt-2 h-11 w-full rounded-md border border-sky-200 bg-white px-3 text-sm"
+                        placeholder="@bowbowbestie"
+                      />
+                    </label>
+                  </div>
+
+                  <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
+                    <button
+                      type="submit"
+                      disabled={isSavingPetDetails}
+                      className="btn-primary disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      {isSavingPetDetails ? 'Saving...' : 'Save Pet Details'}
+                    </button>
+                    {petDetailsStatus && (
+                      <p className="text-sm font-semibold text-slate-700">{petDetailsStatus}</p>
+                    )}
+                  </div>
+                </form>
               </>
             )}
 
             <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+              <Link
+                href="/products"
+                className="rounded-lg border border-primary-600 bg-primary-600 px-4 py-2 text-center font-semibold text-white transition-colors hover:bg-primary-700"
+              >
+                Back to Shop
+              </Link>
               <Link
                 href="/"
                 className="rounded-lg border border-primary-600 bg-white px-4 py-2 text-center font-semibold text-primary-700 transition-colors hover:bg-primary-50"
@@ -178,6 +290,7 @@ export const getServerSideProps: GetServerSideProps<CheckoutSuccessProps> = asyn
     return {
       props: {
         order: null,
+        sessionId,
         errorMessage: 'Order details are not available yet. Please check your email receipt or contact Bow-Bow-Ties.',
       },
     }
@@ -195,12 +308,14 @@ export const getServerSideProps: GetServerSideProps<CheckoutSuccessProps> = asyn
     return {
       props: {
         order: JSON.parse(JSON.stringify(order)),
+        sessionId,
       },
     }
   } catch {
     return {
       props: {
         order: null,
+        sessionId,
         errorMessage: 'Your payment was completed, but order details could not be loaded on this page yet. Please contact Bow-Bow-Ties if you need help.',
       },
     }

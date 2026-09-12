@@ -364,6 +364,16 @@ export default function AdminOrders() {
                             ? 'Fulfilled'
                             : 'Needs fulfillment'}
                       </p>
+                      {selectedOrder.petDetails && (
+                        <div className="mt-4 rounded-md border border-sky-100 bg-sky-50 p-3 text-sm text-slate-700">
+                          <p className="font-bold text-slate-950">Pet details</p>
+                          <div className="mt-2 grid gap-1">
+                            <p>Pet name: {selectedOrder.petDetails.petName || 'Not provided'}</p>
+                            <p>Birthday/gotcha day: {selectedOrder.petDetails.specialDate || 'Not provided'}</p>
+                            <p>Instagram: {selectedOrder.petDetails.instagramHandle || 'Not provided'}</p>
+                          </div>
+                        </div>
+                      )}
                     </div>
                     <div className="rounded-lg bg-gray-50 p-4">
                       <label className="text-sm font-semibold text-gray-700" htmlFor="order-status">

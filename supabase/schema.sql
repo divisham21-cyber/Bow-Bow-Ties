@@ -57,6 +57,7 @@ create table if not exists public.orders (
   total_cents integer not null default 0,
   currency text not null default 'USD',
   fulfillment jsonb,
+  pet_details jsonb,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -150,9 +151,9 @@ values
   (
     'bow-bow-treats',
     'Small batch treats',
-    'Oven-baked Bow Bow Treats',
+    'Oven-baked Dog Treats',
     'Crunchy 5 oz. dog treats in simple flavors, available as one-time orders or subscriptions.',
-    'Bow Bow Treats are made for easy gifting, restocking, and happy routines. Pick a flavor for a single order, or subscribe monthly or quarterly so your dog has a fresh treat delivery on schedule.',
+    'Dog treats are made for easy gifting, restocking, and happy routines. Pick a flavor for a single order, or subscribe monthly or quarterly so your dog has a fresh treat delivery on schedule.',
     3
   ),
   (

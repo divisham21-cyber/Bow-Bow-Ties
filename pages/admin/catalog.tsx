@@ -694,7 +694,7 @@ export default function AdminCatalog() {
                     <div>
                       <h3 className="font-bold text-gray-950">Subscription rules</h3>
                       <p className="mt-2 text-sm text-gray-600">
-                        Subscriptions are limited to Bow Bow Treats. Monthly and quarterly plan prices are managed separately from the one-time product price.
+                        Subscriptions are limited to Dog Treats. Monthly and quarterly plan prices are managed separately from the one-time product price.
                       </p>
                       <p className="mt-2 text-sm font-semibold text-amber-700">
                         After changing subscription prices, sync Stripe prices before taking orders.
@@ -747,7 +747,7 @@ export default function AdminCatalog() {
                     <label className="flex items-center justify-between gap-4 rounded-md border border-gray-200 px-4 py-3">
                       <span>
                         <span className="block text-sm font-bold text-gray-950">Enable subscription</span>
-                        <span className="block text-xs text-gray-500">Only available for Bow Bow Treats</span>
+                        <span className="block text-xs text-gray-500">Only available for Dog Treats</span>
                       </span>
                       <input
                         type="checkbox"

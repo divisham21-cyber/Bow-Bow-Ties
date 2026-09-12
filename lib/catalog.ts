@@ -81,7 +81,7 @@ export const catalogCategories: ProductCategory[] = [
   },
   {
     id: 'bow-bow-treats',
-    name: 'Bow Bow Treats',
+    name: 'Dog Treats',
     description: 'Giftable treat bundles and care packages for pet celebrations.',
   },
   {
@@ -114,9 +114,9 @@ export const defaultCategoryContent: CategoryContent[] = [
   {
     categoryId: 'bow-bow-treats',
     eyebrow: 'Small batch treats',
-    title: 'Oven-baked Bow Bow Treats',
+    title: 'Oven-baked Dog Treats',
     summary: 'Crunchy 5 oz. dog treats in simple flavors, available as one-time orders or subscriptions.',
-    body: 'Bow Bow Treats are made for easy gifting, restocking, and happy routines. Pick a flavor for a single order, or subscribe monthly or quarterly so your dog has a fresh treat delivery on schedule.',
+    body: 'Dog treats are made for easy gifting, restocking, and happy routines. Pick a flavor for a single order, or subscribe monthly or quarterly so your dog has a fresh treat delivery on schedule.',
   },
   {
     categoryId: 'tabitha-beads',
