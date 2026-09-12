@@ -208,8 +208,13 @@ export function createOrderFromCheckoutSession(
   const taxCents = session.total_details?.amount_tax || 0
   const shippingCents = session.total_details?.amount_shipping || 0
   const discountCents = session.total_details?.amount_discount || 0
-  const calculatedTotalCents = Math.max(subtotalCents + taxCents + shippingCents - discountCents, 0)
-  const totalCents = session.amount_total ?? calculatedTotalCents
+  const totalCents = getOrderDueCents({
+    subtotalCents,
+    shippingCents,
+    taxCents,
+    discountCents,
+    totalCents: session.amount_total || 0,
+  })
 
   return {
     id: `order-${session.id}`,
@@ -246,14 +251,7 @@ export function formatShippingAddress(address: ShippingAddress) {
 }
 
 export function getOrderTotalLabel(order: OrderSummary) {
-  const discountCents = getOrderDiscountCents(order)
-  const calculatedTotalCents = Math.max(order.subtotalCents + order.shippingCents + order.taxCents - discountCents, 0)
-  const totalCents =
-    order.taxCents > 0 && discountCents === 0 && order.totalCents === order.subtotalCents + order.shippingCents
-      ? calculatedTotalCents
-      : order.totalCents || calculatedTotalCents
-
-  return `${formatPrice(totalCents)} ${order.currency}`
+  return `${formatPrice(getOrderDueCents(order))} ${order.currency}`
 }
 
 export function getOrderDiscountCents(order: OrderSummary) {
@@ -269,6 +267,13 @@ export function getOrderDiscountCents(order: OrderSummary) {
   }
 
   return 0
+}
+
+export function getOrderDueCents(
+  order: Pick<OrderSummary, 'subtotalCents' | 'shippingCents' | 'taxCents' | 'totalCents' | 'discountCents'>
+) {
+  const discountCents = getOrderDiscountCents(order as OrderSummary)
+  return Math.max(order.subtotalCents + order.shippingCents + order.taxCents - discountCents, 0)
 }
 
 export function getCustomerOrderNumber(order: Pick<OrderSummary, 'stripeSessionId' | 'createdAt'>) {

@@ -80,7 +80,8 @@ async function upsertShippingRate(config) {
   if (
     existing &&
     existing.fixed_amount?.amount === config.fixedAmountCents &&
-    existing.fixed_amount?.currency === 'usd'
+    existing.fixed_amount?.currency === 'usd' &&
+    existing.tax_behavior === 'exclusive'
   ) {
     return { envKey: config.envKey, id: existing.id, created: false }
   }
@@ -92,6 +93,7 @@ async function upsertShippingRate(config) {
       amount: config.fixedAmountCents,
       currency: 'usd',
     },
+    tax_behavior: 'exclusive',
     delivery_estimate: {
       minimum: {
         unit: 'business_day',
@@ -142,6 +144,7 @@ function priceMatches(existing, config) {
     existing &&
     existing.unit_amount === config.unitAmount &&
     existing.currency === 'usd' &&
+    existing.tax_behavior === 'exclusive' &&
     existing.recurring?.interval === config.interval &&
     existing.recurring?.interval_count === config.intervalCount
   )
@@ -158,6 +161,7 @@ async function upsertRecurringShippingPrice(shippingProduct, config) {
     product: shippingProduct.id,
     currency: 'usd',
     unit_amount: config.unitAmount,
+    tax_behavior: 'exclusive',
     nickname: config.nickname,
     lookup_key: config.lookupKey,
     transfer_lookup_key: true,

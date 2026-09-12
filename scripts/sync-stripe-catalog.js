@@ -238,6 +238,7 @@ async function upsertProduct(product) {
 
 function priceMatches(existing, amount, recurring) {
   if (!existing || existing.unit_amount !== amount || existing.currency !== 'usd') return false
+  if (existing.tax_behavior !== 'exclusive') return false
   if (!recurring) return !existing.recurring
 
   return (
@@ -258,6 +259,7 @@ async function upsertOneTimePrice(product, stripeProduct, variant) {
     product: stripeProduct.id,
     currency: 'usd',
     unit_amount: variant.priceCents,
+    tax_behavior: 'exclusive',
     nickname: `${product.name} - ${variant.name}`,
     lookup_key: lookupKey,
     transfer_lookup_key: true,
@@ -288,6 +290,7 @@ async function upsertRecurringPrice(product, stripeProduct, variant, plan) {
     product: stripeProduct.id,
     currency: 'usd',
     unit_amount: amount,
+    tax_behavior: 'exclusive',
     nickname: `${product.name} - ${variant.name} - ${plan.label}`,
     lookup_key: lookupKey,
     transfer_lookup_key: true,
