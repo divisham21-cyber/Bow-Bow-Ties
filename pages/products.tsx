@@ -677,7 +677,7 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                 onClick={() => setIsMobileCartOpen(false)}
                 aria-label="Close cart"
               />
-              <div className="absolute inset-x-0 bottom-0 max-h-[86vh] overflow-y-auto rounded-t-2xl bg-sky-50 p-5 shadow-2xl">
+              <div className="absolute inset-x-0 bottom-0 max-h-[88vh] overflow-y-auto rounded-t-2xl bg-sky-50 px-5 pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-5 shadow-2xl">
                 <div className="flex items-center justify-between gap-4">
                   <div className="flex items-center gap-3">
                     <span className="flex h-11 w-11 items-center justify-center rounded-full bg-amber-300 text-xl shadow-sm" aria-hidden="true">
@@ -792,7 +792,7 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                     </div>
                     <button
                       type="button"
-                      className={`${primaryButtonClass} w-full`}
+                      className={`${primaryButtonClass} mt-2 w-full`}
                       onClick={() => startCheckout(cartItems)}
                     >
                       Checkout
