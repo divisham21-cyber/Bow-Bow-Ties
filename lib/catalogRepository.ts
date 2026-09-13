@@ -21,6 +21,7 @@ interface CatalogProductRow {
   short_description: string
   description: string
   hero_image_url: string
+  image_urls?: string[] | null
   subscription_enabled: boolean
   subscription_plans: SubscriptionPlan[] | null
   featured: boolean
@@ -59,6 +60,12 @@ function rowToProduct(row: CatalogProductRow): CatalogProduct {
       })
     )
 
+  const images = Array.isArray(row.image_urls) && row.image_urls.length
+    ? row.image_urls.filter(Boolean).slice(0, 2)
+    : row.hero_image_url
+      ? [row.hero_image_url]
+      : []
+
   return {
     id: row.id,
     slug: row.slug,
@@ -66,7 +73,7 @@ function rowToProduct(row: CatalogProductRow): CatalogProduct {
     categoryId: row.category_id,
     shortDescription: row.short_description,
     description: row.description,
-    images: row.hero_image_url ? [row.hero_image_url] : [],
+    images,
     variants,
     subscriptionEnabled: row.subscription_enabled,
     subscriptionPlans: row.subscription_plans || undefined,
@@ -76,6 +83,8 @@ function rowToProduct(row: CatalogProductRow): CatalogProduct {
 }
 
 function productToRow(product: CatalogProduct, sortOrder: number) {
+  const images = product.images.filter(Boolean).slice(0, 2)
+
   return {
     id: product.id,
     slug: product.slug,
@@ -83,7 +92,8 @@ function productToRow(product: CatalogProduct, sortOrder: number) {
     category_id: product.categoryId,
     short_description: product.shortDescription,
     description: product.description,
-    hero_image_url: product.images[0] || '',
+    hero_image_url: images[0] || '',
+    image_urls: images,
     subscription_enabled: product.subscriptionEnabled,
     subscription_plans: product.subscriptionPlans || null,
     featured: Boolean(product.featured),

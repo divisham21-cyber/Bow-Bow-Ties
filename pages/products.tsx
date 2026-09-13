@@ -132,6 +132,8 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
   const [checkoutMessage, setCheckoutMessage] = useState<string | null>(null)
   const [isMobileCartOpen, setIsMobileCartOpen] = useState(false)
   const [cartStorageReady, setCartStorageReady] = useState(false)
+  const [activeImageIndexes, setActiveImageIndexes] = useState<Record<string, number>>({})
+  const [touchStartX, setTouchStartX] = useState<Record<string, number>>({})
 
   useEffect(() => {
     try {
@@ -182,6 +184,24 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
 
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0)
   const cartTotal = cartItems.reduce((sum, item) => sum + item.priceCents * item.quantity, 0)
+
+  function updateProductImageIndex(productId: string, imageCount: number, imageIndex: number) {
+    setActiveImageIndexes((current) => ({
+      ...current,
+      [productId]: (imageIndex + imageCount) % imageCount,
+    }))
+  }
+
+  function handleImageSwipe(productId: string, imageCount: number, endX: number) {
+    const startX = touchStartX[productId]
+    if (startX === undefined || imageCount < 2) return
+
+    const distance = startX - endX
+    if (Math.abs(distance) < 36) return
+
+    const currentIndex = activeImageIndexes[productId] || 0
+    updateProductImageIndex(productId, imageCount, currentIndex + (distance > 0 ? 1 : -1))
+  }
 
   function updateSelection(productId: string, nextSelection: Partial<ProductSelection>) {
     setSelections((current) => ({
@@ -265,7 +285,7 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
               <div className="flex justify-between items-center">
                 <Link href="/" className="logo-container">
                   <img
-                    src="/bow_bow_ties.jpg"
+                    src="/bow_bow_ties.png"
                     alt="Bow-Bow-Ties Logo"
                     className="w-16 h-16 rounded-full object-cover"
                   />
@@ -459,16 +479,85 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                         selection.purchaseType === 'subscription' && selectedPlan
                           ? selectedPlan.priceCents || selectedVariant.priceCents * selectedPlan.intervalCount
                           : selectedVariant.priceCents
-                      const heroImage = product.images[0]
+                      const productImages = product.images.filter(Boolean).slice(0, 2)
+                      const activeImageIndex = Math.min(
+                        activeImageIndexes[product.id] || 0,
+                        Math.max(productImages.length - 1, 0)
+                      )
 
                       return (
                         <article key={product.id} className="flex h-full flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-md">
-                        <div className="aspect-square bg-slate-100 overflow-hidden">
-                          <img
-                            src={heroImage}
-                            alt={product.name}
-                            className="h-full w-full object-cover"
-                          />
+                        <div
+                          className="relative aspect-square overflow-hidden bg-slate-100"
+                          onTouchStart={(event) =>
+                            setTouchStartX((current) => ({
+                              ...current,
+                              [product.id]: event.touches[0]?.clientX || 0,
+                            }))
+                          }
+                          onTouchEnd={(event) =>
+                            handleImageSwipe(
+                              product.id,
+                              productImages.length,
+                              event.changedTouches[0]?.clientX || 0
+                            )
+                          }
+                        >
+                          {productImages.length ? (
+                            <div
+                              className="flex h-full transition-transform duration-300 ease-out"
+                              style={{ transform: `translateX(-${activeImageIndex * 100}%)` }}
+                            >
+                              {productImages.map((image, imageIndex) => (
+                                <img
+                                  key={`${product.id}-${imageIndex}`}
+                                  src={image}
+                                  alt={imageIndex === 0 ? product.name : `${product.name} photo ${imageIndex + 1}`}
+                                  className="h-full w-full shrink-0 object-cover"
+                                />
+                              ))}
+                            </div>
+                          ) : null}
+
+                          {productImages.length > 1 && (
+                            <>
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  updateProductImageIndex(product.id, productImages.length, activeImageIndex - 1)
+                                }
+                                className="absolute left-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-lg font-bold text-slate-800 shadow-sm transition-colors hover:bg-white"
+                                aria-label={`Show previous photo for ${product.name}`}
+                              >
+                                {'<'}
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  updateProductImageIndex(product.id, productImages.length, activeImageIndex + 1)
+                                }
+                                className="absolute right-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-lg font-bold text-slate-800 shadow-sm transition-colors hover:bg-white"
+                                aria-label={`Show next photo for ${product.name}`}
+                              >
+                                {'>'}
+                              </button>
+                              <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-2">
+                                {productImages.map((_, imageIndex) => (
+                                  <button
+                                    key={imageIndex}
+                                    type="button"
+                                    onClick={() =>
+                                      updateProductImageIndex(product.id, productImages.length, imageIndex)
+                                    }
+                                    className={`h-2.5 w-2.5 rounded-full border border-white shadow-sm ${
+                                      imageIndex === activeImageIndex ? 'bg-white' : 'bg-white/45'
+                                    }`}
+                                    aria-label={`Show photo ${imageIndex + 1} for ${product.name}`}
+                                  />
+                                ))}
+                              </div>
+                            </>
+                          )}
                         </div>
                         <div className="flex flex-1 flex-col p-5">
                           <div className="flex items-start justify-between gap-3">

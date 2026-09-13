@@ -109,7 +109,7 @@ const Calendar: React.FC = () => {
               <div className="flex justify-between items-center">
                 <Link href="/" className="logo-container">
                   <img 
-                    src="/bow_bow_ties.jpg" 
+                    src="/bow_bow_ties.png" 
                     alt="Bow-Bow-Ties Logo" 
                     className="w-16 h-16 rounded-full object-cover"
                   />

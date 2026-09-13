@@ -26,7 +26,7 @@ export default function AdminHome() {
         <header className="border-b bg-white">
           <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-5 sm:px-6 lg:px-8">
             <div className="flex items-center gap-3">
-              <img src="/bow_bow_ties.jpg" alt="Bow-Bow-Ties Logo" className="h-12 w-12 rounded-full object-cover" />
+              <img src="/bow_bow_ties.png" alt="Bow-Bow-Ties Logo" className="h-12 w-12 rounded-full object-cover" />
               <div>
                 <h1 className="text-2xl font-bold text-gray-950">Admin</h1>
                 <p className="text-sm text-gray-600">Manage catalog, orders, and fulfillment</p>

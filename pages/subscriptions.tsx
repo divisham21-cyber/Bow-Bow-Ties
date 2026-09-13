@@ -48,7 +48,7 @@ export default function SubscriptionsPage() {
           <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-5 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
             <Link href="/" className="flex items-center gap-3">
               <img
-                src="/bow_bow_ties.jpg"
+                src="/bow_bow_ties.png"
                 alt="Bow-Bow-Ties Logo"
                 className="h-12 w-12 rounded-full object-cover"
               />

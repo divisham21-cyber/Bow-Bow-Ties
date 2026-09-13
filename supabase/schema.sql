@@ -6,6 +6,7 @@ create table if not exists public.catalog_products (
   short_description text not null default '',
   description text not null default '',
   hero_image_url text not null default '',
+  image_urls jsonb not null default '[]'::jsonb,
   subscription_enabled boolean not null default false,
   subscription_plans jsonb,
   featured boolean not null default false,

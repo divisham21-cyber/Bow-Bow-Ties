@@ -22,7 +22,7 @@ export default function CheckoutCancel() {
       <main className="min-h-screen bg-sky-50 px-4 py-16">
         <div className="mx-auto max-w-2xl rounded-lg border border-sky-100 bg-white p-8 text-center shadow-sm">
           <img
-            src="/bow_bow_ties.jpg"
+            src="/bow_bow_ties.png"
             alt="Bow-Bow-Ties Logo"
             className="mx-auto h-20 w-20 rounded-full object-cover"
           />

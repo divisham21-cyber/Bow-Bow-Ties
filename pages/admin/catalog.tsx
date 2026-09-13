@@ -49,7 +49,7 @@ export default function AdminCatalog() {
   const [filter, setFilter] = useState<AdminFilter>('all')
   const [statusMessage, setStatusMessage] = useState('Loading catalog...')
   const [isSaving, setIsSaving] = useState(false)
-  const [isUploadingImage, setIsUploadingImage] = useState(false)
+  const [uploadingImageIndex, setUploadingImageIndex] = useState<number | null>(null)
   const [catalogSource, setCatalogSource] = useState('Unsaved changes')
   const [categoryContent, setCategoryContent] = useState<CategoryContent[]>(() => getInitialCategoryContent())
   const [selectedCategoryContentId, setSelectedCategoryContentId] = useState<ProductCategoryId>('bow-ties')
@@ -156,10 +156,16 @@ export default function AdminCatalog() {
     updateSelectedProduct(normalizeProductForCategory(product, categoryId))
   }
 
-  function updateHeroImage(value: string) {
+  function updateProductImage(index: number, value: string) {
     if (!selectedProduct) return
 
-    updateSelectedProduct({ ...selectedProduct, images: [value] })
+    const nextImages = [...selectedProduct.images.slice(0, 2)]
+    nextImages[index] = value
+
+    updateSelectedProduct({
+      ...selectedProduct,
+      images: nextImages.map((image) => image || '').slice(0, 2),
+    })
   }
 
   async function saveCatalog() {
@@ -192,7 +198,7 @@ export default function AdminCatalog() {
     }
   }
 
-  async function uploadHeroImage(event: ChangeEvent<HTMLInputElement>) {
+  async function uploadProductImage(event: ChangeEvent<HTMLInputElement>, imageIndex: number) {
     const file = event.target.files?.[0]
     if (!file || !selectedProduct) return
 
@@ -202,8 +208,8 @@ export default function AdminCatalog() {
       return
     }
 
-    setIsUploadingImage(true)
-    setStatusMessage('Uploading hero image...')
+    setUploadingImageIndex(imageIndex)
+    setStatusMessage(`Uploading photo ${imageIndex + 1}...`)
 
     const reader = new FileReader()
     reader.onload = async () => {
@@ -222,13 +228,13 @@ export default function AdminCatalog() {
           throw new Error(result.message || 'Unable to upload image.')
         }
 
-        updateHeroImage(result.publicUrl)
-        setStatusMessage('Hero image uploaded. Save when ready.')
+        updateProductImage(imageIndex, result.publicUrl)
+        setStatusMessage(`Photo ${imageIndex + 1} uploaded. Save when ready.`)
       } catch (error) {
         const message = error instanceof Error ? error.message : 'Unable to upload image.'
         setStatusMessage(message)
       } finally {
-        setIsUploadingImage(false)
+        setUploadingImageIndex(null)
         event.target.value = ''
       }
     }
@@ -323,7 +329,7 @@ export default function AdminCatalog() {
         <header className="border-b bg-white">
           <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-5 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
             <div className="flex items-center gap-3">
-              <img src="/bow_bow_ties.jpg" alt="Bow-Bow-Ties Logo" className="h-12 w-12 rounded-full object-cover" />
+              <img src="/bow_bow_ties.png" alt="Bow-Bow-Ties Logo" className="h-12 w-12 rounded-full object-cover" />
               <div>
                 <h1 className="text-2xl font-bold text-gray-950">Catalog Admin</h1>
                 <p className="text-sm text-gray-600">Manage products, pricing, photos, and availability</p>
@@ -623,35 +629,43 @@ export default function AdminCatalog() {
 
                 <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
                   <div className="rounded-lg border border-gray-200 bg-white p-5">
-                    <h3 className="font-bold text-gray-950">Hero image</h3>
-                    <div className="mt-4 grid grid-cols-[80px_1fr] gap-3">
-                      <div className="h-20 w-20 overflow-hidden rounded-md bg-gray-100">
-                        {selectedProduct.images[0] ? (
-                          <img src={selectedProduct.images[0]} alt="" className="h-full w-full object-cover" />
-                        ) : null}
-                      </div>
-                      <label>
-                        <span className="text-sm font-semibold text-gray-700">Hero image URL</span>
-                        <input
-                          value={selectedProduct.images[0] || ''}
-                          onChange={(event) => updateHeroImage(event.target.value)}
-                          placeholder="/images/example.jpeg"
-                          className="mt-2 h-10 w-full rounded-md border border-gray-300 px-3 text-sm"
-                        />
-                      </label>
+                    <h3 className="font-bold text-gray-950">Product photos</h3>
+                    <div className="mt-4 space-y-5">
+                      {[0, 1].map((imageIndex) => (
+                        <div key={imageIndex} className="grid grid-cols-[80px_1fr] gap-3">
+                          <div className="h-20 w-20 overflow-hidden rounded-md bg-gray-100">
+                            {selectedProduct.images[imageIndex] ? (
+                              <img src={selectedProduct.images[imageIndex]} alt="" className="h-full w-full object-cover" />
+                            ) : null}
+                          </div>
+                          <div>
+                            <label>
+                              <span className="text-sm font-semibold text-gray-700">
+                                {imageIndex === 0 ? 'Photo 1 URL (hero)' : 'Photo 2 URL'}
+                              </span>
+                              <input
+                                value={selectedProduct.images[imageIndex] || ''}
+                                onChange={(event) => updateProductImage(imageIndex, event.target.value)}
+                                placeholder="/images/example.jpeg"
+                                className="mt-2 h-10 w-full rounded-md border border-gray-300 px-3 text-sm"
+                              />
+                            </label>
+                            <label className="mt-3 inline-flex cursor-pointer rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:border-primary-500">
+                              {uploadingImageIndex === imageIndex ? 'Uploading...' : `Upload Photo ${imageIndex + 1}`}
+                              <input
+                                type="file"
+                                accept="image/png,image/jpeg,image/webp,image/gif"
+                                onChange={(event) => uploadProductImage(event, imageIndex)}
+                                disabled={uploadingImageIndex !== null}
+                                className="sr-only"
+                              />
+                            </label>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                    <label className="mt-4 inline-flex cursor-pointer rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:border-primary-500">
-                      {isUploadingImage ? 'Uploading...' : 'Upload Hero Image'}
-                      <input
-                        type="file"
-                        accept="image/png,image/jpeg,image/webp,image/gif"
-                        onChange={uploadHeroImage}
-                        disabled={isUploadingImage}
-                        className="sr-only"
-                      />
-                    </label>
                     <p className="mt-3 text-sm text-gray-500">
-                      Upload a hero image, or paste an existing image URL.
+                      Photo 1 is always the hero image. Photo 2 appears as the second carousel slide when provided.
                     </p>
                   </div>
 

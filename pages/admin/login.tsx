@@ -52,7 +52,7 @@ export default function AdminLogin() {
       <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-12">
         <section className="w-full max-w-md rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
           <div className="flex items-center gap-3">
-            <img src="/bow_bow_ties.jpg" alt="Bow-Bow-Ties Logo" className="h-12 w-12 rounded-full object-cover" />
+            <img src="/bow_bow_ties.png" alt="Bow-Bow-Ties Logo" className="h-12 w-12 rounded-full object-cover" />
             <div>
               <h1 className="text-2xl font-bold text-slate-950">Admin Login</h1>
               <p className="text-sm text-slate-600">Enter the shop admin password.</p>

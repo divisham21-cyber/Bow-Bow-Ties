@@ -242,7 +242,7 @@ export default function AdminOrders() {
         <header className="border-b bg-white">
           <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-5 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
             <div className="flex items-center gap-3">
-              <img src="/bow_bow_ties.jpg" alt="Bow-Bow-Ties Logo" className="h-12 w-12 rounded-full object-cover" />
+              <img src="/bow_bow_ties.png" alt="Bow-Bow-Ties Logo" className="h-12 w-12 rounded-full object-cover" />
               <div>
                 <h1 className="text-2xl font-bold text-gray-950">Orders Admin</h1>
                 <p className="text-sm text-gray-600">Fulfillment and customer shipping updates</p>
