@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import { GetServerSideProps } from 'next'
+import { useRouter } from 'next/router'
 import { useEffect, useMemo, useState } from 'react'
 import {
   CategoryContent,
@@ -118,6 +119,7 @@ const categoryPillStyles: Record<ProductCategoryId, { active: string; inactive: 
 }
 
 export default function Products({ initialProducts, categoryContent }: ProductsProps) {
+  const router = useRouter()
   const activeProducts = useMemo(
     () => initialProducts.filter((product) => product.active),
     [initialProducts]
@@ -134,6 +136,19 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
   const [cartStorageReady, setCartStorageReady] = useState(false)
   const [activeImageIndexes, setActiveImageIndexes] = useState<Record<string, number>>({})
   const [touchStartX, setTouchStartX] = useState<Record<string, number>>({})
+
+  useEffect(() => {
+    if (!router.isReady) return
+
+    const categoryQuery = router.query.category
+    const category = Array.isArray(categoryQuery) ? categoryQuery[0] : categoryQuery
+    const isValidCategory = catalogCategories.some((candidate) => candidate.id === category)
+
+    if (isValidCategory && category !== selectedCategory) {
+      setSelectedCategory(category as ProductCategoryId)
+      setCategoryIntroExpanded(false)
+    }
+  }, [router.isReady, router.query.category])
 
   useEffect(() => {
     try {
@@ -211,6 +226,19 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
         ...nextSelection,
       },
     }))
+  }
+
+  function selectCategory(categoryId: ProductCategoryId) {
+    setSelectedCategory(categoryId)
+    setCategoryIntroExpanded(false)
+    router.replace(
+      {
+        pathname: '/products',
+        query: { category: categoryId },
+      },
+      undefined,
+      { shallow: true, scroll: false }
+    )
   }
 
   function addToCart(product: CatalogProduct) {
@@ -397,10 +425,7 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                     <button
                       key={category.id}
                       type="button"
-                      onClick={() => {
-                        setSelectedCategory(category.id)
-                        setCategoryIntroExpanded(false)
-                      }}
+                      onClick={() => selectCategory(category.id)}
                       className={`rounded-full border px-5 py-2.5 text-base font-semibold transition-colors ${
                         selectedCategory === category.id ? pillStyle.active : pillStyle.inactive
                       }`}
@@ -488,7 +513,7 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                       return (
                         <article key={product.id} className="flex h-full flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-md">
                         <div
-                          className="relative aspect-square overflow-hidden bg-slate-100"
+                          className="relative aspect-[4/5] overflow-hidden bg-slate-100"
                           onTouchStart={(event) =>
                             setTouchStartX((current) => ({
                               ...current,
@@ -513,7 +538,7 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                                   key={`${product.id}-${imageIndex}`}
                                   src={image}
                                   alt={imageIndex === 0 ? product.name : `${product.name} photo ${imageIndex + 1}`}
-                                  className="h-full w-full shrink-0 object-cover"
+                                  className="h-full w-full shrink-0 object-contain"
                                 />
                               ))}
                             </div>

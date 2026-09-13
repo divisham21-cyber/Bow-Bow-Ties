@@ -51,7 +51,7 @@ export default function Home() {
                     alt="Bow-Bow-Ties Logo" 
                     className="w-16 h-16 rounded-full object-cover"
                   />
-                  <h1 className="text-3xl font-bold gradient-text">Bow-Bow-Ties</h1>
+                  <h1 className="text-3xl font-bold gradient-text">Bow-Bow Ties</h1>
                 </div>
               </div>
               
@@ -164,38 +164,136 @@ export default function Home() {
         })()}
 
         {/* Hero Section */}
-        <section id="home" className="hero-section">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center">
-              <h2 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-                For Pets We Love. For Animals in Need.
-              </h2>
-              <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-                A youth-led, purpose driven pet brand. Handmade pet accessories and wholesome dog treats created with love and a purpose.
-                <br />
-                Every purchase helps support animals in need.
-              </p>
-              <div className="flex justify-center">
-                <a
-                  href="/products"
-                  className="btn-primary text-lg px-8 py-3 inline-block text-center"
-                >
-                  Shop Now
-                </a>
+        <section id="home" className="bg-white pb-5 sm:pb-7">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="relative overflow-hidden rounded-lg bg-slate-900 shadow-sm">
+              <img
+                src="/images/home-treats-banner.png"
+                alt="Happy dog wearing a Bow-Bow-Ties bow tie beside a bag of dog treats"
+                className="h-auto w-full"
+              />
+              <div className="absolute right-0 top-0 h-full w-full bg-[radial-gradient(circle_at_88%_12%,rgba(15,23,42,0.68)_0%,rgba(15,23,42,0.54)_26%,rgba(15,23,42,0.29)_52%,rgba(15,23,42,0)_82%)]" />
+              <div className="absolute inset-0 flex items-start justify-center p-4 sm:justify-end sm:p-6 lg:p-8">
+                <div className="max-w-xl text-center text-white sm:text-right">
+                  <p className="text-4xl font-extrabold leading-none sm:text-5xl lg:text-6xl">
+                    Bow-Bow Ties
+                  </p>
+                  <h2 className="mt-2 text-xl font-bold leading-tight sm:text-2xl lg:text-3xl">
+                    For Pets We Love. For Animals in Need.
+                  </h2>
+                  <p className="ml-auto mt-3 max-w-lg text-sm leading-6 text-white/90 sm:text-base">
+                    A youth-led, purpose driven pet brand. Handmade pet accessories and wholesome dog treats created with love and a purpose. Every purchase helps support animals in need.
+                  </p>
+                  <div className="mt-5 flex justify-center sm:justify-end">
+                    <a
+                      href="/products"
+                      className="rounded-lg border border-amber-300 bg-amber-300 px-6 py-2.5 text-center font-bold text-slate-950 shadow-lg transition-colors hover:border-amber-400 hover:bg-amber-400"
+                    >
+                      Shop Now
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-5 grid gap-5 md:grid-cols-2">
+              <div className="relative min-h-[280px] overflow-hidden rounded-lg bg-slate-900 shadow-sm sm:min-h-[340px]">
+                <img
+                  src="/images/home-accessories-card.png"
+                  alt="Dog and cat wearing Bow-Bow Ties pet accessories"
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+                <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/75 to-transparent" />
+                <p className="absolute bottom-6 left-5 max-w-[55%] text-lg font-bold leading-snug text-white shadow-sm sm:left-6 sm:text-xl">
+                  Bow Ties, Bandanas, Necklaces, and more
+                </p>
+                <div className="absolute bottom-5 right-5">
+                  <a
+                    href="/products?category=bow-ties"
+                    className="inline-flex rounded-lg border border-amber-300 bg-amber-300 px-5 py-2.5 font-bold text-slate-950 shadow-sm transition-colors hover:bg-amber-400"
+                  >
+                    Shop Pet Accessories
+                  </a>
+                </div>
+              </div>
+
+              <div className="relative min-h-[280px] overflow-hidden rounded-lg bg-slate-900 shadow-sm sm:min-h-[340px]">
+                <img
+                  src="/images/home-treats-card.png"
+                  alt="Bow-Bow Treats bags with natural dog treat ingredients"
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+                <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/75 to-transparent" />
+                <p className="absolute bottom-6 left-5 max-w-[55%] text-lg font-bold leading-snug text-white shadow-sm sm:left-6 sm:text-xl">
+                  Wholesome clean ingredients, no preservative dog treats
+                </p>
+                <div className="absolute bottom-5 right-5">
+                  <a
+                    href="/products?category=bow-bow-treats"
+                    className="inline-flex rounded-lg border border-amber-300 bg-amber-300 px-5 py-2.5 font-bold text-slate-950 shadow-sm transition-colors hover:bg-amber-400"
+                  >
+                    Shop Pet Treats
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-5 grid overflow-hidden rounded-lg bg-rose-50 shadow-sm md:grid-cols-[1fr_1fr]">
+              <div className="min-h-[240px] bg-slate-100 sm:min-h-[300px] md:min-h-[340px]">
+                <img
+                  src="/images/home-founder-banner.png"
+                  alt="Divisha with a dog wearing a Bow-Bow Ties bow tie"
+                  className="h-full w-full object-cover object-center"
+                />
+              </div>
+              <div className="relative flex items-center overflow-hidden px-5 py-6 sm:px-7 lg:px-8">
+                <div className="absolute right-4 top-4 text-6xl text-rose-200/60" aria-hidden="true">♡</div>
+                <div className="absolute right-8 top-12 h-20 w-20 rounded-full border-[12px] border-rose-200/30" aria-hidden="true" />
+                <div className="relative max-w-2xl">
+                  <p className="text-2xl font-extrabold leading-tight text-slate-950 sm:text-3xl">
+                    Started at 9.
+                  </p>
+                  <h3 className="mt-1 text-2xl font-extrabold leading-tight text-rose-600 sm:text-3xl">
+                    With One Simple Mission.
+                  </h3>
+                  <p className="mt-4 text-sm leading-6 text-slate-700 sm:text-base">
+                    At nine years old, Divisha started making bow ties for dogs to help support shelter animals. What began with handmade bow ties has grown into Bow-Bow Ties, now offering pet accessories and wholesome treats, while staying true to the same mission that started it all.
+                  </p>
+                  <a
+                    href="#founder"
+                    className="mt-5 inline-flex rounded-full border border-teal-700 bg-teal-700 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-colors hover:bg-teal-800"
+                  >
+                    Meet Divisha & Read Our Story →
+                  </a>
+                  <div className="mt-5 grid grid-cols-3 gap-2 border-t border-rose-200 pt-4 text-center">
+                    <div className="rounded-lg bg-sky-100 px-2 py-2 text-sky-900">
+                      <p className="text-xl" aria-hidden="true">🎓</p>
+                      <p className="mt-1 text-xs font-bold sm:text-sm">Young Entrepreneur</p>
+                    </div>
+                    <div className="rounded-lg bg-rose-100 px-2 py-2 text-rose-900">
+                      <p className="text-xl" aria-hidden="true">♥</p>
+                      <p className="mt-1 text-xs font-bold sm:text-sm">$10,000+ Raised to Help Animals</p>
+                    </div>
+                    <div className="rounded-lg bg-teal-100 px-2 py-2 text-teal-900">
+                      <p className="text-xl" aria-hidden="true">🐾</p>
+                      <p className="mt-1 text-xs font-bold sm:text-sm">20 Animal Shelters Supported</p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Products Preview Section */}
-        <section id="products" className="py-8 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center">
-              <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Why Pet Parents Choose Bow-Bow Ties</h3>
-              <p className="text-base text-gray-600 mb-5">Little things for your pet. A bigger difference for animals in need.</p>
-              
-              <div className="bg-primary-50 rounded-lg p-4 sm:p-5 max-w-4xl mx-auto">
-                <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        <section id="products" className="bg-white pb-10">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="grid overflow-hidden rounded-lg bg-primary-50 shadow-sm lg:grid-cols-[1.08fr_0.92fr]">
+              <div className="p-4 sm:p-5 lg:p-6">
+                <div className="text-center lg:text-left">
+                  <h3 className="text-2xl font-bold text-gray-900 sm:text-3xl">Why Pet Parents Choose Bow-Bow Ties</h3>
+                  <p className="mt-2 text-base text-gray-600">Little things for your pet. A bigger difference for animals in need.</p>
+                </div>
+                <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2">
                   <div className="flex items-center gap-3 rounded-lg bg-white/70 p-3 text-left shadow-sm">
                     <span className="flex h-12 w-14 shrink-0 items-center justify-center text-3xl">💰</span>
                     <div>
@@ -231,113 +329,55 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-
-                <div className="text-center mt-5">
-                  <div className="inline-flex items-center space-x-2 bg-white rounded-full px-5 py-2 shadow-sm">
-                    <span className="text-base font-semibold text-gray-900">You can make a Difference. Shop with Purpose.</span>
-                  </div>
-                </div>
-
-                <div className="mt-5 flex justify-center">
-                  <a 
-                    href="/products"
-                    className="btn-primary px-7 py-2.5 inline-block"
-                  >
-                    Shop Now
-                  </a>
-                </div>
+              </div>
+              <div className="min-h-[280px] bg-slate-100 lg:min-h-full">
+                <img
+                  src="/images/home-why-pet-parents.png"
+                  alt="Pet parent smiling with a dog wearing a Bow-Bow Ties bow tie"
+                  className="h-full w-full object-cover object-center"
+                />
               </div>
             </div>
           </div>
         </section>
 
         {/* Our Impact Section */}
-        <section id="impact" className="py-12 bg-gray-50">
+        <section id="impact" className="bg-gray-50 py-8">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h3 className="text-3xl font-bold text-gray-900 mb-4">Our Impact</h3>
-              <p className="text-lg text-gray-600">See how your support has made a difference in the lives of animals</p>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
-              <div className="bg-yellow-100 rounded-lg p-6 text-center">
-                <div className="text-3xl font-bold text-yellow-600 mb-2">$10,000+</div>
-                <div className="text-lg font-medium text-gray-900">Amount Donated</div>              
-              </div>
-              
-              <div className="bg-blue-100 rounded-lg p-6 text-center">
-                <div className="text-3xl font-bold text-blue-600 mb-2">20+</div>
-                <div className="text-lg font-medium text-gray-900">Shelters Supported</div>  
-              </div>
-              
-              <div className="bg-green-100 rounded-lg p-6 text-center">
-                <div className="text-3xl font-bold text-green-600 mb-2">400+ LBs</div>
-                <div className="text-lg font-medium text-gray-900">Pet Food Donated</div>
-              </div>
-              
-              <div className="bg-purple-100 rounded-lg p-6 text-center">
-                <div className="text-3xl font-bold text-purple-600 mb-2">68</div>
-                <div className="text-lg font-medium text-gray-900">Dogs Microchipped</div>
+            <div className="rounded-lg bg-gradient-to-r from-sky-50 via-teal-50 to-amber-50 p-5 shadow-sm sm:p-6">
+              <div className="text-center">
+                <h3 className="text-2xl font-bold text-gray-900 sm:text-3xl">Our Impact</h3>
+                <p className="mt-2 text-base text-gray-600">See how your support has made a difference in the lives of animals</p>
               </div>
 
-              <div className="bg-pink-100 rounded-lg p-6 text-center">
-                <div className="text-3xl font-bold text-pink-600 mb-2">2,000+</div>
-                <div className="text-lg font-medium text-gray-900">Products Sold/Donated</div>
-              </div>
-            </div>
+              <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-5">
+                <div className="rounded-lg bg-yellow-100 p-4 text-center">
+                  <div className="text-2xl font-bold text-yellow-600">$10,000+</div>
+                  <div className="mt-1 text-sm font-bold text-gray-900">Amount Donated</div>
+                </div>
 
-            {/* Impact Photos Gallery */}
-            <div className="mb-12">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div 
-                  className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow cursor-pointer"
-                  onClick={() => setSelectedImage('impact/impact_photo_1.jpeg')}
-                >
-                  <img 
-                    src="impact/impact_photo_1.jpeg" 
-                    alt="Impact Photo 1" 
-                    className="w-full h-48 object-contain rounded-lg"
-                  />
-                  <p className="text-center text-sm text-gray-500 mt-2">Click to enlarge</p>
+                <div className="rounded-lg bg-blue-100 p-4 text-center">
+                  <div className="text-2xl font-bold text-blue-600">20+</div>
+                  <div className="mt-1 text-sm font-bold text-gray-900">Shelters Supported</div>
                 </div>
-                <div 
-                  className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow cursor-pointer"
-                  onClick={() => setSelectedImage('impact/impact_photo_2.jpeg')}
-                >
-                  <img 
-                    src="impact/impact_photo_2.jpeg" 
-                    alt="Impact Photo 2" 
-                    className="w-full h-48 object-contain rounded-lg"
-                  />
-                  <p className="text-center text-sm text-gray-500 mt-2">Click to enlarge</p>
+
+                <div className="rounded-lg bg-green-100 p-4 text-center">
+                  <div className="text-2xl font-bold text-green-600">400+ LBs</div>
+                  <div className="mt-1 text-sm font-bold text-gray-900">Pet Food Donated</div>
                 </div>
-                <div 
-                  className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow cursor-pointer"
-                  onClick={() => setSelectedImage('impact/impact_photo_3.jpeg')}
-                >
-                  <img 
-                    src="impact/impact_photo_3.jpeg" 
-                    alt="Impact Photo 3" 
-                    className="w-full h-48 object-contain rounded-lg"
-                  />
-                  <p className="text-center text-sm text-gray-500 mt-2">Click to enlarge</p>
+
+                <div className="rounded-lg bg-purple-100 p-4 text-center">
+                  <div className="text-2xl font-bold text-purple-600">68</div>
+                  <div className="mt-1 text-sm font-bold text-gray-900">Dogs Microchipped</div>
                 </div>
-                <div 
-                  className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow cursor-pointer"
-                  onClick={() => setSelectedImage('impact/impact_photo_4.jpeg')}
-                >
-                  <img 
-                    src="impact/impact_photo_4.jpeg" 
-                    alt="Impact Photo 4" 
-                    className="w-full h-48 object-contain rounded-lg"
-                  />
-                  <p className="text-center text-sm text-gray-500 mt-2">Click to enlarge</p>
+
+                <div className="rounded-lg bg-pink-100 p-4 text-center">
+                  <div className="text-2xl font-bold text-pink-600">2,000+</div>
+                  <div className="mt-1 text-sm font-bold text-gray-900">Products Sold/Donated</div>
                 </div>
               </div>
-            </div>
-            
-            <div className="text-center mt-8">
-              <p className="text-gray-600 italic">
+
+              <p className="mt-5 text-center text-sm italic text-gray-600">
                 "Making the world a better place for animals"
               </p>
             </div>
@@ -358,34 +398,14 @@ export default function Home() {
         {/* About Section */}
         <section id="about" className="py-12 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {/* Hero Banner */}
-            <div className="mb-12 -mx-4 sm:-mx-6 lg:-mx-8">
-              <div className="relative">
-                <div className="w-full" style={{ aspectRatio: '2528/1126' }}>
-                  <img 
-                    src="/bowbowtiebanner.jpeg" 
-                    alt="Bow-Bow-Ties Hero Banner" 
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-                <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center">
-                  <div className="text-center text-white">
-                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3 drop-shadow-2xl" style={{ textShadow: '2px 2px 0px #000, -2px -2px 0px #000, 2px -2px 0px #000, -2px 2px 0px #000' }}>
-                      About Bow-Bow-Ties
-                    </h2>
-                    <p className="text-lg md:text-xl drop-shadow-xl" style={{ textShadow: '1px 1px 0px #000, -1px -1px 0px #000, 1px -1px 0px #000, -1px 1px 0px #000' }}>
-                      Making The World A Better Place For Animals
-                    </p>
-                  </div>
-                </div>
-              </div>
+            <div id="founder" className="scroll-mt-24 mb-8 rounded-lg bg-gradient-to-r from-teal-500 via-sky-400 to-amber-300 px-5 py-5 text-center shadow-sm">
+              <p className="text-sm font-bold uppercase tracking-wide text-slate-950">Our Story</p>
+              <h3 className="mt-1 text-2xl font-bold text-slate-950 sm:text-3xl">From the Founder - Divisha M</h3>
             </div>
-
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div className="bg-white rounded-lg p-8 shadow-md">
                 <div className="text-center">
                   <span className="text-6xl mb-4 block">🐾</span>
-                  <h4 className="text-xl font-semibold text-gray-900 mb-6">From the Founder - Divisha M</h4>
                   <div className="text-left space-y-4">
                     <p className="text-gray-600">I started Bow-Bow Ties in 2021 when I was 9 years old with a mission to make the world a better place for animals. I wanted to help animals in shelters by creating adorable bow ties that would make them look cuter in adoption photo shoots and increase their chances of finding loving homes.</p>
                     <p className="text-gray-600">I started by making bow ties and gifting them to local animal shelters. But I was not sure, if it was enough and I was looking to do more.</p>
