@@ -172,22 +172,23 @@ export default function Home() {
                 alt="Happy dog wearing a Bow-Bow-Ties bow tie beside a bag of dog treats"
                 className="h-auto w-full"
               />
-              <div className="absolute right-0 top-0 h-full w-full bg-[radial-gradient(circle_at_88%_12%,rgba(15,23,42,0.68)_0%,rgba(15,23,42,0.54)_26%,rgba(15,23,42,0.29)_52%,rgba(15,23,42,0)_82%)]" />
-              <div className="absolute inset-0 flex items-start justify-center p-4 sm:justify-end sm:p-6 lg:p-8">
+              <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 via-black/40 to-transparent sm:hidden" />
+              <div className="absolute right-0 top-0 hidden h-full w-full bg-[radial-gradient(circle_at_88%_12%,rgba(15,23,42,0.68)_0%,rgba(15,23,42,0.54)_26%,rgba(15,23,42,0.29)_52%,rgba(15,23,42,0)_82%)] sm:block" />
+              <div className="absolute inset-0 flex items-end justify-center p-4 sm:items-start sm:justify-end sm:p-6 lg:p-8">
                 <div className="max-w-xl text-center text-white sm:text-right">
-                  <p className="text-4xl font-extrabold leading-none sm:text-5xl lg:text-6xl">
+                  <p className="text-3xl font-extrabold leading-none sm:text-5xl lg:text-6xl">
                     Bow-Bow Ties
                   </p>
-                  <h2 className="mt-2 text-xl font-bold leading-tight sm:text-2xl lg:text-3xl">
+                  <h2 className="mt-2 text-base font-bold leading-tight sm:text-2xl lg:text-3xl">
                     For Pets We Love. For Animals in Need.
                   </h2>
-                  <p className="ml-auto mt-3 max-w-lg text-sm leading-6 text-white/90 sm:text-base">
+                  <p className="ml-auto mt-3 hidden max-w-lg text-sm leading-6 text-white/90 sm:block sm:text-base">
                     A youth-led, purpose driven pet brand. Handmade pet accessories and wholesome dog treats created with love and a purpose. Every purchase helps support animals in need.
                   </p>
-                  <div className="mt-5 flex justify-center sm:justify-end">
+                  <div className="mt-4 flex justify-center sm:mt-5 sm:justify-end">
                     <a
                       href="/products"
-                      className="rounded-lg border border-amber-300 bg-amber-300 px-6 py-2.5 text-center font-bold text-slate-950 shadow-lg transition-colors hover:border-amber-400 hover:bg-amber-400"
+                      className="rounded-lg border border-amber-300 bg-amber-300 px-5 py-2 text-center text-sm font-bold text-slate-950 shadow-lg transition-colors hover:border-amber-400 hover:bg-amber-400 sm:px-6 sm:py-2.5 sm:text-base"
                     >
                       Shop Now
                     </a>
@@ -204,15 +205,15 @@ export default function Home() {
                   className="absolute inset-0 h-full w-full object-cover"
                 />
                 <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/75 to-transparent" />
-                <p className="absolute bottom-6 left-5 max-w-[55%] text-lg font-bold leading-snug text-white shadow-sm sm:left-6 sm:text-xl">
-                  Bow Ties, Bandanas, Necklaces, and more
-                </p>
-                <div className="absolute bottom-5 right-5">
+                <div className="absolute inset-x-5 bottom-5 flex items-end justify-between gap-3 sm:inset-x-6">
+                  <p className="max-w-[58%] text-base font-bold leading-snug text-white shadow-sm sm:max-w-[62%] sm:text-xl">
+                    Bow Ties, Bandanas, Necklaces, and more
+                  </p>
                   <a
                     href="/products?category=bow-ties"
-                    className="inline-flex rounded-lg border border-amber-300 bg-amber-300 px-5 py-2.5 font-bold text-slate-950 shadow-sm transition-colors hover:bg-amber-400"
+                    className="inline-flex shrink-0 rounded-lg border border-amber-300 bg-amber-300 px-4 py-2.5 text-sm font-bold text-slate-950 shadow-sm transition-colors hover:bg-amber-400 sm:px-5 sm:text-base"
                   >
-                    Shop Pet Accessories
+                    Shop Accessories
                   </a>
                 </div>
               </div>
@@ -224,13 +225,13 @@ export default function Home() {
                   className="absolute inset-0 h-full w-full object-cover"
                 />
                 <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/75 to-transparent" />
-                <p className="absolute bottom-6 left-5 max-w-[55%] text-lg font-bold leading-snug text-white shadow-sm sm:left-6 sm:text-xl">
-                  Wholesome clean ingredients, no preservative dog treats
-                </p>
-                <div className="absolute bottom-5 right-5">
+                <div className="absolute inset-x-5 bottom-5 flex items-end justify-between gap-3 sm:inset-x-6">
+                  <p className="max-w-[58%] text-base font-bold leading-snug text-white shadow-sm sm:max-w-[62%] sm:text-xl">
+                    Wholesome clean ingredients, no preservative dog treats
+                  </p>
                   <a
                     href="/products?category=bow-bow-treats"
-                    className="inline-flex rounded-lg border border-amber-300 bg-amber-300 px-5 py-2.5 font-bold text-slate-950 shadow-sm transition-colors hover:bg-amber-400"
+                    className="inline-flex shrink-0 rounded-lg border border-amber-300 bg-amber-300 px-4 py-2.5 text-sm font-bold text-slate-950 shadow-sm transition-colors hover:bg-amber-400 sm:px-5 sm:text-base"
                   >
                     Shop Pet Treats
                   </a>
@@ -287,13 +288,23 @@ export default function Home() {
 
         <section id="products" className="bg-white pb-10">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="grid overflow-hidden rounded-lg bg-primary-50 shadow-sm lg:grid-cols-[1.08fr_0.92fr]">
-              <div className="p-4 sm:p-5 lg:p-6">
-                <div className="text-center lg:text-left">
-                  <h3 className="text-2xl font-bold text-gray-900 sm:text-3xl">Why Pet Parents Choose Bow-Bow Ties</h3>
-                  <p className="mt-2 text-base text-gray-600">Little things for your pet. A bigger difference for animals in need.</p>
+            <div className="grid overflow-hidden rounded-lg bg-primary-50 shadow-sm lg:grid-cols-[0.92fr_1.08fr]">
+              <div className="relative min-h-[280px] bg-slate-100 lg:min-h-full">
+                <img
+                  src="/images/home-why-pet-parents.png"
+                  alt="Pet parent smiling with a dog wearing a Bow-Bow Ties bow tie"
+                  className="h-full w-full object-cover object-center"
+                />
+                <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-black/75 via-black/35 to-transparent" />
+                <div className="absolute inset-x-5 bottom-5 text-white sm:inset-x-6">
+                  <h3 className="whitespace-nowrap text-lg font-bold leading-tight sm:text-2xl">Why Pet Parents Choose Bow-Bow Ties</h3>
                 </div>
-                <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2">
+              </div>
+              <div className="p-4 sm:p-5 lg:p-6">
+                <p className="mb-4 text-center text-base font-bold text-rose-600">
+                  Little things for your pet. A bigger difference for animals in need.
+                </p>
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                   <div className="flex items-center gap-3 rounded-lg bg-white/70 p-3 text-left shadow-sm">
                     <span className="flex h-12 w-14 shrink-0 items-center justify-center text-3xl">💰</span>
                     <div>
@@ -325,17 +336,10 @@ export default function Home() {
                     <span className="flex h-12 w-14 shrink-0 items-center justify-center text-3xl">❤️</span>
                     <div>
                       <h4 className="text-base font-semibold text-gray-900">Something Special for Every Pup</h4>
-                      <p className="mt-0.5 text-sm leading-5 text-gray-600">Shop bow ties, bandanas, necklaces, and delicious treats.</p>
+                      <p className="mt-0.5 text-sm leading-5 text-gray-600">Style your pets with bow ties, bandanas, and necklaces.</p>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className="min-h-[280px] bg-slate-100 lg:min-h-full">
-                <img
-                  src="/images/home-why-pet-parents.png"
-                  alt="Pet parent smiling with a dog wearing a Bow-Bow Ties bow tie"
-                  className="h-full w-full object-cover object-center"
-                />
               </div>
             </div>
           </div>
