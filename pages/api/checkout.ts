@@ -2,10 +2,8 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import Stripe from 'stripe'
 import {
   CatalogProduct,
-  getOneTimePriceLookupKey,
-  getSubscriptionPriceLookupKey,
 } from '../../lib/catalog'
-import { getRecurringShippingPriceLookupKey, pickupLocation } from '../../lib/commerceConfig'
+import { pickupLocation, standardShipping } from '../../lib/commerceConfig'
 import { getCatalogProductsForStorefront } from '../../lib/catalogRepository'
 
 interface CheckoutItemInput {
@@ -33,12 +31,10 @@ interface ValidatedCheckoutItem {
   intervalCount?: number
   unitAmountCents: number
   quantity: number
-  lookupKey: string
 }
 
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY
 const stripe = stripeSecretKey ? new Stripe(stripeSecretKey) : null
-const standardShippingRateId = process.env.STRIPE_STANDARD_SHIPPING_RATE_ID
 
 function getOrigin(req: NextApiRequest) {
   const forwardedProto = req.headers['x-forwarded-proto']
@@ -89,7 +85,6 @@ function validateItems(products: CatalogProduct[], items: CheckoutItemInput[] = 
         intervalCount: plan.intervalCount,
         unitAmountCents: plan.priceCents || variant.priceCents * plan.intervalCount,
         quantity,
-        lookupKey: getSubscriptionPriceLookupKey(product.id, variant.id, plan.id),
       }
     }
 
@@ -101,24 +96,87 @@ function validateItems(products: CatalogProduct[], items: CheckoutItemInput[] = 
       purchaseType: 'one-time',
       unitAmountCents: variant.priceCents,
       quantity,
-      lookupKey: getOneTimePriceLookupKey(product.id, variant.id),
     }
   })
 }
 
-async function getPriceId(lookupKey: string) {
-  if (!stripe) throw new Error('Stripe is not configured.')
+function getCheckoutLineItem(item: ValidatedCheckoutItem): Stripe.Checkout.SessionCreateParams.LineItem {
+  return {
+    price_data: {
+      currency: 'usd',
+      unit_amount: item.unitAmountCents,
+      tax_behavior: 'exclusive',
+      product_data: {
+        name: item.variantName === 'Standard' ? item.productName : `${item.productName} - ${item.variantName}`,
+        metadata: {
+          catalog_id: item.productId,
+          variant_id: item.variantId,
+          purchase_type: item.purchaseType,
+          ...(item.planId ? { plan_id: item.planId } : {}),
+        },
+      },
+      ...(item.purchaseType === 'subscription'
+        ? {
+            recurring: {
+              interval: item.interval as Stripe.PriceCreateParams.Recurring.Interval,
+              interval_count: item.intervalCount,
+            },
+          }
+        : {}),
+    },
+    quantity: item.quantity,
+  }
+}
 
-  const prices = await stripe.prices.list({
-    active: true,
-    lookup_keys: [lookupKey],
-    limit: 1,
-  })
+function getRecurringShippingLineItem(
+  intervalCount: number
+): Stripe.Checkout.SessionCreateParams.LineItem {
+  return {
+    price_data: {
+      currency: 'usd',
+      unit_amount: standardShipping.priceCents * intervalCount,
+      tax_behavior: 'exclusive',
+      product_data: {
+        name: standardShipping.name,
+        metadata: {
+          catalog_id: standardShipping.id,
+          purchase_type: 'subscription-shipping',
+        },
+      },
+      recurring: {
+        interval: 'month',
+        interval_count: intervalCount,
+      },
+    },
+    quantity: 1,
+  }
+}
 
-  const price = prices.data[0]
-  if (!price) throw new Error(`Stripe price is missing for ${lookupKey}.`)
-
-  return price.id
+function getStandardShippingOption(): Stripe.Checkout.SessionCreateParams.ShippingOption {
+  return {
+    shipping_rate_data: {
+      display_name: standardShipping.name,
+      type: 'fixed_amount',
+      fixed_amount: {
+        amount: standardShipping.priceCents,
+        currency: 'usd',
+      },
+      tax_behavior: 'exclusive',
+      delivery_estimate: {
+        minimum: {
+          unit: 'business_day',
+          value: 3,
+        },
+        maximum: {
+          unit: 'business_day',
+          value: 7,
+        },
+      },
+      metadata: {
+        source: 'bow-bow-ties-website',
+      },
+    },
+  }
 }
 
 async function createPickupTaxCustomer() {
@@ -159,11 +217,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const body = req.body as CheckoutRequestBody
     const fulfillmentMethod = body.fulfillmentMethod === 'pickup' ? 'pickup' : 'ship'
 
-    if (fulfillmentMethod === 'ship' && !standardShippingRateId) {
-      res.status(500).json({ message: 'Stripe standard shipping rate is not configured on the server.' })
-      return
-    }
-
     const availableProducts = await getCatalogProductsForStorefront()
     const items = validateItems(availableProducts, body.items)
     const subscriptionItems = items.filter((item) => item.purchaseType === 'subscription')
@@ -178,12 +231,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return
     }
 
-    const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = await Promise.all(
-      items.map(async (item) => ({
-        price: await getPriceId(item.lookupKey),
-        quantity: item.quantity,
-      }))
-    )
+    const lineItems = items.map(getCheckoutLineItem)
     const origin = getOrigin(req)
     const mode = subscriptionItems.length > 0 ? 'subscription' : 'payment'
     const cartMetadata = JSON.stringify(
@@ -204,10 +252,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return
       }
 
-      lineItems.push({
-        price: await getPriceId(getRecurringShippingPriceLookupKey(firstSubscription.intervalCount)),
-        quantity: 1,
-      })
+      lineItems.push(getRecurringShippingLineItem(firstSubscription.intervalCount))
     }
 
     const sessionParams: Stripe.Checkout.SessionCreateParams = {
@@ -240,11 +285,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         sessionParams.shipping_address_collection = {
           allowed_countries: ['US'],
         }
-        sessionParams.shipping_options = [
-          {
-            shipping_rate: standardShippingRateId,
-          },
-        ]
+        sessionParams.shipping_options = [getStandardShippingOption()]
       }
     }
 
