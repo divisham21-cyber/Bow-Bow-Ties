@@ -65,9 +65,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         let message = 'Order marked canceled.'
 
         if (order.stripeSubscriptionId) {
-          const subscription = await stripe.subscriptions.cancel(order.stripeSubscriptionId)
+          const subscription = await stripe.subscriptions.update(order.stripeSubscriptionId, {
+            cancel_at_period_end: true,
+          })
           stripeActionId = subscription.id
-          message = 'Subscription canceled in Stripe and order marked canceled.'
+          message = 'Subscription will cancel at the end of the current billing period.'
         } else if (order.stripePaymentIntentId) {
           message = 'Order marked canceled. Paid one-time orders are not refunded unless you use Refund payment.'
         }

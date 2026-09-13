@@ -244,6 +244,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }))
     )
     const cartMetadataChunks = cartMetadata.match(/.{1,450}/g) || []
+    const sessionMetadata = {
+      source: 'bow-bow-ties-website',
+      fulfillmentMethod,
+      cartParts: String(cartMetadataChunks.length),
+      ...Object.fromEntries(cartMetadataChunks.map((chunk, index) => [`cart_${index}`, chunk])),
+    }
 
     if (mode === 'subscription' && fulfillmentMethod === 'ship') {
       const firstSubscription = subscriptionItems[0]
@@ -268,12 +274,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       phone_number_collection: {
         enabled: true,
       },
-      metadata: {
-        source: 'bow-bow-ties-website',
-        fulfillmentMethod,
-        cartParts: String(cartMetadataChunks.length),
-        ...Object.fromEntries(cartMetadataChunks.map((chunk, index) => [`cart_${index}`, chunk])),
-      },
+      metadata: sessionMetadata,
+    }
+
+    if (mode === 'subscription') {
+      sessionParams.subscription_data = {
+        metadata: sessionMetadata,
+      }
     }
 
     if (fulfillmentMethod === 'pickup') {

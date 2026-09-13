@@ -121,3 +121,35 @@ export async function getOrdersFromDb() {
   if (error) throw error
   return (data || []).map((row) => rowToOrder(row as OrderRow))
 }
+
+export async function getFirstOrderBySubscriptionId(subscriptionId: string) {
+  const supabase = getSupabaseAdmin()
+  if (!supabase) return null
+
+  const { data, error } = await supabase
+    .from('orders')
+    .select('*')
+    .eq('stripe_subscription_id', subscriptionId)
+    .order('created_at', { ascending: true })
+    .limit(1)
+    .maybeSingle()
+
+  if (error) throw error
+  return data ? rowToOrder(data as OrderRow) : null
+}
+
+export async function getSubscriptionOrdersByEmail(email: string) {
+  const supabase = getSupabaseAdmin()
+  if (!supabase) return null
+
+  const { data, error } = await supabase
+    .from('orders')
+    .select('*')
+    .ilike('customer_email', email)
+    .not('stripe_subscription_id', 'is', null)
+    .order('created_at', { ascending: false })
+    .limit(50)
+
+  if (error) throw error
+  return (data || []).map((row) => rowToOrder(row as OrderRow))
+}

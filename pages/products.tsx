@@ -353,7 +353,9 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                   From handmade accessories to wholesome treats, everything we create is made to bring joy to pets while helping animals in need.
                 </p>
                 <div className="mt-5 inline-flex max-w-full rounded-lg border border-sky-200 bg-white/80 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm">
-                  Standard shipping is {formatPrice(standardShipping.priceCents)}. FREE local pickup from {pickupLocation.label} or at in-person events is available.
+                  <span>
+                    Standard shipping is {formatPrice(standardShipping.priceCents)}. FREE local pickup from {pickupLocation.label} or at in-person events is available.
+                  </span>
                 </div>
               </div>
             </div>
@@ -392,10 +394,22 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
               <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_360px]">
                 <div>
                   <section className="mb-6 rounded-lg border border-sky-100 bg-white p-5 shadow-sm">
-                    <p className="text-xs font-bold uppercase tracking-wide text-sky-700">
-                      {selectedCategoryIntro.eyebrow}
-                    </p>
-                    <h2 className="mt-2 text-2xl font-bold text-slate-950">{selectedCategoryIntro.title}</h2>
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                      <div>
+                        <p className="text-xs font-bold uppercase tracking-wide text-sky-700">
+                          {selectedCategoryIntro.eyebrow}
+                        </p>
+                        <h2 className="mt-2 text-2xl font-bold text-slate-950">{selectedCategoryIntro.title}</h2>
+                      </div>
+                      {selectedCategory === 'bow-bow-treats' && (
+                        <Link
+                          href="/subscriptions"
+                          className={`${secondaryButtonClass} w-full text-center text-sm sm:w-fit`}
+                        >
+                          Manage Subscription
+                        </Link>
+                      )}
+                    </div>
                     <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-700">
                       {selectedCategoryIntro.summary}
                     </p>
@@ -834,6 +848,7 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                 <ul className="space-y-2 text-gray-400">
                   <li><Link href="/" className="hover:text-white transition-colors">Home</Link></li>
                   <li><Link href="/products" className="hover:text-white transition-colors">Shop</Link></li>
+                  <li><Link href="/subscriptions" className="hover:text-white transition-colors">Subscriptions</Link></li>
                   <li><a href="/#about" className="hover:text-white transition-colors">About</a></li>
                   <li><Link href="/calendar" className="hover:text-white transition-colors">Calendar</Link></li>
                   <li><a href="/#contact" className="hover:text-white transition-colors">Contact</a></li>

@@ -1,8 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import Stripe from 'stripe'
 import { sendOrderEmails } from '../../../lib/email'
-import { createOrderFromCheckoutSession } from '../../../lib/orders'
-import { saveOrderToDb } from '../../../lib/orderRepository'
+import {
+  createOrderFromCheckoutSession,
+  createRenewalOrderFromInvoice,
+  getInvoiceSubscriptionId,
+} from '../../../lib/orders'
+import { getFirstOrderBySubscriptionId, saveOrderToDb } from '../../../lib/orderRepository'
 import { getCatalogProductsForAdmin } from '../../../lib/catalogRepository'
 
 export const config = {
@@ -57,6 +61,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           await saveOrderToDb(order)
           console.log(`Stripe webhook processed order: ${order.id}`)
           await sendOrderEmails(order)
+        }
+        break
+      case 'invoice.payment_succeeded':
+        {
+          const invoice = event.data.object as Stripe.Invoice
+          const subscriptionId = getInvoiceSubscriptionId(invoice)
+
+          if (!subscriptionId || invoice.billing_reason !== 'subscription_cycle') {
+            console.log(`Stripe webhook skipped invoice order: ${invoice.id}`)
+            break
+          }
+
+          const sourceOrder = await getFirstOrderBySubscriptionId(subscriptionId)
+          if (!sourceOrder) {
+            console.log(`Stripe webhook missing source order for subscription: ${subscriptionId}`)
+            break
+          }
+
+          const renewalOrder = createRenewalOrderFromInvoice(invoice, sourceOrder)
+          await saveOrderToDb(renewalOrder)
+          console.log(`Stripe webhook processed renewal order: ${renewalOrder.id}`)
+          await sendOrderEmails(renewalOrder)
         }
         break
       case 'customer.subscription.created':

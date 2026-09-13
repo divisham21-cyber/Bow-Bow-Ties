@@ -25,6 +25,7 @@ export default function CheckoutSuccess({ order, errorMessage, sessionId }: Chec
   const isPickup = order?.fulfillmentMethod === 'pickup'
   const customerOrderNumber = order ? getCustomerOrderNumber(order) : ''
   const discountCents = order ? getOrderDiscountCents(order) : 0
+  const hasSubscription = order?.lineItems.some((item) => item.purchaseType === 'subscription') || false
   const [petName, setPetName] = useState(order?.petDetails?.petName || '')
   const [specialDate, setSpecialDate] = useState(order?.petDetails?.specialDate || '')
   const [instagramHandle, setInstagramHandle] = useState(order?.petDetails?.instagramHandle || '')
@@ -220,6 +221,20 @@ export default function CheckoutSuccess({ order, errorMessage, sessionId }: Chec
                   <p className="mt-3">
                     Questions? Email <a href="mailto:contact@bowbowties.us" className="font-bold underline">contact@bowbowties.us</a>.
                   </p>
+                  {hasSubscription && (
+                    <div className="mt-4 rounded-lg border border-teal-100 bg-white p-4">
+                      <p className="font-bold text-slate-950">Manage future treat renewals</p>
+                      <p className="mt-1 leading-6">
+                        Use your email and this order number to review or cancel future subscription renewals.
+                      </p>
+                      <Link
+                        href="/subscriptions"
+                        className="mt-3 inline-flex rounded-lg border border-teal-700 bg-teal-700 px-4 py-2 font-bold text-white shadow-sm transition-colors hover:bg-teal-800"
+                      >
+                        Manage Subscription
+                      </Link>
+                    </div>
+                  )}
                 </div>
 
                 <form

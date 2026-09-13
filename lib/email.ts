@@ -17,6 +17,7 @@ export interface EmailMessage {
 const sellerEmail = process.env.SELLER_ORDER_EMAIL || 'contact@bowbowties.us'
 const fromEmail = process.env.ORDER_FROM_EMAIL || 'contact@bowbowties.us'
 const resendApiKey = process.env.RESEND_API_KEY
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://bowbowties.us'
 
 function getLineItemsText(order: OrderSummary) {
   return order.lineItems
@@ -30,14 +31,18 @@ function getLineItemsText(order: OrderSummary) {
 export function buildBuyerOrderEmail(order: OrderSummary): EmailMessage | null {
   if (!order.customerEmail) return null
   const customerOrderNumber = getCustomerOrderNumber(order)
+  const hasSubscription = order.lineItems.some((item) => item.purchaseType === 'subscription')
+  const isRenewalOrder = order.stripeSessionId.startsWith('invoice:')
 
   return {
     to: order.customerEmail,
-    subject: `Bow-Bow-Ties order received`,
+    subject: isRenewalOrder ? 'Bow-Bow-Ties subscription order received' : 'Bow-Bow-Ties order received',
     text: [
       `Hi ${order.customerName},`,
       '',
-      'Thank you for your Bow-Bow-Ties order. We received your payment and will prepare your items for shipment.',
+      isRenewalOrder
+        ? 'Your Bow-Bow-Ties subscription payment was received, and we will prepare this treat order.'
+        : 'Thank you for your Bow-Bow-Ties order. We received your payment and will prepare your items for shipment.',
       '',
       `Order: ${customerOrderNumber}`,
       '',
@@ -58,6 +63,12 @@ export function buildBuyerOrderEmail(order: OrderSummary): EmailMessage | null {
       order.fulfillmentMethod === 'pickup'
         ? 'We will send an update when your order is ready.'
         : 'We will send tracking details after the order is fulfilled.',
+      ...(hasSubscription
+        ? [
+            '',
+            `Manage or cancel future subscription renewals: ${siteUrl.replace(/\/$/, '')}/subscriptions`,
+          ]
+        : []),
     ].join('\n'),
   }
 }
@@ -67,9 +78,11 @@ export function buildSellerOrderEmail(order: OrderSummary): EmailMessage {
 
   return {
     to: sellerEmail,
-    subject: `New Bow-Bow-Ties order: ${order.customerName}`,
+    subject: `${order.stripeSessionId.startsWith('invoice:') ? 'Subscription renewal' : 'New Bow-Bow-Ties order'}: ${order.customerName}`,
     text: [
-      'New paid order received.',
+      order.stripeSessionId.startsWith('invoice:')
+        ? 'New paid subscription renewal order received.'
+        : 'New paid order received.',
       '',
       `Customer order: ${customerOrderNumber}`,
       `Internal order ID: ${order.id}`,

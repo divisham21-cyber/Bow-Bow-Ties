@@ -93,6 +93,20 @@ type CheckoutSessionWithShipping = Stripe.Checkout.Session & {
   } | null
 }
 
+type InvoiceWithSubscription = Stripe.Invoice & {
+  subscription?: string | Stripe.Subscription | null
+  payment_intent?: string | Stripe.PaymentIntent | null
+  tax?: number | null
+  total_tax_amounts?: Array<{ amount: number }>
+  total_discount_amounts?: Array<{ amount: number }>
+}
+
+export function getInvoiceSubscriptionId(invoice: Stripe.Invoice) {
+  const invoiceWithSubscription = invoice as InvoiceWithSubscription
+  const parentSubscription = invoice.parent?.subscription_details?.subscription
+  return getStripeId(invoiceWithSubscription.subscription) || getStripeId(parentSubscription)
+}
+
 function normalizeCartMetadataItem(item: Partial<CartMetadataItem>): CartMetadataItem | null {
   const productId = item.productId || item.p
   const variantId = item.variantId || item.v
@@ -130,7 +144,7 @@ function parseCartMetadata(metadata?: Stripe.Metadata | null) {
   }
 }
 
-function getStripeId(value: string | Stripe.PaymentIntent | Stripe.Subscription | null) {
+function getStripeId(value: string | Stripe.PaymentIntent | Stripe.Subscription | null | undefined) {
   if (!value) return undefined
   return typeof value === 'string' ? value : value.id
 }
@@ -235,6 +249,44 @@ export function createOrderFromCheckoutSession(
     totalCents,
     currency: (session.currency || 'usd').toUpperCase(),
     createdAt: new Date((session.created || Math.floor(Date.now() / 1000)) * 1000).toISOString(),
+  }
+}
+
+export function createRenewalOrderFromInvoice(
+  invoice: Stripe.Invoice,
+  sourceOrder: OrderSummary
+): OrderSummary {
+  const invoiceWithSubscription = invoice as InvoiceWithSubscription
+  const taxCents =
+    invoiceWithSubscription.total_tax_amounts?.reduce((sum, taxAmount) => sum + taxAmount.amount, 0) ||
+    invoiceWithSubscription.tax ||
+    0
+  const discountCents =
+    invoiceWithSubscription.total_discount_amounts?.reduce(
+      (sum, discountAmount) => sum + discountAmount.amount,
+      0
+    ) || 0
+  const createdAt = new Date((invoice.created || Math.floor(Date.now() / 1000)) * 1000).toISOString()
+
+  return {
+    ...sourceOrder,
+    id: `order-${invoice.id}`,
+    stripeSessionId: `invoice:${invoice.id}`,
+    stripePaymentIntentId: getStripeId(invoiceWithSubscription.payment_intent),
+    stripeSubscriptionId: getInvoiceSubscriptionId(invoice) || sourceOrder.stripeSubscriptionId,
+    status: 'needs_fulfillment',
+    customerName: invoice.customer_name || sourceOrder.customerName,
+    customerEmail: invoice.customer_email || sourceOrder.customerEmail,
+    customerPhone: invoice.customer_phone || sourceOrder.customerPhone,
+    subtotalCents: invoice.subtotal || sourceOrder.subtotalCents,
+    shippingCents: (invoice as { amount_shipping?: number | null }).amount_shipping || sourceOrder.shippingCents,
+    taxCents,
+    discountCents,
+    totalCents: invoice.amount_paid || invoice.total || sourceOrder.totalCents,
+    currency: (invoice.currency || sourceOrder.currency || 'usd').toUpperCase(),
+    createdAt,
+    fulfillment: undefined,
+    petDetails: sourceOrder.petDetails,
   }
 }
 

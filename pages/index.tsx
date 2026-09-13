@@ -672,6 +672,7 @@ export default function Home() {
                 <ul className="space-y-2 text-gray-400">
                   <li><a href="#home" className="hover:text-white transition-colors">Home</a></li>
                   <li><a href="/products" className="hover:text-white transition-colors">Shop</a></li>
+                  <li><a href="/subscriptions" className="hover:text-white transition-colors">Subscriptions</a></li>
                   <li><a href="#about" className="hover:text-white transition-colors">About</a></li>
                   <li><a href="/calendar" className="hover:text-white transition-colors">Calendar</a></li>
                   <li><a href="#contact" className="hover:text-white transition-colors">Contact</a></li>
