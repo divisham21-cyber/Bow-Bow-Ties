@@ -172,9 +172,21 @@ export default function Home() {
                 alt="Happy dog wearing a Bow-Bow-Ties bow tie beside a bag of dog treats"
                 className="h-auto w-full"
               />
-              <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 via-black/40 to-transparent sm:hidden" />
+              <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/80 via-black/40 to-transparent sm:hidden" />
               <div className="absolute right-0 top-0 hidden h-full w-full bg-[radial-gradient(circle_at_88%_12%,rgba(15,23,42,0.68)_0%,rgba(15,23,42,0.54)_26%,rgba(15,23,42,0.29)_52%,rgba(15,23,42,0)_82%)] sm:block" />
-              <div className="absolute inset-0 flex items-end justify-center p-4 sm:items-start sm:justify-end sm:p-6 lg:p-8">
+              <div className="absolute inset-x-5 bottom-5 flex items-end justify-between gap-3 sm:hidden">
+                <div className="max-w-[58%] text-left text-white shadow-sm">
+                  <p className="text-base font-bold leading-snug">Bow-Bow Ties</p>
+                  <p className="mt-1 text-sm font-bold leading-snug">For Pets We Love. For Animals in Need.</p>
+                </div>
+                <a
+                  href="/products"
+                  className="inline-flex shrink-0 rounded-lg border border-amber-300 bg-amber-300 px-4 py-2.5 text-sm font-bold text-slate-950 shadow-sm transition-colors hover:bg-amber-400"
+                >
+                  Shop Now
+                </a>
+              </div>
+              <div className="absolute inset-0 hidden items-start justify-end p-4 sm:flex sm:p-6 lg:p-8">
                 <div className="max-w-xl text-center text-white sm:text-right">
                   <p className="text-3xl font-extrabold leading-none sm:text-5xl lg:text-6xl">
                     Bow-Bow Ties
@@ -296,7 +308,7 @@ export default function Home() {
                   className="h-full w-full object-cover object-center"
                 />
                 <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-black/75 via-black/35 to-transparent" />
-                <div className="absolute inset-x-5 bottom-5 text-white sm:inset-x-6">
+                <div className="absolute inset-x-5 bottom-5 text-center text-white sm:inset-x-6">
                   <h3 className="whitespace-nowrap text-lg font-bold leading-tight sm:text-2xl">Why Pet Parents Choose Bow-Bow Ties</h3>
                 </div>
               </div>
