@@ -227,9 +227,9 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ items, fulfillmentMethod: method }),
       })
-      const result = await response.json()
+      const result = await response.json().catch(() => null)
 
-      if (result.url) {
+      if (result?.url) {
         window.localStorage.setItem(
           savedCartKey,
           JSON.stringify({
@@ -241,9 +241,10 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
         return
       }
 
-      setCheckoutMessage(result.message || 'Checkout is not ready yet.')
-    } catch {
-      setCheckoutMessage('Checkout is not ready yet. Please try again in a moment.')
+      setCheckoutMessage(result?.message || 'Checkout is not ready yet. Please try again in a moment.')
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Checkout is not ready yet. Please try again in a moment.'
+      setCheckoutMessage(message)
     }
   }
 
@@ -549,7 +550,7 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                   </div>
                 </div>
 
-                <aside className="hidden h-fit rounded-lg border border-sky-100 bg-sky-50 p-5 shadow-sm lg:sticky lg:top-6 lg:block">
+                <aside className="hidden max-h-[calc(100vh-3rem)] rounded-lg border border-sky-100 bg-sky-50 p-5 shadow-sm lg:sticky lg:top-6 lg:flex lg:flex-col">
                   <div className="flex items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
                       <span className="flex h-11 w-11 items-center justify-center rounded-full bg-amber-300 text-xl shadow-sm" aria-hidden="true">
@@ -569,43 +570,45 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                       <p className="mt-1 text-xs leading-5 text-slate-500">Add an item to choose shipping or pickup and checkout.</p>
                     </div>
                   ) : (
-                    <div className="mt-5 space-y-4">
-                      {cartItems.map((item) => (
-                        <div key={item.id} className="grid grid-cols-[64px_1fr] gap-3 rounded-lg border border-sky-100 bg-white p-3 shadow-sm">
-                          <div className="h-16 w-16 overflow-hidden rounded-md bg-slate-100">
-                            <img src={item.image} alt="" className="h-full w-full object-cover" />
-                          </div>
-                          <div>
-                            <div className="flex justify-between gap-2">
-                              <p className="font-semibold text-slate-950">{item.productName}</p>
-                              <button
-                                type="button"
-                                className="text-sm font-semibold text-slate-500 hover:text-red-600"
-                                onClick={() => updateQuantity(item.id, 0)}
-                              >
-                                Remove
-                              </button>
+                    <div className="mt-5 flex min-h-0 flex-1 flex-col gap-4">
+                      <div className="min-h-0 flex-1 space-y-3 overflow-y-auto pr-1">
+                        {cartItems.map((item) => (
+                          <div key={item.id} className="grid grid-cols-[64px_1fr] gap-3 rounded-lg border border-sky-100 bg-white p-3 shadow-sm">
+                            <div className="h-16 w-16 overflow-hidden rounded-md bg-slate-100">
+                              <img src={item.image} alt="" className="h-full w-full object-cover" />
                             </div>
-                            <p className="text-sm text-slate-600">
-                              {item.variantName}
-                              {item.planName ? `, ${item.planName}` : ''}
-                            </p>
-                            <div className="mt-3 flex items-center justify-between">
-                              <input
-                                type="number"
-                                min={1}
-                                value={item.quantity}
-                                onChange={(event) => updateQuantity(item.id, Number(event.target.value))}
-                                className="w-20 rounded-md border border-slate-300 px-2 py-1 text-sm focus:border-sky-300 focus:outline-none focus:ring-2 focus:ring-sky-100"
-                                aria-label={`Quantity for ${item.productName}`}
-                              />
-                              <span className="font-bold text-slate-900">
-                                {formatPrice(item.priceCents * item.quantity)}
-                              </span>
+                            <div>
+                              <div className="flex justify-between gap-2">
+                                <p className="font-semibold text-slate-950">{item.productName}</p>
+                                <button
+                                  type="button"
+                                  className="text-sm font-semibold text-slate-500 hover:text-red-600"
+                                  onClick={() => updateQuantity(item.id, 0)}
+                                >
+                                  Remove
+                                </button>
+                              </div>
+                              <p className="text-sm text-slate-600">
+                                {item.variantName}
+                                {item.planName ? `, ${item.planName}` : ''}
+                              </p>
+                              <div className="mt-3 flex items-center justify-between">
+                                <input
+                                  type="number"
+                                  min={1}
+                                  value={item.quantity}
+                                  onChange={(event) => updateQuantity(item.id, Number(event.target.value))}
+                                  className="w-20 rounded-md border border-slate-300 px-2 py-1 text-sm focus:border-sky-300 focus:outline-none focus:ring-2 focus:ring-sky-100"
+                                  aria-label={`Quantity for ${item.productName}`}
+                                />
+                                <span className="font-bold text-slate-900">
+                                  {formatPrice(item.priceCents * item.quantity)}
+                                </span>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
 
                       <div className="rounded-lg border border-amber-100 bg-amber-50 p-3">
                         <div className="flex items-center justify-between text-sm font-semibold text-slate-700">
@@ -797,6 +800,11 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                     >
                       Checkout
                     </button>
+                    {checkoutMessage && (
+                      <p className="rounded-lg border border-sky-100 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm">
+                        {checkoutMessage}
+                      </p>
+                    )}
                   </div>
                 )}
               </div>
