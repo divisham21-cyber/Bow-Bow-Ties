@@ -355,53 +355,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* How Do We Support Section */}
-        <section id="support" className="py-12 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h3 className="text-3xl font-bold text-gray-900 mb-4">🐾 How Do We Support? 🐾</h3>
-              <p className="text-lg text-gray-600">See how your support makes a difference</p>
-            </div>
-            
-            <div className="max-w-4xl mx-auto">
-              <div className="bg-primary-50 rounded-lg p-8 md:p-12">
-                <div className="space-y-6 text-gray-700">
-                  <div className="flex items-start space-x-4">
-                    <span className="text-2xl">💰</span>
-                    <p className="text-lg">Donating 50% of sales proceeds donated to animal shelters to help provide food, medical care, and training to animals in need.</p>
-                  </div>
-                  
-                  <div className="flex items-start space-x-4">
-                    <span className="text-2xl">🏷️</span>
-                    <p className="text-lg">Supporting microchipping & pet food drives for low income group with pets.</p>
-                  </div>
-                  
-                  <div className="flex items-start space-x-4">
-                    <span className="text-2xl">🤝</span>
-                    <p className="text-lg">Partnering in fundraising events for animal welfare.</p>
-                  </div>
-                  
-                  <div className="flex items-start space-x-4">
-                    <span className="text-2xl">🎯</span>
-                    <p className="text-lg">Raising awareness about animal adoption.</p>
-                  </div>
-                  
-                  <div className="flex items-start space-x-4">
-                    <span className="text-2xl">🏠</span>
-                    <p className="text-lg">Creating beautiful accessories that help shelter animals look their best for adoption photos.</p>
-                  </div>
-                </div>
-                
-                <div className="text-center mt-8">
-                  <div className="inline-flex items-center space-x-2 bg-white rounded-full px-6 py-3 shadow-sm">
-                    <span className="text-lg font-semibold text-gray-900">Made with Love, Driven by Purpose</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* About Section */}
         <section id="about" className="py-12 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -438,7 +391,7 @@ export default function Home() {
                     <p className="text-gray-600">I started by making bow ties and gifting them to local animal shelters. But I was not sure, if it was enough and I was looking to do more.</p>
                     <p className="text-gray-600">In Summer 2021, I decided to sell a few bow ties at a lemonade stand, where I got a positive response. I realized that this allowed me to raise funds for the shelters which might be more helpful than gifting the bow ties. I started participating in pop-up stalls, children's business fairs, and establishing an online presence, and donated 50% of my sale proceeds.</p>
                      <p className="text-gray-600">The best part of my job is dressing up my pup Trixie, my supermodel along with hundreds of adorable animals!</p>
-                    <p className="text-gray-600">Since starting in 2021, we have donated over $10,000 and supported over 15 animal shelters. I hope that with your support, we can help raise funds for even more animals in need!</p>
+                    <p className="text-gray-600">Since starting in 2021, we have donated over $10,000 and supported over 20 animal shelters. I hope that with your support, we can help raise funds for even more animals in need!</p>
                   </div>
                 </div>
               </div>
