@@ -30,13 +30,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return
       }
 
-      await saveCatalogProductsToDb(products)
+      const productSave = await saveCatalogProductsToDb(products)
       let categoryContentSaved: boolean | undefined
       if (Array.isArray(categoryContent)) {
         categoryContentSaved = await saveCategoryContentToDb(categoryContent)
       }
 
-      res.status(200).json({ ok: true, products, categoryContent, categoryContentSaved })
+      res.status(200).json({ ok: true, products, categoryContent, categoryContentSaved, imageUrlsSaved: productSave.imageUrlsSaved })
       return
     }
 

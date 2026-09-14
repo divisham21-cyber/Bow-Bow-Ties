@@ -102,7 +102,7 @@ export function validateProduct(product: CatalogProduct, allProducts: CatalogPro
   if (!product.shortDescription.trim()) errors.push('Short description is required.')
   if (!product.description.trim()) errors.push('Full description is required.')
   if (imageCount < 1) errors.push('At least one image is required.')
-  if (imageCount > 5) errors.push('A product can have at most 5 images.')
+  if (imageCount > 2) errors.push('A product can have at most 2 images.')
   if (product.subscriptionEnabled && product.categoryId !== 'bow-bow-treats') {
     errors.push('Subscriptions are only enabled for Dog Treats.')
   }
@@ -149,7 +149,7 @@ export function createCatalogExport(
     exportedAt: new Date().toISOString(),
     products: products.map((product) => ({
       ...product,
-      images: product.images.filter(Boolean).slice(0, 1),
+      images: product.images.filter(Boolean).slice(0, 2),
       slug: product.slug || slugify(product.name),
     })),
     categoryContent,

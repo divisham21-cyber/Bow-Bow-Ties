@@ -360,10 +360,10 @@ export default function Home() {
         {/* Our Impact Section */}
         <section id="impact" className="bg-gray-50 py-8">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="rounded-lg bg-gradient-to-r from-sky-50 via-teal-50 to-amber-50 p-5 shadow-sm sm:p-6">
+            <div className="rounded-lg bg-gradient-to-r from-teal-500 via-sky-400 to-amber-300 p-5 shadow-sm sm:p-6">
               <div className="text-center">
-                <h3 className="text-2xl font-bold text-gray-900 sm:text-3xl">Our Impact</h3>
-                <p className="mt-2 text-base text-gray-600">See how your support has made a difference in the lives of animals</p>
+                <h3 className="text-2xl font-bold text-slate-950 sm:text-3xl">Our Impact</h3>
+                <p className="mt-2 text-base font-semibold text-slate-900">See how your support has made a difference in the lives of animals</p>
               </div>
 
               <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-5">
@@ -393,7 +393,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <p className="mt-5 text-center text-sm italic text-gray-600">
+              <p className="mt-5 text-center text-sm font-semibold italic text-slate-900">
                 "Making the world a better place for animals"
               </p>
             </div>
@@ -416,7 +416,7 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div id="founder" className="scroll-mt-24 mb-8 rounded-lg bg-gradient-to-r from-teal-500 via-sky-400 to-amber-300 px-5 py-5 text-center shadow-sm">
               <p className="text-sm font-bold uppercase tracking-wide text-slate-950">Our Story</p>
-              <h3 className="mt-1 text-2xl font-bold text-slate-950 sm:text-3xl">From the Founder - Divisha M</h3>
+              <h3 className="mt-1 text-2xl font-bold text-slate-950 sm:text-3xl">From the Founder - Divisha</h3>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div className="bg-white rounded-lg p-8 shadow-md">

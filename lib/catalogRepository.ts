@@ -13,6 +13,10 @@ function isMissingTableError(error: { code?: string; message?: string }) {
   return error.code === '42P01' || error.code === 'PGRST205' || error.message?.includes('catalog_category_content')
 }
 
+function isMissingImageUrlsColumnError(error: { code?: string; message?: string }) {
+  return error.code === 'PGRST204' || error.message?.includes("'image_urls' column")
+}
+
 interface CatalogProductRow {
   id: string
   slug: string
@@ -206,9 +210,23 @@ export async function saveCatalogProductsToDb(products: CatalogProduct[]) {
   if (!supabase) throw new Error('Supabase is not configured.')
 
   const productRows = products.map(productToRow)
-  const { error: productsError } = await supabase
+  let imageUrlsSaved = true
+  let { error: productsError } = await supabase
     .from('catalog_products')
     .upsert(productRows, { onConflict: 'id' })
+
+  if (productsError && isMissingImageUrlsColumnError(productsError)) {
+    imageUrlsSaved = false
+    const legacyRows = productRows.map((row) => {
+      const legacyRow: Record<string, unknown> = { ...row }
+      delete legacyRow.image_urls
+      return legacyRow
+    })
+    const retry = await supabase
+      .from('catalog_products')
+      .upsert(legacyRows, { onConflict: 'id' })
+    productsError = retry.error
+  }
 
   if (productsError) throw productsError
 
@@ -221,11 +239,13 @@ export async function saveCatalogProductsToDb(products: CatalogProduct[]) {
   if (deleteError) throw deleteError
 
   const variantRows = products.flatMap(productVariantsToRows)
-  if (!variantRows.length) return
+  if (!variantRows.length) return { imageUrlsSaved }
 
   const { error: variantsError } = await supabase
     .from('catalog_product_variants')
     .insert(variantRows)
 
   if (variantsError) throw variantsError
+
+  return { imageUrlsSaved }
 }

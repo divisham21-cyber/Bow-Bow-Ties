@@ -185,11 +185,13 @@ export default function AdminCatalog() {
       }
 
       setCatalogSource('Saved')
-      setStatusMessage(
-        result.categoryContentSaved === false
-          ? 'Catalog saved. Run the category content SQL in Supabase to save category copy edits.'
-          : 'Catalog saved. Storefront will use these active products and category copy.'
-      )
+      if (result.imageUrlsSaved === false) {
+        setStatusMessage('Catalog saved, but Photo 2 needs the product image SQL in Supabase before it can persist.')
+      } else if (result.categoryContentSaved === false) {
+        setStatusMessage('Catalog saved. Run the category content SQL in Supabase to save category copy edits.')
+      } else {
+        setStatusMessage('Catalog saved. Storefront will use these active products and category copy.')
+      }
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unable to save catalog.'
       setStatusMessage(message)
