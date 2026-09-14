@@ -174,7 +174,7 @@ export default function Home() {
               />
               <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/80 via-black/40 to-transparent sm:hidden" />
               <div className="absolute right-0 top-0 hidden h-full w-full bg-[radial-gradient(circle_at_88%_12%,rgba(15,23,42,0.68)_0%,rgba(15,23,42,0.54)_26%,rgba(15,23,42,0.29)_52%,rgba(15,23,42,0)_82%)] sm:block" />
-              <div className="absolute inset-x-5 bottom-5 flex items-end justify-between gap-3 sm:hidden">
+              <div className="absolute inset-x-5 bottom-3 flex items-end justify-between gap-3 sm:hidden">
                 <div className="max-w-[58%] text-left text-white shadow-sm">
                   <p className="text-base font-bold leading-snug">Bow-Bow Ties</p>
                   <p className="mt-1 text-sm font-bold leading-snug">For Pets We Love. For Animals in Need.</p>
@@ -218,8 +218,8 @@ export default function Home() {
                 />
                 <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/75 to-transparent" />
                 <div className="absolute inset-x-5 bottom-5 flex items-end justify-between gap-3 sm:inset-x-6">
-                  <p className="max-w-[58%] text-base font-bold leading-snug text-white shadow-sm sm:max-w-[62%] sm:text-xl">
-                    Bow Ties, Bandanas, Necklaces, and more
+                  <p className="max-w-[52%] text-sm font-bold leading-snug text-white shadow-sm sm:max-w-[62%] sm:text-xl">
+                    Bow Ties, Bandanas, Necklaces, more
                   </p>
                   <a
                     href="/products?category=bow-ties"
@@ -238,7 +238,7 @@ export default function Home() {
                 />
                 <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/75 to-transparent" />
                 <div className="absolute inset-x-5 bottom-5 flex items-end justify-between gap-3 sm:inset-x-6">
-                  <p className="max-w-[58%] text-base font-bold leading-snug text-white shadow-sm sm:max-w-[62%] sm:text-xl">
+                  <p className="max-w-[52%] text-sm font-bold leading-snug text-white shadow-sm sm:max-w-[62%] sm:text-xl">
                     Wholesome clean ingredients, no preservative dog treats
                   </p>
                   <a
@@ -308,7 +308,7 @@ export default function Home() {
                   className="h-full w-full object-cover object-center"
                 />
                 <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-black/75 via-black/35 to-transparent" />
-                <div className="absolute inset-x-5 bottom-5 text-center text-white sm:inset-x-6">
+                <div className="absolute inset-x-0 bottom-5 px-3 text-center text-white sm:inset-x-6 sm:px-0">
                   <h3 className="whitespace-nowrap text-lg font-bold leading-tight sm:text-2xl">Why Pet Parents Choose Bow-Bow Ties</h3>
                 </div>
               </div>
@@ -360,8 +360,8 @@ export default function Home() {
         {/* Our Impact Section */}
         <section id="impact" className="bg-gray-50 py-8">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="rounded-lg bg-gradient-to-r from-teal-500 via-sky-400 to-amber-300 p-5 shadow-sm sm:p-6">
-              <div className="text-center">
+            <div className="rounded-lg bg-gradient-to-r from-sky-50 via-teal-50 to-amber-50 p-5 shadow-sm sm:p-6">
+              <div className="rounded-lg bg-gradient-to-r from-teal-500 via-sky-400 to-amber-300 px-5 py-4 text-center">
                 <h3 className="text-2xl font-bold text-slate-950 sm:text-3xl">Our Impact</h3>
                 <p className="mt-2 text-base font-semibold text-slate-900">See how your support has made a difference in the lives of animals</p>
               </div>
