@@ -88,6 +88,14 @@ export const events: Event[] = [
     description: 'Marketplace event in Kenmore! Support young local entrepreneurs.',
     type: 'marketplace'
   },
+  {
+    id: 11,
+    title: "Homeward Pet 5k",
+    date: '2026-09-19',
+    time: '9:00AM-2:00PM',
+    description: 'No Place Like Home 5k! At Wilmot Gateway Park, Woodinville.',
+    type: 'marketplace'
+  },
 ];
 
 export function getNextEvent(): Event | null {

@@ -186,7 +186,7 @@ export default function AdminCatalog() {
 
       setCatalogSource('Saved')
       if (result.imageUrlsSaved === false) {
-        setStatusMessage('Catalog saved, but Photo 2 needs the product image SQL in Supabase before it can persist.')
+        setStatusMessage('Catalog saved. Photo 2 is not enabled in the database yet, so only Photo 1 is saved for now.')
       } else if (result.categoryContentSaved === false) {
         setStatusMessage('Catalog saved. Run the category content SQL in Supabase to save category copy edits.')
       } else {
