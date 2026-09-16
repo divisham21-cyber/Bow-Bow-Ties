@@ -32,25 +32,61 @@ const emptyFulfillment: FulfillmentInfo = {
   note: '',
 }
 
+type OrderQueueFilter = 'customer' | 'sandbox'
+type OrderStatusFilter = 'all' | OrderStatus
+type OrderPurchaseTypeFilter = 'all' | 'one-time' | 'subscription'
+
+function isSandboxOrder(order: OrderSummary) {
+  return order.stripeSessionId.startsWith('cs_test') || order.stripeSessionId.includes('_test_')
+}
+
+function isSubscriptionOrder(order: OrderSummary) {
+  return order.lineItems.some((item) => item.purchaseType === 'subscription')
+}
+
+function getFilteredOrders(
+  orders: OrderSummary[],
+  orderQueueFilter: OrderQueueFilter,
+  statusFilter: OrderStatusFilter,
+  purchaseTypeFilter: OrderPurchaseTypeFilter
+) {
+  return orders.filter((order) => {
+    const matchesQueue = orderQueueFilter === 'sandbox' ? isSandboxOrder(order) : !isSandboxOrder(order)
+    const matchesStatus = statusFilter === 'all' || order.status === statusFilter
+    const matchesPurchaseType =
+      purchaseTypeFilter === 'all' ||
+      (purchaseTypeFilter === 'subscription' ? isSubscriptionOrder(order) : !isSubscriptionOrder(order))
+
+    return matchesQueue && matchesStatus && matchesPurchaseType
+  })
+}
+
 export default function AdminOrders() {
   const [orders, setOrders] = useState<OrderSummary[]>([])
   const [selectedOrderId, setSelectedOrderId] = useState('')
+  const [orderQueueFilter, setOrderQueueFilter] = useState<OrderQueueFilter>('customer')
+  const [statusFilter, setStatusFilter] = useState<OrderStatusFilter>('all')
+  const [purchaseTypeFilter, setPurchaseTypeFilter] = useState<OrderPurchaseTypeFilter>('all')
   const [fulfillmentDraft, setFulfillmentDraft] = useState<FulfillmentInfo>(emptyFulfillment)
   const [emailPreview, setEmailPreview] = useState('')
   const [statusMessage, setStatusMessage] = useState('Loading paid Stripe checkout orders...')
   const [orderAction, setOrderAction] = useState<'refund' | 'cancel' | null>(null)
   const [savingOrderId, setSavingOrderId] = useState<string | null>(null)
 
-  const selectedOrder = orders.find((order) => order.id === selectedOrderId) || orders[0]
+  const visibleOrders = useMemo(
+    () => getFilteredOrders(orders, orderQueueFilter, statusFilter, purchaseTypeFilter),
+    [orderQueueFilter, orders, purchaseTypeFilter, statusFilter]
+  )
+  const selectedOrder = visibleOrders.find((order) => order.id === selectedOrderId) || visibleOrders[0]
   const isSavingSelectedOrder = selectedOrder ? savingOrderId === selectedOrder.id : false
   const selectedOrderIsFulfilled = selectedOrder
     ? ['fulfilled', 'customer_notified'].includes(selectedOrder.status)
     : false
   const selectedOrderIsNotified = selectedOrder?.status === 'customer_notified'
-  const fulfillmentQueue = orders.filter((order) =>
+  const fulfillmentQueue = visibleOrders.filter((order) =>
     ['paid', 'needs_fulfillment'].includes(order.status)
   ).length
-  const fulfilledCount = orders.filter((order) =>
+  const fulfilledCount = visibleOrders.filter((order) =>
     ['fulfilled', 'customer_notified'].includes(order.status)
   ).length
 
@@ -73,11 +109,14 @@ export default function AdminOrders() {
 
       const loadedOrders = (result.orders || []) as OrderSummary[]
       const nextOrders = loadedOrders
+      const nextVisibleOrders = getFilteredOrders(nextOrders, orderQueueFilter, statusFilter, purchaseTypeFilter)
       setOrders(nextOrders)
       setSelectedOrderId((current) =>
-        nextOrders.some((order) => order.id === current) ? current : nextOrders[0]?.id || ''
+        nextVisibleOrders.some((order) => order.id === current) ? current : nextVisibleOrders[0]?.id || ''
       )
-      setFulfillmentDraft(nextOrders[0]?.fulfillment || emptyFulfillment)
+      const nextSelectedOrder =
+        nextVisibleOrders.find((order) => order.id === selectedOrderId) || nextVisibleOrders[0]
+      setFulfillmentDraft(nextSelectedOrder?.fulfillment || emptyFulfillment)
       setEmailPreview('')
       setStatusMessage(
         nextOrders.length
@@ -87,6 +126,33 @@ export default function AdminOrders() {
     } catch {
       setStatusMessage('Unable to load Stripe orders. Please try again.')
     }
+  }
+
+  function updateOrderQueueFilter(nextFilter: OrderQueueFilter) {
+    const nextVisibleOrders = getFilteredOrders(orders, nextFilter, statusFilter, purchaseTypeFilter)
+
+    setOrderQueueFilter(nextFilter)
+    setSelectedOrderId(nextVisibleOrders[0]?.id || '')
+    setFulfillmentDraft(nextVisibleOrders[0]?.fulfillment || emptyFulfillment)
+    setEmailPreview('')
+  }
+
+  function updateStatusFilter(nextFilter: OrderStatusFilter) {
+    const nextVisibleOrders = getFilteredOrders(orders, orderQueueFilter, nextFilter, purchaseTypeFilter)
+
+    setStatusFilter(nextFilter)
+    setSelectedOrderId(nextVisibleOrders[0]?.id || '')
+    setFulfillmentDraft(nextVisibleOrders[0]?.fulfillment || emptyFulfillment)
+    setEmailPreview('')
+  }
+
+  function updatePurchaseTypeFilter(nextFilter: OrderPurchaseTypeFilter) {
+    const nextVisibleOrders = getFilteredOrders(orders, orderQueueFilter, statusFilter, nextFilter)
+
+    setPurchaseTypeFilter(nextFilter)
+    setSelectedOrderId(nextVisibleOrders[0]?.id || '')
+    setFulfillmentDraft(nextVisibleOrders[0]?.fulfillment || emptyFulfillment)
+    setEmailPreview('')
   }
 
   useEffect(() => {
@@ -272,7 +338,7 @@ export default function AdminOrders() {
           <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
             <div className="rounded-lg border border-gray-200 bg-white p-4">
               <p className="text-sm font-semibold text-gray-500">Orders</p>
-              <p className="mt-2 text-3xl font-bold text-gray-950">{orders.length}</p>
+              <p className="mt-2 text-3xl font-bold text-gray-950">{visibleOrders.length}</p>
             </div>
             <div className="rounded-lg border border-gray-200 bg-white p-4">
               <p className="text-sm font-semibold text-gray-500">To fulfill</p>
@@ -297,11 +363,55 @@ export default function AdminOrders() {
           <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[360px_1fr]">
             <aside className="rounded-lg border border-gray-200 bg-white">
               <div className="border-b border-gray-200 p-4">
-                <h2 className="font-bold text-gray-950">Order queue</h2>
-                <p className="mt-1 text-sm text-gray-600">Paid orders, newest first.</p>
+                <div className="flex flex-col gap-3">
+                  <div>
+                    <h2 className="font-bold text-gray-950">Order queue</h2>
+                    <p className="mt-1 text-sm text-gray-600">Paid orders, newest first.</p>
+                  </div>
+                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+                    <label className="block">
+                      <span className="text-xs font-bold uppercase tracking-wide text-gray-500">Source</span>
+                      <select
+                        value={orderQueueFilter}
+                        onChange={(event) => updateOrderQueueFilter(event.target.value as OrderQueueFilter)}
+                        className="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-700"
+                      >
+                        <option value="customer">Customer orders</option>
+                        <option value="sandbox">Sandbox orders</option>
+                      </select>
+                    </label>
+                    <label className="block">
+                      <span className="text-xs font-bold uppercase tracking-wide text-gray-500">Status</span>
+                      <select
+                        value={statusFilter}
+                        onChange={(event) => updateStatusFilter(event.target.value as OrderStatusFilter)}
+                        className="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-700"
+                      >
+                        <option value="all">All statuses</option>
+                        {Object.entries(statusLabels).map(([status, label]) => (
+                          <option key={status} value={status}>
+                            {label}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                    <label className="block">
+                      <span className="text-xs font-bold uppercase tracking-wide text-gray-500">Type</span>
+                      <select
+                        value={purchaseTypeFilter}
+                        onChange={(event) => updatePurchaseTypeFilter(event.target.value as OrderPurchaseTypeFilter)}
+                        className="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-700"
+                      >
+                        <option value="all">All types</option>
+                        <option value="one-time">One-time</option>
+                        <option value="subscription">Subscription</option>
+                      </select>
+                    </label>
+                  </div>
+                </div>
               </div>
               <div className="max-h-[720px] overflow-y-auto">
-                {orders.length ? orders.map((order) => (
+                {visibleOrders.length ? visibleOrders.map((order) => (
                   <button
                     key={order.id}
                     type="button"
@@ -323,7 +433,9 @@ export default function AdminOrders() {
                     </div>
                   </button>
                 )) : (
-                  <p className="p-4 text-sm text-gray-600">No paid orders loaded.</p>
+                  <p className="p-4 text-sm text-gray-600">
+                    No {orderQueueFilter === 'sandbox' ? 'sandbox' : 'customer'} orders loaded.
+                  </p>
                 )}
               </div>
             </aside>

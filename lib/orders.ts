@@ -91,6 +91,9 @@ type CheckoutSessionWithShipping = Stripe.Checkout.Session & {
     name?: string | null
     address?: Stripe.Address | null
   } | null
+  payment_intent?: string | (Stripe.PaymentIntent & {
+    shipping?: Stripe.PaymentIntent.Shipping | null
+  }) | null
 }
 
 type InvoiceWithSubscription = Stripe.Invoice & {
@@ -151,10 +154,18 @@ function getStripeId(value: string | Stripe.PaymentIntent | Stripe.Subscription 
 
 function getAddress(session: Stripe.Checkout.Session): ShippingAddress {
   const sessionWithShipping = session as CheckoutSessionWithShipping
-  const shipping = session.customer_details?.address || sessionWithShipping.shipping_details?.address
+  const paymentIntent = typeof sessionWithShipping.payment_intent === 'string' ? null : sessionWithShipping.payment_intent
+  const shipping =
+    sessionWithShipping.shipping_details?.address ||
+    paymentIntent?.shipping?.address ||
+    session.customer_details?.address
 
   return {
-    name: sessionWithShipping.shipping_details?.name || session.customer_details?.name || undefined,
+    name:
+      sessionWithShipping.shipping_details?.name ||
+      paymentIntent?.shipping?.name ||
+      session.customer_details?.name ||
+      undefined,
     line1: shipping?.line1 || undefined,
     line2: shipping?.line2 || undefined,
     city: shipping?.city || undefined,

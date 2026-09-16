@@ -56,8 +56,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       case 'checkout.session.async_payment_succeeded':
         {
           const session = event.data.object as Stripe.Checkout.Session
+          const fullSession = await stripe.checkout.sessions.retrieve(session.id, {
+            expand: ['payment_intent', 'subscription'],
+          })
           const products = await getCatalogProductsForAdmin()
-          const order = createOrderFromCheckoutSession(session, products)
+          const order = createOrderFromCheckoutSession(fullSession, products)
           await saveOrderToDb(order)
           console.log(`Stripe webhook processed order: ${order.id}`)
           await sendOrderEmails(order)
