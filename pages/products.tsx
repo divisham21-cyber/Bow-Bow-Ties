@@ -771,7 +771,7 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                         </label>
                         <p className="text-xs text-slate-500">
                           {fulfillmentMethod === 'ship'
-                            ? `Standard shipping is ${formatPrice(standardShipping.priceCents)} plus applicable tax.`
+                            ? `Standard shipping is ${formatPrice(standardShipping.priceCents)} plus applicable tax. Orders typically ship within 3-5 business days.`
                             : `FREE local pickup from ${pickupLocation.label}. We will coordinate pickup after payment.`}
                         </p>
                       </div>
@@ -917,7 +917,7 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                       </label>
                       <p className="text-xs text-slate-500">
                         {fulfillmentMethod === 'ship'
-                          ? `Standard shipping is ${formatPrice(standardShipping.priceCents)} plus applicable tax.`
+                          ? `Standard shipping is ${formatPrice(standardShipping.priceCents)} plus applicable tax. Orders typically ship within 3-5 business days.`
                           : `FREE local pickup from ${pickupLocation.label}. We will coordinate pickup after payment.`}
                       </p>
                     </div>
