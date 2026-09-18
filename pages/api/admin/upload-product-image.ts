@@ -3,12 +3,13 @@ import { isAdminAuthenticated } from '../../../lib/adminAuth'
 import { getSupabaseAdmin } from '../../../lib/supabaseAdmin'
 
 const bucketName = 'product-images'
-const maxImageBytes = 4 * 1024 * 1024
+const maxImageBytes = 8 * 1024 * 1024
+const allowedContentTypes = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
 
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: '6mb',
+      sizeLimit: '12mb',
     },
   },
 }
@@ -23,6 +24,10 @@ function getExtension(contentType: string) {
 function parseDataUrl(dataUrl: string) {
   const match = dataUrl.match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/)
   if (!match) throw new Error('Expected a base64 image data URL.')
+
+  if (!allowedContentTypes.has(match[1])) {
+    throw new Error('Please upload a JPG, PNG, WebP, or GIF image.')
+  }
 
   return {
     contentType: match[1],
@@ -50,6 +55,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const productId = String(req.body?.productId || 'product')
+    const productSlug = String(req.body?.productSlug || '')
     const dataUrl = String(req.body?.dataUrl || '')
     const { contentType, buffer } = parseDataUrl(dataUrl)
 
@@ -59,8 +65,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const extension = getExtension(contentType)
-    const safeProductId = productId.replace(/[^a-z0-9-]/gi, '-').toLowerCase()
-    const path = `${safeProductId}/${Date.now()}.${extension}`
+    const safeProductPath = (productSlug || productId)
+      .replace(/[^a-z0-9-]/gi, '-')
+      .replace(/^-+|-+$/g, '')
+      .toLowerCase() || 'product'
+    const path = `${safeProductPath}/${Date.now()}.${extension}`
 
     const { error } = await supabase.storage
       .from(bucketName)
@@ -69,7 +78,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         upsert: true,
       })
 
-    if (error) throw error
+    if (error) {
+      if (error.message?.toLowerCase().includes('bucket not found')) {
+        throw new Error('Product image storage is not ready. Please create the product-images bucket in Supabase.')
+      }
+
+      throw new Error(`Image upload failed: ${error.message}`)
+    }
 
     const { data } = supabase.storage.from(bucketName).getPublicUrl(path)
     res.status(200).json({ publicUrl: data.publicUrl, path })

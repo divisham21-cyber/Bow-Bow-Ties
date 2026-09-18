@@ -33,6 +33,9 @@ const categoryNames = Object.fromEntries(
   catalogCategories.map((category) => [category.id, category.name])
 ) as Record<ProductCategoryId, string>
 
+const maxUploadBytes = 8 * 1024 * 1024
+const allowedUploadTypes = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
+
 function downloadJson(filename: string, payload: unknown) {
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' })
   const url = URL.createObjectURL(blob)
@@ -204,14 +207,20 @@ export default function AdminCatalog() {
     const file = event.target.files?.[0]
     if (!file || !selectedProduct) return
 
-    if (file.size > 4 * 1024 * 1024) {
-      setStatusMessage('Image must be 4 MB or smaller. Try a smaller or compressed photo.')
+    if (!allowedUploadTypes.has(file.type)) {
+      setStatusMessage('Please upload a JPG, PNG, WebP, or GIF image. HEIC photos need to be converted first.')
+      event.target.value = ''
+      return
+    }
+
+    if (file.size > maxUploadBytes) {
+      setStatusMessage('Image must be 8 MB or smaller. Try a smaller or compressed photo.')
       event.target.value = ''
       return
     }
 
     setUploadingImageIndex(imageIndex)
-    setStatusMessage(`Uploading photo ${imageIndex + 1}...`)
+    setStatusMessage(`Uploading photo ${imageIndex + 1}: ${file.name}...`)
 
     const reader = new FileReader()
     reader.onload = async () => {
@@ -221,6 +230,7 @@ export default function AdminCatalog() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             productId: selectedProduct.id,
+            productSlug: selectedProduct.slug,
             dataUrl: String(reader.result),
           }),
         })

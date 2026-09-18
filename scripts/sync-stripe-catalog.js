@@ -192,7 +192,7 @@ function subscriptionLookupKey(productId, variantId, planId) {
 
 async function searchProduct(catalogId) {
   const result = await stripe.products.search({
-    query: `metadata['catalog_id']:'${catalogId}'`,
+    query: `metadata['catalog_id']:'${catalogId}' AND metadata['source']:'bow-bow-ties-website'`,
     limit: 1,
   })
 
@@ -319,7 +319,11 @@ function rowToProduct(row) {
     id: row.id,
     name: row.name,
     description: row.short_description || row.description,
-    images: row.hero_image_url ? [row.hero_image_url] : [],
+    images: Array.isArray(row.image_urls) && row.image_urls.length
+      ? row.image_urls.filter(Boolean)
+      : row.hero_image_url
+        ? [row.hero_image_url]
+        : [],
     variants,
     plans: row.subscription_enabled ? row.subscription_plans || [] : [],
   }
@@ -330,7 +334,7 @@ async function loadSupabaseCatalogProducts() {
 
   const { data, error } = await supabase
     .from('catalog_products')
-    .select('id, name, short_description, description, hero_image_url, subscription_enabled, subscription_plans, sort_order, catalog_product_variants(product_id, variant_id, name, price_cents, sort_order)')
+    .select('id, name, short_description, description, hero_image_url, image_urls, subscription_enabled, subscription_plans, sort_order, catalog_product_variants(product_id, variant_id, name, price_cents, sort_order)')
     .eq('active', true)
     .order('sort_order', { ascending: true })
 
