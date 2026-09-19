@@ -100,7 +100,6 @@ export function validateProduct(product: CatalogProduct, allProducts: CatalogPro
   if (!trimmedName) errors.push('Product name is required.')
   if (!slug) errors.push('Slug is required.')
   if (!product.shortDescription.trim()) errors.push('Short description is required.')
-  if (!product.description.trim()) errors.push('Full description is required.')
   if (imageCount < 1) errors.push('At least one image is required.')
   if (imageCount > 2) errors.push('A product can have at most 2 images.')
   if (product.subscriptionEnabled && product.categoryId !== 'bow-bow-treats') {

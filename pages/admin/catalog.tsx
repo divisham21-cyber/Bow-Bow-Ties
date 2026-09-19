@@ -34,7 +34,66 @@ const categoryNames = Object.fromEntries(
 ) as Record<ProductCategoryId, string>
 
 const maxUploadBytes = 8 * 1024 * 1024
+const maxOptimizedImageBytes = 6 * 1024 * 1024
+const maxUploadDimension = 1800
 const allowedUploadTypes = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
+
+function readFileAsDataUrl(file: File) {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(String(reader.result))
+    reader.onerror = () => reject(new Error('Unable to read image file.'))
+    reader.readAsDataURL(file)
+  })
+}
+
+function loadImage(dataUrl: string) {
+  return new Promise<HTMLImageElement>((resolve, reject) => {
+    const image = new Image()
+    image.onload = () => resolve(image)
+    image.onerror = () => reject(new Error('Unable to prepare image for upload.'))
+    image.src = dataUrl
+  })
+}
+
+function canvasToDataUrl(canvas: HTMLCanvasElement) {
+  return new Promise<string>((resolve, reject) => {
+    canvas.toBlob(
+      (blob) => {
+        if (!blob) {
+          reject(new Error('Unable to optimize image for upload.'))
+          return
+        }
+
+        const reader = new FileReader()
+        reader.onload = () => resolve(String(reader.result))
+        reader.onerror = () => reject(new Error('Unable to read optimized image.'))
+        reader.readAsDataURL(blob)
+      },
+      'image/jpeg',
+      0.86
+    )
+  })
+}
+
+async function prepareImageUpload(file: File) {
+  const originalDataUrl = await readFileAsDataUrl(file)
+  if (file.type === 'image/gif') return originalDataUrl
+
+  const image = await loadImage(originalDataUrl)
+  const scale = Math.min(1, maxUploadDimension / Math.max(image.width, image.height))
+  const width = Math.max(1, Math.round(image.width * scale))
+  const height = Math.max(1, Math.round(image.height * scale))
+  const canvas = document.createElement('canvas')
+  canvas.width = width
+  canvas.height = height
+
+  const context = canvas.getContext('2d')
+  if (!context) return originalDataUrl
+
+  context.drawImage(image, 0, 0, width, height)
+  return canvasToDataUrl(canvas)
+}
 
 function downloadJson(filename: string, payload: unknown) {
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' })
@@ -159,16 +218,22 @@ export default function AdminCatalog() {
     updateSelectedProduct(normalizeProductForCategory(product, categoryId))
   }
 
-  function updateProductImage(index: number, value: string) {
-    if (!selectedProduct) return
+  function updateProductImage(index: number, value: string, productId = selectedProduct?.id) {
+    if (!productId) return
 
-    const nextImages = [...selectedProduct.images.slice(0, 2)]
-    nextImages[index] = value
+    setProducts((current) =>
+      current.map((product) => {
+        if (product.id !== productId) return product
 
-    updateSelectedProduct({
-      ...selectedProduct,
-      images: nextImages.map((image) => image || '').slice(0, 2),
-    })
+        const nextImages = [...product.images.slice(0, 2)]
+        nextImages[index] = value
+
+        return {
+          ...product,
+          images: nextImages.map((image) => image || '').slice(0, 2),
+        }
+      })
+    )
   }
 
   async function saveCatalog() {
@@ -221,36 +286,39 @@ export default function AdminCatalog() {
 
     setUploadingImageIndex(imageIndex)
     setStatusMessage(`Uploading photo ${imageIndex + 1}: ${file.name}...`)
+    const uploadProductId = selectedProduct.id
+    const uploadProductSlug = selectedProduct.slug
 
-    const reader = new FileReader()
-    reader.onload = async () => {
-      try {
-        const response = await fetch('/api/admin/upload-product-image', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            productId: selectedProduct.id,
-            productSlug: selectedProduct.slug,
-            dataUrl: String(reader.result),
-          }),
-        })
-        const result = await response.json()
-
-        if (!response.ok) {
-          throw new Error(result.message || 'Unable to upload image.')
-        }
-
-        updateProductImage(imageIndex, result.publicUrl)
-        setStatusMessage(`Photo ${imageIndex + 1} uploaded. Save when ready.`)
-      } catch (error) {
-        const message = error instanceof Error ? error.message : 'Unable to upload image.'
-        setStatusMessage(message)
-      } finally {
-        setUploadingImageIndex(null)
-        event.target.value = ''
+    try {
+      const dataUrl = await prepareImageUpload(file)
+      if (dataUrl.length > maxOptimizedImageBytes * 1.4) {
+        throw new Error('Optimized image is still too large. Try cropping or compressing it before upload.')
       }
+
+      const response = await fetch('/api/admin/upload-product-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          productId: uploadProductId,
+          productSlug: uploadProductSlug,
+          dataUrl,
+        }),
+      })
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Unable to upload image.')
+      }
+
+      updateProductImage(imageIndex, result.publicUrl, uploadProductId)
+      setStatusMessage(`Photo ${imageIndex + 1} uploaded. Save when ready.`)
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unable to upload image.'
+      setStatusMessage(message)
+    } finally {
+      setUploadingImageIndex(null)
+      event.target.value = ''
     }
-    reader.readAsDataURL(file)
   }
 
   function updateVariantPrice(variantId: string, value: string) {
@@ -628,7 +696,7 @@ export default function AdminCatalog() {
                     </label>
 
                     <label className="block md:col-span-2">
-                      <span className="text-sm font-semibold text-gray-700">Full description</span>
+                      <span className="text-sm font-semibold text-gray-700">Internal description (optional)</span>
                       <textarea
                         value={selectedProduct.description}
                         onChange={(event) => updateSelectedProduct({ ...selectedProduct, description: event.target.value })}
