@@ -142,8 +142,8 @@ export default function Home() {
           return (
             <div className={`${getEventTypeColor(nextEvent.type)} border-b`}>
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
+                <div className="grid gap-3 text-center sm:grid-cols-[1fr_auto_1fr] sm:items-center sm:text-left">
+                  <div className="flex flex-col items-center gap-1 sm:flex-row sm:items-center sm:gap-3">
                     <span className="text-2xl">{getEventTypeIcon(nextEvent.type)}</span>
                     <div>
                       <h3 className="font-semibold text-lg">Next Event: {nextEvent.title}</h3>
@@ -154,7 +154,10 @@ export default function Home() {
                       </p>
                     </div>
                   </div>
-                  <span className="text-xs uppercase font-medium px-3 py-1 rounded-full bg-white bg-opacity-50">
+                  <p className="mx-auto inline-flex max-w-xs flex-wrap items-center justify-center gap-2 rounded-md bg-amber-300 px-3 py-1 text-sm font-bold text-slate-950 shadow-sm sm:max-w-none">
+                    Use code <span className="rounded bg-white px-2 py-0.5 tracking-wide text-rose-700">WELCOME10</span> for 10% off
+                  </p>
+                  <span className="justify-self-center rounded-full bg-white bg-opacity-50 px-3 py-1 text-xs font-medium uppercase sm:justify-self-end">
                     {nextEvent.type}
                   </span>
                 </div>
