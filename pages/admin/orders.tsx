@@ -240,19 +240,6 @@ export default function AdminOrders() {
     await updateOrder({ ...selectedOrder, status }, `Updated ${selectedOrder.id} to ${statusLabels[status]}.`)
   }
 
-  async function markFulfilled() {
-    if (!selectedOrder) return
-
-    await updateOrder(
-      {
-        ...selectedOrder,
-        status: 'fulfilled',
-        fulfillment: fulfillmentDraft,
-      },
-      'Fulfillment saved and order marked fulfilled.'
-    )
-  }
-
   async function saveFulfillment() {
     if (!selectedOrder) return
 
@@ -613,8 +600,8 @@ export default function AdminOrders() {
                         {selectedOrderIsNotified
                           ? 'This order is fulfilled and the customer notification has been sent.'
                           : selectedOrderIsFulfilled
-                            ? 'This order is marked fulfilled.'
-                            : 'Add fulfillment details, then mark the order fulfilled.'}
+                            ? 'This order is fulfilled. You can still send the customer email if needed.'
+                            : 'Add fulfillment details, then send the customer email.'}
                       </p>
                     </div>
                     <span
@@ -689,15 +676,7 @@ export default function AdminOrders() {
                       disabled={isSavingSelectedOrder}
                       className="rounded-md border border-primary-600 bg-white px-4 py-2 font-semibold text-primary-700 hover:bg-primary-50 disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      {isSavingSelectedOrder ? 'Saving...' : 'Save Fulfillment'}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={markFulfilled}
-                      disabled={isSavingSelectedOrder || selectedOrderIsFulfilled}
-                      className="btn-secondary disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                      {selectedOrderIsFulfilled ? 'Fulfilled' : 'Mark Fulfilled'}
+                      {isSavingSelectedOrder ? 'Saving...' : 'Save Draft'}
                     </button>
                     <button type="button" onClick={previewShippingEmail} className="rounded-md border border-primary-600 bg-white px-4 py-2 font-semibold text-primary-700 hover:bg-primary-50">
                       Preview Customer Email
@@ -712,7 +691,7 @@ export default function AdminOrders() {
                         ? 'Sending...'
                         : selectedOrderIsNotified
                           ? 'Customer Notified'
-                          : 'Send Customer Email'}
+                          : 'Save & Send Customer Email'}
                     </button>
                   </div>
                 </div>
