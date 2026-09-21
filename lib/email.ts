@@ -12,10 +12,12 @@ export interface EmailMessage {
   to: string
   subject: string
   text: string
+  replyTo?: string
 }
 
 const sellerEmail = process.env.SELLER_ORDER_EMAIL || 'contact@bowbowties.us'
 const fromEmail = process.env.ORDER_FROM_EMAIL || 'contact@bowbowties.us'
+const replyToEmail = process.env.ORDER_REPLY_TO_EMAIL || sellerEmail
 const resendApiKey = process.env.RESEND_API_KEY
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://bowbowties.us'
 
@@ -36,13 +38,15 @@ export function buildBuyerOrderEmail(order: OrderSummary): EmailMessage | null {
 
   return {
     to: order.customerEmail,
-    subject: isRenewalOrder ? 'Bow-Bow-Ties subscription order received' : 'Bow-Bow-Ties order received',
+    subject: isRenewalOrder
+      ? `[Bow-Bow-Ties Order ${customerOrderNumber}] Subscription renewal received`
+      : `[Bow-Bow-Ties Order ${customerOrderNumber}] Order received`,
     text: [
       `Hi ${order.customerName},`,
       '',
       isRenewalOrder
-        ? 'Your Bow-Bow-Ties subscription payment was received, and we will prepare this treat order.'
-        : 'Thank you for your Bow-Bow-Ties order. We received your payment and will prepare your items for shipment.',
+        ? 'Thank you so much! Your Bow-Bow Ties subscription payment was received, and we will prepare this treat order.'
+        : 'Thank you so much for your Bow-Bow Ties order! We received your payment and will start preparing your items.',
       '',
       `Order: ${customerOrderNumber}`,
       '',
@@ -57,30 +61,41 @@ export function buildBuyerOrderEmail(order: OrderSummary): EmailMessage | null {
       '',
       order.fulfillmentMethod === 'pickup' ? 'Fulfillment: Pick up order' : 'Shipping to:',
       order.fulfillmentMethod === 'pickup'
-        ? 'We will coordinate pickup details after your order is prepared.'
+        ? 'We will send you an update when your order is ready and coordinate pickup details with you.'
         : formatShippingAddress(order.shippingAddress),
       '',
       order.fulfillmentMethod === 'pickup'
         ? 'We will send an update when your order is ready.'
-        : 'We will send tracking details after the order is fulfilled.',
+        : 'Most orders ship within 3-5 business days after we receive the order. We will send tracking details as soon as your package is on its way.',
       ...(hasSubscription
         ? [
             '',
             `Manage or cancel future subscription renewals: ${siteUrl.replace(/\/$/, '')}/subscriptions`,
           ]
         : []),
+      '',
+      'Thank you for supporting our mission to help animals in need. We hope you and your furry friend love everything!',
+      '',
+      'Sincerely,',
+      'Divisha Mandal',
+      'Founder, Bow-Bow Ties',
+      'https://bowbowties.us/',
+      'Making the world a better place for animals',
     ].join('\n'),
   }
 }
 
 export function buildSellerOrderEmail(order: OrderSummary): EmailMessage {
   const customerOrderNumber = getCustomerOrderNumber(order)
+  const isRenewalOrder = order.stripeSessionId.startsWith('invoice:')
 
   return {
     to: sellerEmail,
-    subject: `${order.stripeSessionId.startsWith('invoice:') ? 'Subscription renewal' : 'New Bow-Bow-Ties order'}: ${order.customerName}`,
+    subject: isRenewalOrder
+      ? `[BBT Seller Order ${customerOrderNumber}] Subscription renewal - ${order.customerName}`
+      : `[BBT Seller Order ${customerOrderNumber}] New order - ${order.customerName}`,
     text: [
-      order.stripeSessionId.startsWith('invoice:')
+      isRenewalOrder
         ? 'New paid subscription renewal order received.'
         : 'New paid order received.',
       '',
@@ -118,27 +133,32 @@ export function buildShippingConfirmationEmail(
     to: order.customerEmail,
     subject:
       order.fulfillmentMethod === 'pickup'
-        ? 'Your Bow-Bow-Ties order is ready for pickup'
-        : 'Your Bow-Bow-Ties order has shipped',
+        ? `[Bow-Bow-Ties Order ${customerOrderNumber}] Ready for pickup`
+        : `[Bow-Bow-Ties Order ${customerOrderNumber}] Your order has shipped`,
     text: [
       `Hi ${order.customerName},`,
       '',
       `Order: ${customerOrderNumber}`,
       '',
       order.fulfillmentMethod === 'pickup'
-        ? 'Your Bow-Bow-Ties order is ready for pickup.'
-        : 'Your Bow-Bow-Ties order has shipped.',
+        ? 'Great news! Your Bow-Bow Ties order is ready for pickup.'
+        : 'Great news! Your Bow-Bow Ties order is on its way!',
       '',
-      order.fulfillmentMethod === 'pickup' ? '' : `Carrier: ${fulfillment.carrier || 'Not provided'}`,
-      order.fulfillmentMethod === 'pickup' ? '' : `Tracking number: ${fulfillment.trackingNumber || 'Not provided'}`,
-      order.fulfillmentMethod === 'pickup' || !fulfillment.trackingUrl ? '' : `Tracking link: ${fulfillment.trackingUrl}`,
+      order.fulfillmentMethod === 'pickup' ? '' : `Carrier: ${fulfillment.carrier || 'USPS'}`,
+      order.fulfillmentMethod === 'pickup' ? '' : `Tracking Number: ${fulfillment.trackingNumber || 'Not provided'}`,
+      order.fulfillmentMethod === 'pickup' || !fulfillment.trackingUrl ? '' : `Track Your Package: ${fulfillment.trackingUrl}`,
       fulfillment.shippedAt
         ? `${order.fulfillmentMethod === 'pickup' ? 'Ready date' : 'Shipped date'}: ${fulfillment.shippedAt}`
         : '',
       fulfillment.note ? `Note: ${fulfillment.note}` : '',
       '',
-      'Items:',
-      getLineItemsText(order),
+      'Thank you so much for your order and for supporting our mission to help animals in need. We hope you and your furry friend love everything!',
+      '',
+      'Sincerely,',
+      'Divisha Mandal',
+      'Founder, Bow-Bow Ties',
+      'https://bowbowties.us/',
+      'Making the world a better place for animals',
     ]
       .filter((line) => line !== '')
       .join('\n'),
@@ -158,6 +178,7 @@ export async function sendEmail(message: EmailMessage) {
         to: message.to,
         subject: message.subject,
         text: message.text,
+        reply_to: message.replyTo || replyToEmail,
       }),
     })
 
@@ -176,6 +197,7 @@ export async function sendEmail(message: EmailMessage) {
         from: fromEmail,
         to: message.to,
         subject: message.subject,
+        replyTo: message.replyTo || replyToEmail,
         text: message.text,
       },
       null,

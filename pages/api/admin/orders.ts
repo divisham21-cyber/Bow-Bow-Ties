@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import Stripe from 'stripe'
 import { isAdminAuthenticated } from '../../../lib/adminAuth'
+import { buildShippingConfirmationEmail, sendEmail } from '../../../lib/email'
 import { OrderSummary } from '../../../lib/orders'
 import { getOrdersFromDb, saveOrderToDb } from '../../../lib/orderRepository'
 
@@ -21,11 +22,33 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     if (req.method === 'POST') {
-      const action = req.body?.action as 'refund' | 'cancel' | undefined
+      const action = req.body?.action as 'refund' | 'cancel' | 'send-fulfillment-email' | undefined
       const order = req.body?.order as OrderSummary | undefined
 
       if (!action || !order?.stripeSessionId) {
         res.status(400).json({ message: 'Order action and order payload are required.' })
+        return
+      }
+
+      if (action === 'send-fulfillment-email') {
+        const email = order.fulfillment ? buildShippingConfirmationEmail(order, order.fulfillment) : null
+
+        if (!email) {
+          res.status(400).json({ message: 'This order does not have a customer email address.' })
+          return
+        }
+
+        await sendEmail(email)
+
+        const nextOrder: OrderSummary = { ...order, status: 'customer_notified' }
+        const saved = await saveOrderToDb(nextOrder, { preserveAdminState: false })
+
+        if (!saved) {
+          res.status(500).json({ message: 'Email sent, but Supabase is not configured to save the order status.' })
+          return
+        }
+
+        res.status(200).json({ ok: true, order: nextOrder, message: 'Customer fulfillment email sent.' })
         return
       }
 

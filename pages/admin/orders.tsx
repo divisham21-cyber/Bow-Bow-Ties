@@ -70,7 +70,7 @@ export default function AdminOrders() {
   const [fulfillmentDraft, setFulfillmentDraft] = useState<FulfillmentInfo>(emptyFulfillment)
   const [emailPreview, setEmailPreview] = useState('')
   const [statusMessage, setStatusMessage] = useState('Loading paid Stripe checkout orders...')
-  const [orderAction, setOrderAction] = useState<'refund' | 'cancel' | null>(null)
+  const [orderAction, setOrderAction] = useState<'refund' | 'cancel' | 'send-fulfillment-email' | null>(null)
   const [savingOrderId, setSavingOrderId] = useState<string | null>(null)
 
   const visibleOrders = useMemo(
@@ -277,16 +277,42 @@ export default function AdminOrders() {
 
   async function markCustomerNotified() {
     if (!selectedOrder) return
+    if (!selectedEmail) {
+      setEmailPreview('Customer email is missing, so no fulfillment email can be sent.')
+      return
+    }
 
-    await updateOrder(
-      {
-        ...selectedOrder,
-        status: 'customer_notified',
-        fulfillment: fulfillmentDraft,
-      },
-      'Customer notification preview generated and order marked notified.'
-    )
-    previewShippingEmail()
+    const nextOrder: OrderSummary = {
+      ...selectedOrder,
+      fulfillment: fulfillmentDraft,
+    }
+
+    setOrderAction('send-fulfillment-email')
+    setSavingOrderId(selectedOrder.id)
+    setStatusMessage('Sending customer fulfillment email...')
+    setEmailPreview(`To: ${selectedEmail.to}\nSubject: ${selectedEmail.subject}\n\n${selectedEmail.text}`)
+
+    try {
+      const response = await fetch('/api/admin/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'send-fulfillment-email', order: nextOrder }),
+      })
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Unable to send customer email.')
+      }
+
+      setOrders((current) => current.map((order) => (order.id === result.order.id ? result.order : order)))
+      setStatusMessage(result.message || 'Customer fulfillment email sent.')
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unable to send customer email.'
+      setStatusMessage(message)
+    } finally {
+      setOrderAction(null)
+      setSavingOrderId(null)
+    }
   }
 
   function resetOrders() {
@@ -585,7 +611,7 @@ export default function AdminOrders() {
                       <h3 className="font-bold text-gray-950">Fulfillment</h3>
                       <p className="mt-1 text-sm text-gray-600">
                         {selectedOrderIsNotified
-                          ? 'This order is fulfilled and the customer notification has been prepared.'
+                          ? 'This order is fulfilled and the customer notification has been sent.'
                           : selectedOrderIsFulfilled
                             ? 'This order is marked fulfilled.'
                             : 'Add fulfillment details, then mark the order fulfilled.'}
@@ -682,7 +708,11 @@ export default function AdminOrders() {
                       disabled={isSavingSelectedOrder || selectedOrderIsNotified}
                       className="btn-primary disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      {selectedOrderIsNotified ? 'Customer Notified' : 'Mark Customer Notified'}
+                      {orderAction === 'send-fulfillment-email'
+                        ? 'Sending...'
+                        : selectedOrderIsNotified
+                          ? 'Customer Notified'
+                          : 'Send Customer Email'}
                     </button>
                   </div>
                 </div>
