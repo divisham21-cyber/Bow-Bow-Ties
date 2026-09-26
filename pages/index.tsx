@@ -375,7 +375,7 @@ export default function Home() {
             <div className="rounded-lg bg-gradient-to-r from-sky-50 via-teal-50 to-amber-50 p-5 shadow-sm sm:p-6">
               <div className="rounded-lg bg-gradient-to-r from-teal-500 via-sky-400 to-amber-300 px-5 py-4 text-center">
                 <h3 className="text-2xl font-bold text-slate-950 sm:text-3xl">Our Impact</h3>
-                <p className="mt-2 text-base font-semibold text-slate-900">See how your support has made a difference in the lives of animals</p>
+                <p className="mt-2 text-base font-semibold text-slate-900">See how your support has made a difference.</p>
               </div>
 
               <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-5">

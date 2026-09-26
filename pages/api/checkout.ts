@@ -281,7 +281,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           key: 'order_note',
           label: {
             type: 'custom',
-            custom: 'Order note / special instructions',
+            custom: 'Order note',
           },
           optional: true,
           type: 'text',
