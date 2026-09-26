@@ -14,6 +14,11 @@ const adminTools = [
     title: 'Orders',
     description: 'Review paid orders, add tracking, mark fulfillment, preview buyer shipping emails.',
   },
+  {
+    href: '/admin/gallery',
+    title: 'Gallery',
+    description: 'Upload customer photos, add titles, and manage the public gallery page.',
+  },
 ]
 
 export default function AdminHome() {
@@ -44,7 +49,7 @@ export default function AdminHome() {
         </header>
 
         <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
             {adminTools.map((tool) => (
               <Link
                 key={tool.href}

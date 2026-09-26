@@ -61,6 +61,9 @@ export default function SubscriptionsPage() {
               <Link href="/products" className="rounded-lg border border-sky-200 bg-white px-4 py-2 text-sm font-bold text-slate-700 hover:border-sky-400">
                 Shop
               </Link>
+              <Link href="/gallery" className="rounded-lg border border-sky-200 bg-white px-4 py-2 text-sm font-bold text-slate-700 hover:border-sky-400">
+                Gallery
+              </Link>
               <a href="mailto:contact@bowbowties.us" className="rounded-lg border border-sky-200 bg-white px-4 py-2 text-sm font-bold text-slate-700 hover:border-sky-400">
                 Contact
               </a>

@@ -347,6 +347,9 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                 <Link href="/calendar" className="text-slate-700 hover:text-sky-600 transition-colors text-base lg:text-lg font-bold">
                   Events
                 </Link>
+                <Link href="/gallery" className="text-slate-700 hover:text-sky-600 transition-colors text-base lg:text-lg font-bold">
+                  Gallery
+                </Link>
               </nav>
 
               <div className="flex items-center justify-center space-x-3 mt-3 lg:mt-0 lg:space-x-4">
@@ -1006,6 +1009,7 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                   <li><Link href="/subscriptions" className="hover:text-white transition-colors">Subscriptions</Link></li>
                   <li><a href="/#about" className="hover:text-white transition-colors">About</a></li>
                   <li><Link href="/calendar" className="hover:text-white transition-colors">Events</Link></li>
+                  <li><Link href="/gallery" className="hover:text-white transition-colors">Gallery</Link></li>
                   <li><a href="/#contact" className="hover:text-white transition-colors">Contact</a></li>
                 </ul>
               </div>

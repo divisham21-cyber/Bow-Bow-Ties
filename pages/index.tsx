@@ -59,19 +59,21 @@ export default function Home() {
               </div>
               
               {/* Mobile Navigation */}
-              <nav className="flex md:hidden justify-center space-x-4 mt-2 mb-2">
+              <nav className="flex md:hidden flex-wrap justify-center gap-x-4 gap-y-2 mt-2 mb-2">
                 <a href="/products" className="text-gray-700 hover:text-primary-600 transition-colors text-base font-bold">Shop</a>
                 <a href="#about" className="text-gray-700 hover:text-primary-600 transition-colors text-base font-bold">About</a>
                 <a href="#impact" className="text-gray-700 hover:text-primary-600 transition-colors text-base font-bold">Impact</a>
                 <a href="/calendar" className="text-gray-700 hover:text-primary-600 transition-colors text-base font-bold">Events</a>
+                <a href="/gallery" className="text-gray-700 hover:text-primary-600 transition-colors text-base font-bold">Gallery</a>
               </nav>
               
               {/* Tablet Navigation */}
-              <nav className="hidden md:flex lg:hidden justify-center space-x-6 mt-2 mb-2">
+              <nav className="hidden md:flex lg:hidden flex-wrap justify-center gap-x-6 gap-y-2 mt-2 mb-2">
                 <a href="/products" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Shop</a>
                 <a href="#about" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">About</a>
                 <a href="#impact" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Impact</a>
                 <a href="/calendar" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Events</a>
+                <a href="/gallery" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Gallery</a>
               </nav>
               
               {/* Desktop Navigation */}
@@ -80,6 +82,7 @@ export default function Home() {
                 <a href="#about" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">About</a>
                 <a href="#impact" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Impact</a>
                 <a href="/calendar" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Events</a>
+                <a href="/gallery" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Gallery</a>
               </nav>
               
               <div className="flex items-center justify-center space-x-3 mt-2 lg:mt-0 lg:space-x-4">
@@ -723,6 +726,7 @@ export default function Home() {
                   <li><a href="/subscriptions" className="hover:text-white transition-colors">Subscriptions</a></li>
                   <li><a href="#about" className="hover:text-white transition-colors">About</a></li>
                   <li><a href="/calendar" className="hover:text-white transition-colors">Events</a></li>
+                  <li><a href="/gallery" className="hover:text-white transition-colors">Gallery</a></li>
                   <li><a href="#contact" className="hover:text-white transition-colors">Contact</a></li>
                 </ul>
               </div>

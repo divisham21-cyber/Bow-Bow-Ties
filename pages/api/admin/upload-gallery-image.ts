@@ -1,0 +1,86 @@
+import type { NextApiRequest, NextApiResponse } from 'next'
+import { isAdminAuthenticated } from '../../../lib/adminAuth'
+import { getSupabaseAdmin } from '../../../lib/supabaseAdmin'
+
+const bucketName = 'product-images'
+const maxImageBytes = 8 * 1024 * 1024
+const allowedContentTypes = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
+
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '12mb',
+    },
+  },
+}
+
+function getExtension(contentType: string) {
+  if (contentType === 'image/png') return 'png'
+  if (contentType === 'image/webp') return 'webp'
+  if (contentType === 'image/gif') return 'gif'
+  return 'jpg'
+}
+
+function parseDataUrl(dataUrl: string) {
+  const match = dataUrl.match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/)
+  if (!match) throw new Error('Expected a base64 image data URL.')
+
+  if (!allowedContentTypes.has(match[1])) {
+    throw new Error('Please upload a JPG, PNG, WebP, or GIF image.')
+  }
+
+  return {
+    contentType: match[1],
+    buffer: Buffer.from(match[2], 'base64'),
+  }
+}
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', 'POST')
+    res.status(405).json({ message: 'Method not allowed.' })
+    return
+  }
+
+  if (!isAdminAuthenticated(req)) {
+    res.status(401).json({ message: 'Admin login required.' })
+    return
+  }
+
+  const supabase = getSupabaseAdmin()
+  if (!supabase) {
+    res.status(500).json({ message: 'Supabase is not configured.' })
+    return
+  }
+
+  try {
+    const dataUrl = String(req.body?.dataUrl || '')
+    const { contentType, buffer } = parseDataUrl(dataUrl)
+
+    if (buffer.byteLength > maxImageBytes) {
+      res.status(400).json({ message: 'Image must be 8 MB or smaller.' })
+      return
+    }
+
+    const extension = getExtension(contentType)
+    const path = `gallery/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${extension}`
+    const { error } = await supabase.storage.from(bucketName).upload(path, buffer, {
+      contentType,
+      upsert: true,
+    })
+
+    if (error) {
+      if (error.message?.toLowerCase().includes('bucket not found')) {
+        throw new Error('Image storage is not ready. Please create the product-images bucket in Supabase.')
+      }
+
+      throw new Error(`Image upload failed: ${error.message}`)
+    }
+
+    const { data } = supabase.storage.from(bucketName).getPublicUrl(path)
+    res.status(200).json({ publicUrl: data.publicUrl, path })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unable to upload image.'
+    res.status(500).json({ message })
+  }
+}
