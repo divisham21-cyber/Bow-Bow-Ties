@@ -104,6 +104,10 @@ const categoryPillStyles: Record<ProductCategoryId, { active: string; inactive: 
     active: 'border-rose-400 bg-rose-200 text-rose-950 shadow-sm',
     inactive: 'border-rose-200 bg-rose-50 text-rose-900 hover:border-rose-300 hover:bg-rose-100',
   },
+  'fall-bundles': {
+    active: 'border-orange-400 bg-orange-200 text-orange-950 shadow-sm',
+    inactive: 'border-orange-200 bg-orange-50 text-orange-900 hover:border-orange-300 hover:bg-orange-100',
+  },
   'bow-bow-treats': {
     active: 'border-amber-400 bg-amber-200 text-amber-950 shadow-sm',
     inactive: 'border-amber-200 bg-amber-50 text-amber-900 hover:border-amber-300 hover:bg-amber-100',

@@ -87,6 +87,16 @@ function renderLineItemsRows(order: OrderSummary) {
     .join('')
 }
 
+function renderDetailRows(rows: Array<[string, string | undefined]>) {
+  return rows
+    .filter(([, value]) => Boolean(value))
+    .map(
+      ([label, value]) =>
+        `<tr><td style="padding:8px 0;border-bottom:1px solid #e5e7eb;font-weight:700;color:#0f172a;">${escapeHtml(label)}</td><td style="padding:8px 0;border-bottom:1px solid #e5e7eb;text-align:right;color:#334155;">${escapeHtml(value)}</td></tr>`
+    )
+    .join('')
+}
+
 function renderOrderHtml(order: OrderSummary, customerOrderNumber: string, isRenewalOrder: boolean, hasSubscription: boolean) {
   const discountCents = getOrderDiscountCents(order)
   const fulfillmentCopy =
@@ -99,6 +109,12 @@ function renderOrderHtml(order: OrderSummary, customerOrderNumber: string, isRen
       : `<p style="margin:8px 0 0;white-space:pre-line;color:#475569;">${escapeHtml(formatShippingAddress(order.shippingAddress))}</p>`
   const subscriptionHtml = hasSubscription
     ? `<p style="margin:20px 0 0;"><a href="${escapeHtml(siteUrl.replace(/\/$/, '') + '/subscriptions')}" style="color:#0f766e;font-weight:700;">Manage or cancel future subscription renewals</a></p>`
+    : ''
+  const noteHtml = order.orderNote
+    ? `<div style="margin:0 0 22px;padding:14px 16px;background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;">
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;color:#9a3412;letter-spacing:.04em;">Your note</div>
+        <p style="margin:8px 0 0;white-space:pre-line;color:#475569;">${escapeHtml(order.orderNote)}</p>
+      </div>`
     : ''
 
   return renderEmailLayout(
@@ -134,7 +150,53 @@ function renderOrderHtml(order: OrderSummary, customerOrderNumber: string, isRen
       <h2 style="margin:0 0 8px;font-size:18px;color:#0f172a;">${order.fulfillmentMethod === 'pickup' ? 'Fulfillment' : 'Shipping to'}</h2>
       ${addressHtml}
       <p style="margin:16px 0 0;font-size:15px;line-height:1.6;color:#475569;">${escapeHtml(fulfillmentCopy)}</p>
+      ${noteHtml}
       ${subscriptionHtml}
+    `
+  )
+}
+
+function renderSellerOrderHtml(order: OrderSummary, customerOrderNumber: string, isRenewalOrder: boolean) {
+  return renderEmailLayout(
+    isRenewalOrder ? 'Subscription Renewal' : 'New Order',
+    `
+      <div style="margin:0 0 22px;padding:14px 16px;background:#f0fdfa;border:1px solid #99f6e4;border-radius:10px;">
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;color:#0f766e;letter-spacing:.04em;">Customer order</div>
+        <div style="margin-top:4px;font-size:20px;font-weight:800;color:#0f172a;">${escapeHtml(customerOrderNumber)}</div>
+      </div>
+
+      <h2 style="margin:0 0 8px;font-size:18px;color:#0f172a;">Customer</h2>
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;margin:0 0 22px;color:#334155;">
+        ${renderDetailRows([
+          ['Name', order.customerName],
+          ['Email', order.customerEmail || 'Not provided'],
+          ['Phone', order.customerPhone],
+          ['Fulfillment', order.fulfillmentMethod === 'pickup' ? 'Pick up' : 'Ship'],
+          ['Stripe session', order.stripeSessionId],
+          ['Stripe subscription', order.stripeSubscriptionId],
+        ])}
+      </table>
+
+      ${
+        order.orderNote
+          ? `<div style="margin:0 0 22px;padding:14px 16px;background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;">
+              <div style="font-size:12px;font-weight:700;text-transform:uppercase;color:#9a3412;letter-spacing:.04em;">Order note</div>
+              <p style="margin:8px 0 0;white-space:pre-line;color:#475569;">${escapeHtml(order.orderNote)}</p>
+            </div>`
+          : ''
+      }
+
+      <h2 style="margin:0 0 8px;font-size:18px;color:#0f172a;">Items</h2>
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;margin-bottom:18px;">
+        ${renderLineItemsRows(order)}
+      </table>
+
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;margin:0 0 22px;color:#334155;">
+        <tr><td style="padding:10px 0 0;border-top:1px solid #e5e7eb;font-weight:800;color:#0f172a;">Total</td><td style="padding:10px 0 0;border-top:1px solid #e5e7eb;text-align:right;font-weight:800;color:#0f172a;">${escapeHtml(getOrderTotalLabel(order))}</td></tr>
+      </table>
+
+      <h2 style="margin:0 0 8px;font-size:18px;color:#0f172a;">${order.fulfillmentMethod === 'pickup' ? 'Pickup' : 'Ship to'}</h2>
+      <p style="margin:8px 0 0;white-space:pre-line;color:#475569;">${escapeHtml(order.fulfillmentMethod === 'pickup' ? 'Pickup order.' : formatShippingAddress(order.shippingAddress))}</p>
     `
   )
 }
@@ -220,6 +282,13 @@ export function buildBuyerOrderEmail(order: OrderSummary): EmailMessage | null {
       order.fulfillmentMethod === 'pickup'
         ? 'We will send an update when your order is ready.'
         : 'Most orders ship within 3-5 business days after we receive the order. We will send tracking details as soon as your package is on its way.',
+      ...(order.orderNote
+        ? [
+            '',
+            'Your note:',
+            order.orderNote,
+          ]
+        : []),
       ...(hasSubscription
         ? [
             '',
@@ -247,6 +316,7 @@ export function buildSellerOrderEmail(order: OrderSummary): EmailMessage {
     subject: isRenewalOrder
       ? `[BBT Seller Order ${customerOrderNumber}] Subscription renewal - ${order.customerName}`
       : `[BBT Seller Order ${customerOrderNumber}] New order - ${order.customerName}`,
+    html: renderSellerOrderHtml(order, customerOrderNumber, isRenewalOrder),
     text: [
       isRenewalOrder
         ? 'New paid subscription renewal order received.'
@@ -260,6 +330,7 @@ export function buildSellerOrderEmail(order: OrderSummary): EmailMessage {
       `Buyer: ${order.customerName}`,
       `Email: ${order.customerEmail || 'Not provided'}`,
       order.customerPhone ? `Phone: ${order.customerPhone}` : '',
+      order.orderNote ? `Order note: ${order.orderNote}` : '',
       `Fulfillment: ${order.fulfillmentMethod === 'pickup' ? 'Pick up' : 'Ship'}`,
       '',
       'Items:',

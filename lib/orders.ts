@@ -67,6 +67,7 @@ export interface OrderSummary {
   createdAt: string
   fulfillment?: FulfillmentInfo
   petDetails?: PetDetails
+  orderNote?: string
 }
 
 interface CartMetadataItem {
@@ -150,6 +151,11 @@ function parseCartMetadata(metadata?: Stripe.Metadata | null) {
 function getStripeId(value: string | Stripe.PaymentIntent | Stripe.Subscription | null | undefined) {
   if (!value) return undefined
   return typeof value === 'string' ? value : value.id
+}
+
+function getOrderNote(session: Stripe.Checkout.Session) {
+  const orderNote = session.custom_fields?.find((field) => field.key === 'order_note')
+  return orderNote?.text?.value?.trim() || undefined
 }
 
 function getAddress(session: Stripe.Checkout.Session): ShippingAddress {
@@ -260,6 +266,7 @@ export function createOrderFromCheckoutSession(
     totalCents,
     currency: (session.currency || 'usd').toUpperCase(),
     createdAt: new Date((session.created || Math.floor(Date.now() / 1000)) * 1000).toISOString(),
+    orderNote: getOrderNote(session),
   }
 }
 
@@ -298,6 +305,7 @@ export function createRenewalOrderFromInvoice(
     createdAt,
     fulfillment: undefined,
     petDetails: sourceOrder.petDetails,
+    orderNote: sourceOrder.orderNote,
   }
 }
 

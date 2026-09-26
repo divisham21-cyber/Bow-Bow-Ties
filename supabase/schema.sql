@@ -59,6 +59,7 @@ create table if not exists public.orders (
   currency text not null default 'USD',
   fulfillment jsonb,
   pet_details jsonb,
+  order_note text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );

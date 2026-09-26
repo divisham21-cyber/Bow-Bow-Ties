@@ -500,6 +500,12 @@ export default function AdminOrders() {
                           </div>
                         </div>
                       )}
+                      {selectedOrder.orderNote && (
+                        <div className="mt-4 rounded-md border border-amber-100 bg-amber-50 p-3 text-sm text-slate-700">
+                          <p className="font-bold text-slate-950">Order note</p>
+                          <p className="mt-2 whitespace-pre-wrap">{selectedOrder.orderNote}</p>
+                        </div>
+                      )}
                     </div>
                     <div className="rounded-lg bg-gray-50 p-4">
                       <label className="text-sm font-semibold text-gray-700" htmlFor="order-status">

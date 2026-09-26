@@ -20,11 +20,16 @@ interface OrderRow {
   currency: string
   fulfillment: OrderSummary['fulfillment'] | null
   pet_details: OrderSummary['petDetails'] | null
+  order_note: string | null
   created_at: string
 }
 
 interface SaveOrderOptions {
   preserveAdminState?: boolean
+}
+
+function isMissingOrderNoteColumnError(error: { code?: string; message?: string }) {
+  return error.code === 'PGRST204' || error.message?.includes("'order_note' column")
 }
 
 function rowToOrder(row: OrderRow): OrderSummary {
@@ -48,6 +53,7 @@ function rowToOrder(row: OrderRow): OrderSummary {
     createdAt: row.created_at,
     fulfillment: row.fulfillment || undefined,
     petDetails: row.pet_details || undefined,
+    orderNote: row.order_note || undefined,
   }
 }
 
@@ -70,6 +76,7 @@ function orderToRow(order: OrderSummary) {
     total_cents: order.totalCents,
     currency: order.currency,
     fulfillment: order.fulfillment || null,
+    order_note: order.orderNote || null,
     created_at: order.createdAt,
   }
 
@@ -100,9 +107,20 @@ export async function saveOrderToDb(order: OrderSummary, options: SaveOrderOptio
     }
   }
 
-  const { error } = await supabase
+  let { error } = await supabase
     .from('orders')
     .upsert(row, { onConflict: 'stripe_session_id' })
+
+  if (error && isMissingOrderNoteColumnError(error)) {
+    const legacyRow: Record<string, unknown> = { ...row }
+    delete legacyRow.order_note
+
+    const retry = await supabase
+      .from('orders')
+      .upsert(legacyRow, { onConflict: 'stripe_session_id' })
+
+    error = retry.error
+  }
 
   if (error) throw error
   return true

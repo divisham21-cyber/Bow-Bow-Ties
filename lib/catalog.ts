@@ -3,6 +3,7 @@ import etsyCatalogSeed from './etsyCatalogSeed.json'
 export type ProductCategoryId =
   | 'bow-ties'
   | 'bandanas'
+  | 'fall-bundles'
   | 'bow-bow-treats'
   | 'tabitha-beads'
   | 'tote-bags'
@@ -70,6 +71,11 @@ interface EtsyCatalogListing {
 
 export const catalogCategories: ProductCategory[] = [
   {
+    id: 'fall-bundles',
+    name: 'Bundles',
+    description: 'Seasonal pumpkin treat and fall bow tie bundles for cozy gifting.',
+  },
+  {
     id: 'bow-ties',
     name: 'Bow Ties',
     description: 'Handmade accessories for collars, photos, events, and everyday walks.',
@@ -97,6 +103,13 @@ export const catalogCategories: ProductCategory[] = [
 ]
 
 export const defaultCategoryContent: CategoryContent[] = [
+  {
+    categoryId: 'fall-bundles',
+    eyebrow: 'Limited fall bundles',
+    title: 'Pumpkin treats and fall bow ties in one cozy bundle',
+    summary: 'Seasonal bundles pairing pumpkin dog treats with a handmade fall bow tie.',
+    body: 'Fall bundles make gifting easy: choose one, two, or three pumpkin treat packs paired with a handmade fall bow tie. Pick Small or Big for the bow tie size, then send your pup into pumpkin season with a little crunch and a little charm.',
+  },
   {
     categoryId: 'bow-ties',
     eyebrow: 'Handmade bow ties',
@@ -298,7 +311,64 @@ function buildEtsyCatalogProducts() {
   )
 }
 
-export const catalogProducts: CatalogProduct[] = buildEtsyCatalogProducts()
+const fallBundleProducts: CatalogProduct[] = [
+  {
+    id: 'fall-bundle-1-pumpkin-treat-1-fall-bow-tie',
+    slug: 'fall-bundle-1-pumpkin-treat-1-fall-bow-tie',
+    name: 'Fall Bundle - 1 Pumpkin Treat + 1 Fall Bow Tie',
+    categoryId: 'fall-bundles',
+    shortDescription: 'One pumpkin treat pack paired with one handmade fall bow tie.',
+    description:
+      'A cozy fall pairing for pups: one pumpkin dog treat pack and one handmade fall bow tie. Choose Small or Big for the bow tie size.',
+    images: ['/images/fall-bundle-1-pumpkin-treat-1-fall-bow-tie.png'],
+    variants: [
+      { id: 'small', name: 'Small Bow Tie', priceCents: 1999 },
+      { id: 'big', name: 'Big Bow Tie', priceCents: 1999 },
+    ],
+    subscriptionEnabled: false,
+    featured: true,
+    active: true,
+  },
+  {
+    id: 'fall-bundle-2-pumpkin-treats-1-fall-bow-tie',
+    slug: 'fall-bundle-2-pumpkin-treats-1-fall-bow-tie',
+    name: 'Fall Bundle - 2 Pumpkin Treats + 1 Fall Bow Tie',
+    categoryId: 'fall-bundles',
+    shortDescription: 'Two pumpkin treat packs paired with one handmade fall bow tie.',
+    description:
+      'A bigger fall bundle for gifting or restocking: two pumpkin dog treat packs and one handmade fall bow tie. Choose Small or Big for the bow tie size.',
+    images: ['/images/fall-bundle-2-pumpkin-treats-1-fall-bow-tie.png'],
+    variants: [
+      { id: 'small', name: 'Small Bow Tie', priceCents: 2899 },
+      { id: 'big', name: 'Big Bow Tie', priceCents: 2899 },
+    ],
+    subscriptionEnabled: false,
+    featured: true,
+    active: true,
+  },
+  {
+    id: 'fall-bundle-3-pumpkin-treats-1-fall-bow-tie',
+    slug: 'fall-bundle-3-pumpkin-treats-1-fall-bow-tie',
+    name: 'Fall Bundle - 3 Pumpkin Treats + 1 Fall Bow Tie',
+    categoryId: 'fall-bundles',
+    shortDescription: 'Three pumpkin treat packs paired with one handmade fall bow tie.',
+    description:
+      'The full fall treat-and-style bundle: three pumpkin dog treat packs and one handmade fall bow tie. Choose Small or Big for the bow tie size.',
+    images: ['/images/fallbow.jpeg', '/images/dog-biscuit.png'],
+    variants: [
+      { id: 'small', name: 'Small Bow Tie', priceCents: 3899 },
+      { id: 'big', name: 'Big Bow Tie', priceCents: 3899 },
+    ],
+    subscriptionEnabled: false,
+    featured: true,
+    active: true,
+  },
+]
+
+export const catalogProducts: CatalogProduct[] = [
+  ...fallBundleProducts,
+  ...buildEtsyCatalogProducts(),
+]
 
 export function formatPrice(priceCents: number) {
   return new Intl.NumberFormat('en-US', {

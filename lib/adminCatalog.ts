@@ -26,6 +26,10 @@ export const defaultVariantsByCategory: Record<ProductCategoryId, ProductVariant
     { id: 'big', name: 'Big', priceCents: 1199 },
   ],
   bandanas: [{ id: 'standard', name: 'Standard', priceCents: 1499 }],
+  'fall-bundles': [
+    { id: 'small', name: 'Small Bow Tie', priceCents: 1999 },
+    { id: 'big', name: 'Big Bow Tie', priceCents: 1999 },
+  ],
   'bow-bow-treats': [{ id: 'standard', name: 'Standard', priceCents: 1099 }],
   'tabitha-beads': [
     { id: 'small', name: 'Small', priceCents: 999 },

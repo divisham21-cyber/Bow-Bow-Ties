@@ -266,6 +266,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       line_items: lineItems,
       success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/checkout/cancel`,
+      custom_fields: [
+        {
+          key: 'order_note',
+          label: {
+            type: 'custom',
+            custom: 'Order note / special instructions',
+          },
+          optional: true,
+          type: 'text',
+          text: {
+            maximum_length: 500,
+          },
+        },
+      ],
       automatic_tax: {
         enabled: true,
       },
