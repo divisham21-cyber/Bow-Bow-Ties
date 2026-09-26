@@ -286,7 +286,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           optional: true,
           type: 'text',
           text: {
-            maximum_length: 500,
+            maximum_length: 255,
           },
         },
       ],
