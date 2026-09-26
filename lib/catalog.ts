@@ -347,14 +347,31 @@ const fallBundleProducts: CatalogProduct[] = [
     active: true,
   },
   {
-    id: 'fall-bundle-3-pumpkin-treats-1-fall-bow-tie',
-    slug: 'fall-bundle-3-pumpkin-treats-1-fall-bow-tie',
-    name: 'Fall Bundle - 3 Pumpkin Treats + 1 Fall Bow Tie',
+    id: 'fall-bundle-3-pumpkin-treats-2-fall-bow-ties',
+    slug: 'fall-bundle-3-pumpkin-treats-2-fall-bow-ties',
+    name: 'Fall Bundle - 3 Pumpkin Treats + 2 Fall Bow Ties',
     categoryId: 'fall-bundles',
-    shortDescription: 'Three pumpkin treat packs paired with one handmade fall bow tie.',
+    shortDescription: 'Three pumpkin treat packs paired with two handmade fall bow ties.',
     description:
-      'The full fall treat-and-style bundle: three pumpkin dog treat packs and one handmade fall bow tie. Choose Small or Big for the bow tie size.',
-    images: ['/images/fallbow.jpeg', '/images/dog-biscuit.png'],
+      'The full fall treat-and-style bundle: three pumpkin dog treat packs and two handmade fall bow ties. Choose Small or Big for the bow tie size.',
+    images: ['/images/fall-bundle-3-pumpkin-treats-2-fall-bow-ties.png'],
+    variants: [
+      { id: 'small', name: 'Small Bow Ties', priceCents: 4499 },
+      { id: 'big', name: 'Big Bow Ties', priceCents: 4499 },
+    ],
+    subscriptionEnabled: false,
+    featured: true,
+    active: true,
+  },
+  {
+    id: 'fall-bundle-3-pumpkin-treats-1-sugar-skull-bow-tie',
+    slug: 'fall-bundle-3-pumpkin-treats-1-sugar-skull-bow-tie',
+    name: 'Fall Bundle - 3 Pumpkin Treats + 1 Sugar Skull Bow Tie',
+    categoryId: 'fall-bundles',
+    shortDescription: 'Three pumpkin treat packs paired with one handmade sugar skull bow tie.',
+    description:
+      'A festive fall bundle with three pumpkin dog treat packs and one handmade sugar skull bow tie. Choose Small or Big for the bow tie size.',
+    images: ['/images/fall-bundle-3-pumpkin-treats-1-sugar-skull-bow-tie.png'],
     variants: [
       { id: 'small', name: 'Small Bow Tie', priceCents: 3899 },
       { id: 'big', name: 'Big Bow Tie', priceCents: 3899 },

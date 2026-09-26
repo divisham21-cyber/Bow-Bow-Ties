@@ -3,7 +3,12 @@ import Stripe from 'stripe'
 import {
   CatalogProduct,
 } from '../../lib/catalog'
-import { pickupLocation, standardShipping } from '../../lib/commerceConfig'
+import {
+  getShippingPriceCents,
+  pickupLocation,
+  qualifiesForFreeShipping,
+  standardShipping,
+} from '../../lib/commerceConfig'
 import { getCatalogProductsForStorefront } from '../../lib/catalogRepository'
 
 interface CheckoutItemInput {
@@ -152,13 +157,16 @@ function getRecurringShippingLineItem(
   }
 }
 
-function getStandardShippingOption(): Stripe.Checkout.SessionCreateParams.ShippingOption {
+function getStandardShippingOption(subtotalCents: number): Stripe.Checkout.SessionCreateParams.ShippingOption {
+  const isFreeShipping = qualifiesForFreeShipping(subtotalCents)
+  const shippingPriceCents = getShippingPriceCents(subtotalCents)
+
   return {
     shipping_rate_data: {
-      display_name: standardShipping.name,
+      display_name: isFreeShipping ? `Free ${standardShipping.name.toLowerCase()}` : standardShipping.name,
       type: 'fixed_amount',
       fixed_amount: {
-        amount: standardShipping.priceCents,
+        amount: shippingPriceCents,
         currency: 'usd',
       },
       tax_behavior: 'exclusive',
@@ -174,6 +182,7 @@ function getStandardShippingOption(): Stripe.Checkout.SessionCreateParams.Shippi
       },
       metadata: {
         source: 'bow-bow-ties-website',
+        free_shipping: String(isFreeShipping),
       },
     },
   }
@@ -232,6 +241,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const lineItems = items.map(getCheckoutLineItem)
+    const checkoutSubtotalCents = items.reduce((sum, item) => sum + item.unitAmountCents * item.quantity, 0)
     const origin = getOrigin(req)
     const mode = subscriptionItems.length > 0 ? 'subscription' : 'payment'
     const cartMetadata = JSON.stringify(
@@ -306,7 +316,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         sessionParams.shipping_address_collection = {
           allowed_countries: ['US'],
         }
-        sessionParams.shipping_options = [getStandardShippingOption()]
+        sessionParams.shipping_options = [getStandardShippingOption(checkoutSubtotalCents)]
       }
     }
 

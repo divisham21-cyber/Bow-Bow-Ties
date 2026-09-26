@@ -12,7 +12,13 @@ import {
   defaultCategoryContent,
   formatPrice,
 } from '../lib/catalog'
-import { pickupLocation, standardShipping } from '../lib/commerceConfig'
+import {
+  freeShippingThresholdCents,
+  getShippingPriceCents,
+  pickupLocation,
+  qualifiesForFreeShipping,
+  standardShipping,
+} from '../lib/commerceConfig'
 import { getCatalogProductsForStorefront, getCategoryContentForStorefront } from '../lib/catalogRepository'
 
 interface CartItem {
@@ -203,6 +209,9 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
 
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0)
   const cartTotal = cartItems.reduce((sum, item) => sum + item.priceCents * item.quantity, 0)
+  const shippingPriceCents = fulfillmentMethod === 'ship' ? getShippingPriceCents(cartTotal) : 0
+  const freeShippingRemainingCents = Math.max(freeShippingThresholdCents - cartTotal, 0)
+  const hasFreeShipping = qualifiesForFreeShipping(cartTotal)
 
   function updateProductImageIndex(productId: string, imageCount: number, imageIndex: number) {
     setActiveImageIndexes((current) => ({
@@ -336,7 +345,7 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                   Impact
                 </a>
                 <Link href="/calendar" className="text-slate-700 hover:text-sky-600 transition-colors text-base lg:text-lg font-bold">
-                  Calendar
+                  Events
                 </Link>
               </nav>
 
@@ -406,7 +415,7 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                 </p>
                 <div className="mt-5 inline-flex max-w-full rounded-lg border border-sky-200 bg-white/80 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm">
                   <span>
-                    Standard shipping is {formatPrice(standardShipping.priceCents)}. FREE local pickup from {pickupLocation.label} or at in-person events is available.
+                    Standard shipping is {formatPrice(standardShipping.priceCents)}. FREE standard shipping on orders {formatPrice(freeShippingThresholdCents)} and up. FREE local pickup from {pickupLocation.label} is available.
                   </span>
                 </div>
               </div>
@@ -751,7 +760,19 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                           <span>Subtotal</span>
                           <span>{formatPrice(cartTotal)}</span>
                         </div>
-                        <p className="mt-1 text-xs text-slate-500">Shipping and tax are calculated in checkout.</p>
+                        {fulfillmentMethod === 'ship' && (
+                          <div className="mt-2 flex items-center justify-between text-sm font-semibold text-slate-700">
+                            <span>{hasFreeShipping ? 'Shipping' : 'Estimated shipping'}</span>
+                            <span>{hasFreeShipping ? 'FREE' : formatPrice(shippingPriceCents)}</span>
+                          </div>
+                        )}
+                        <p className="mt-1 text-xs text-slate-500">
+                          {fulfillmentMethod === 'ship'
+                            ? hasFreeShipping
+                              ? `Free standard shipping applied on orders ${formatPrice(freeShippingThresholdCents)} and up. Tax is calculated in checkout.`
+                              : `Add ${formatPrice(freeShippingRemainingCents)} more for free standard shipping. Tax is calculated in checkout.`
+                            : 'Tax is calculated in checkout.'}
+                        </p>
                       </div>
                       <div className="space-y-2 rounded-md border border-sky-100 bg-white p-3">
                         <p className="text-sm font-semibold text-slate-700">Fulfillment</p>
@@ -775,7 +796,9 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                         </label>
                         <p className="text-xs text-slate-500">
                           {fulfillmentMethod === 'ship'
-                            ? `Standard shipping is ${formatPrice(standardShipping.priceCents)} plus applicable tax. Orders typically ship within 3-5 business days.`
+                            ? hasFreeShipping
+                              ? `Free standard shipping on this order. Orders typically ship within 3-5 business days.`
+                              : `Standard shipping is ${formatPrice(standardShipping.priceCents)}. Orders ${formatPrice(freeShippingThresholdCents)} and up ship free.`
                             : `FREE local pickup from ${pickupLocation.label}. We will coordinate pickup after payment.`}
                         </p>
                       </div>
@@ -897,7 +920,19 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                         <span>Subtotal</span>
                         <span>{formatPrice(cartTotal)}</span>
                       </div>
-                      <p className="mt-1 text-xs text-slate-500">Shipping and tax are calculated in checkout.</p>
+                      {fulfillmentMethod === 'ship' && (
+                        <div className="mt-2 flex items-center justify-between text-sm font-semibold text-slate-700">
+                          <span>{hasFreeShipping ? 'Shipping' : 'Estimated shipping'}</span>
+                          <span>{hasFreeShipping ? 'FREE' : formatPrice(shippingPriceCents)}</span>
+                        </div>
+                      )}
+                      <p className="mt-1 text-xs text-slate-500">
+                        {fulfillmentMethod === 'ship'
+                          ? hasFreeShipping
+                            ? `Free standard shipping applied on orders ${formatPrice(freeShippingThresholdCents)} and up. Tax is calculated in checkout.`
+                            : `Add ${formatPrice(freeShippingRemainingCents)} more for free standard shipping. Tax is calculated in checkout.`
+                          : 'Tax is calculated in checkout.'}
+                      </p>
                     </div>
                     <div className="space-y-2 rounded-md border border-sky-100 bg-white p-3">
                       <p className="text-sm font-semibold text-slate-700">Fulfillment</p>
@@ -921,7 +956,9 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                       </label>
                       <p className="text-xs text-slate-500">
                         {fulfillmentMethod === 'ship'
-                          ? `Standard shipping is ${formatPrice(standardShipping.priceCents)} plus applicable tax. Orders typically ship within 3-5 business days.`
+                          ? hasFreeShipping
+                            ? `Free standard shipping on this order. Orders typically ship within 3-5 business days.`
+                            : `Standard shipping is ${formatPrice(standardShipping.priceCents)}. Orders ${formatPrice(freeShippingThresholdCents)} and up ship free.`
                           : `FREE local pickup from ${pickupLocation.label}. We will coordinate pickup after payment.`}
                       </p>
                     </div>
@@ -968,7 +1005,7 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                   <li><Link href="/products" className="hover:text-white transition-colors">Shop</Link></li>
                   <li><Link href="/subscriptions" className="hover:text-white transition-colors">Subscriptions</Link></li>
                   <li><a href="/#about" className="hover:text-white transition-colors">About</a></li>
-                  <li><Link href="/calendar" className="hover:text-white transition-colors">Calendar</Link></li>
+                  <li><Link href="/calendar" className="hover:text-white transition-colors">Events</Link></li>
                   <li><a href="/#contact" className="hover:text-white transition-colors">Contact</a></li>
                 </ul>
               </div>

@@ -5,6 +5,16 @@ export const standardShipping = {
   deliveryEstimate: '3-7 business days',
 }
 
+export const freeShippingThresholdCents = 5000
+
+export function qualifiesForFreeShipping(subtotalCents: number) {
+  return subtotalCents >= freeShippingThresholdCents
+}
+
+export function getShippingPriceCents(subtotalCents: number) {
+  return qualifiesForFreeShipping(subtotalCents) ? 0 : standardShipping.priceCents
+}
+
 export const pickupLocation = {
   label: 'South Bothell',
   city: 'Bothell',

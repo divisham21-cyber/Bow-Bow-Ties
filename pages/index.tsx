@@ -1,10 +1,13 @@
 import Head from 'next/head'
 import { useState } from 'react'
 import MapComponent, { ProductLocation } from '../components/MapComponent'
+import { formatPrice } from '../lib/catalog'
+import { freeShippingThresholdCents } from '../lib/commerceConfig'
 import { getNextEvent, getEventTypeColor, getEventTypeIcon } from '../lib/events'
 
 export default function Home() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
+  const nextEvent = getNextEvent()
   const productLocations: ProductLocation[] = [
     {
       name: 'Bobby Jo\'s Plants and Mercantile',
@@ -60,7 +63,7 @@ export default function Home() {
                 <a href="/products" className="text-gray-700 hover:text-primary-600 transition-colors text-base font-bold">Shop</a>
                 <a href="#about" className="text-gray-700 hover:text-primary-600 transition-colors text-base font-bold">About</a>
                 <a href="#impact" className="text-gray-700 hover:text-primary-600 transition-colors text-base font-bold">Impact</a>
-                <a href="/calendar" className="text-gray-700 hover:text-primary-600 transition-colors text-base font-bold">Calendar</a>
+                <a href="/calendar" className="text-gray-700 hover:text-primary-600 transition-colors text-base font-bold">Events</a>
               </nav>
               
               {/* Tablet Navigation */}
@@ -68,7 +71,7 @@ export default function Home() {
                 <a href="/products" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Shop</a>
                 <a href="#about" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">About</a>
                 <a href="#impact" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Impact</a>
-                <a href="/calendar" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Calendar</a>
+                <a href="/calendar" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Events</a>
               </nav>
               
               {/* Desktop Navigation */}
@@ -76,7 +79,7 @@ export default function Home() {
                 <a href="/products" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Shop</a>
                 <a href="#about" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">About</a>
                 <a href="#impact" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Impact</a>
-                <a href="/calendar" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Calendar</a>
+                <a href="/calendar" className="text-gray-700 hover:text-primary-600 transition-colors text-lg font-bold">Events</a>
               </nav>
               
               <div className="flex items-center justify-center space-x-3 mt-2 lg:mt-0 lg:space-x-4">
@@ -135,36 +138,41 @@ export default function Home() {
           </div>
         </header>
 
-        {/* Upcoming Event Banner */}
-        {(() => {
-          const nextEvent = getNextEvent();
-          if (!nextEvent) return null;
-          return (
-            <div className={`${getEventTypeColor(nextEvent.type)} border-b`}>
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-                <div className="grid gap-3 text-center sm:grid-cols-[1fr_auto_1fr] sm:items-center sm:text-left">
-                  <div className="flex flex-col items-center gap-1 sm:flex-row sm:items-center sm:gap-3">
-                    <span className="text-2xl">{getEventTypeIcon(nextEvent.type)}</span>
-                    <div>
+        {/* Upcoming Event + Promotion Banner */}
+        <div className={`${nextEvent ? getEventTypeColor(nextEvent.type) : 'bg-amber-50 text-slate-900 border-amber-200'} border-b`}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div className="grid gap-3 text-center sm:grid-cols-[1fr_auto_1fr] sm:items-center sm:text-left">
+              <div className="flex flex-col items-center gap-1 sm:flex-row sm:items-center sm:gap-3">
+                <span className="text-2xl">{nextEvent ? getEventTypeIcon(nextEvent.type) : '🎁'}</span>
+                <div>
+                  {nextEvent ? (
+                    <>
                       <h3 className="font-semibold text-lg">Next Event: {nextEvent.title}</h3>
                       <p className="text-sm opacity-75">
                         {new Date(nextEvent.date + 'T00:00:00').toLocaleDateString('en-US', {
                           weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
                         })} at {nextEvent.time}
                       </p>
-                    </div>
-                  </div>
-                  <p className="mx-auto inline-flex max-w-xs flex-wrap items-center justify-center gap-2 rounded-md bg-amber-300 px-3 py-1 text-sm font-bold text-slate-950 shadow-sm sm:max-w-none">
-                    Use code <span className="rounded bg-white px-2 py-0.5 tracking-wide text-rose-700">WELCOME10</span> for 10% off
-                  </p>
-                  <span className="justify-self-center rounded-full bg-white bg-opacity-50 px-3 py-1 text-xs font-medium uppercase sm:justify-self-end">
-                    {nextEvent.type}
-                  </span>
+                    </>
+                  ) : (
+                    <>
+                      <h3 className="font-semibold text-lg">Bow-Bow Ties Events</h3>
+                      <p className="text-sm opacity-75">Check back for upcoming pop-ups and community events.</p>
+                    </>
+                  )}
                 </div>
               </div>
+              <p className="mx-auto inline-flex max-w-xs flex-wrap items-center justify-center gap-2 rounded-md bg-amber-300 px-3 py-1 text-sm font-bold text-slate-950 shadow-sm sm:max-w-none">
+                Use code <span className="rounded bg-white px-2 py-0.5 tracking-wide text-rose-700">WELCOME10</span> for 10% off
+                <span className="hidden text-slate-700 sm:inline">|</span>
+                <span>Free US shipping over {formatPrice(freeShippingThresholdCents)}</span>
+              </p>
+              <a href="/calendar" className="justify-self-center rounded-full bg-white bg-opacity-50 px-3 py-1 text-xs font-medium uppercase transition-colors hover:bg-opacity-75 sm:justify-self-end">
+                {nextEvent ? nextEvent.type : 'Events'}
+              </a>
             </div>
-          );
-        })()}
+          </div>
+        </div>
 
         {/* Hero Section */}
         <section id="home" className="bg-white pb-5 sm:pb-7">
@@ -713,7 +721,7 @@ export default function Home() {
                   <li><a href="/products" className="hover:text-white transition-colors">Shop</a></li>
                   <li><a href="/subscriptions" className="hover:text-white transition-colors">Subscriptions</a></li>
                   <li><a href="#about" className="hover:text-white transition-colors">About</a></li>
-                  <li><a href="/calendar" className="hover:text-white transition-colors">Calendar</a></li>
+                  <li><a href="/calendar" className="hover:text-white transition-colors">Events</a></li>
                   <li><a href="#contact" className="hover:text-white transition-colors">Contact</a></li>
                 </ul>
               </div>
