@@ -96,6 +96,30 @@ export const events: Event[] = [
     description: 'No Place Like Home 5k! At Wilmot Gateway Park, Woodinville.',
     type: 'marketplace'
   },
+  {
+    id: 12,
+    title: "Ballard Pet Celebration",
+    date: '2026-10-04',
+    time: '12:00PM-3:00PM',
+    description: 'Come visit at Ballard Commons Park to visit many pet vendors with many activities!',
+    type: 'marketplace'
+  },
+  {
+    id: 13,
+    title: "UW Children's Business Fair",
+    date: '2026-11-14',
+    time: '10:00AM-3:00PM',
+    description: 'Childrens Business Fair at University of Washington, Seattle campus! Support youth vendors.',
+    type: 'marketplace'
+  },
+  {
+    id: 14,
+    title: "Kenmore Children's Business Fair",
+    date: '2026-12-05',
+    time: '11:00AM-3:00PM',
+    description: 'Support young entrepreneurs at the Hangar in Kenmore! Get handmade gifts for the holidays.',
+    type: 'marketplace'
+  },
 ];
 
 export function getNextEvent(): Event | null {
