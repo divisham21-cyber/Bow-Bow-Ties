@@ -145,28 +145,28 @@ export default function Home() {
         <div className={`${nextEvent ? getEventTypeColor(nextEvent.type) : 'bg-amber-300 text-slate-950 border-amber-400'} border-b`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             {nextEvent ? (
-              <div className="grid gap-3 text-center sm:grid-cols-[1fr_auto_1fr] sm:items-center sm:text-left">
-                <div className="flex flex-col items-center gap-1 sm:flex-row sm:items-center sm:gap-3">
-                  <span className="text-2xl">{getEventTypeIcon(nextEvent.type)}</span>
-                  <div>
-                    <>
-                      <h3 className="font-semibold text-lg">Next Event: {nextEvent.title}</h3>
-                      <p className="text-sm opacity-75">
-                        {new Date(nextEvent.date + 'T00:00:00').toLocaleDateString('en-US', {
-                          weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-                        })} at {nextEvent.time}
-                      </p>
-                    </>
-                  </div>
+              <div className="flex flex-col items-center gap-3 text-center">
+                <div>
+                  <h3 className="inline-flex flex-wrap items-center justify-center gap-2 text-lg font-semibold">
+                    <span className="text-xl" aria-hidden="true">{getEventTypeIcon(nextEvent.type)}</span>
+                    <span>Next Event: {nextEvent.title}</span>
+                  </h3>
+                  <p className="mt-1 hidden min-w-max whitespace-nowrap text-sm opacity-75 sm:block">
+                    {new Date(nextEvent.date + 'T00:00:00').toLocaleDateString('en-US', {
+                      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+                    })} at {nextEvent.time}
+                  </p>
+                  <p className="mt-1 text-sm opacity-75 sm:hidden">
+                    {new Date(nextEvent.date + 'T00:00:00').toLocaleDateString('en-US', {
+                      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+                    })} at {nextEvent.time}
+                  </p>
                 </div>
                 <p className="mx-auto inline-flex max-w-xs flex-wrap items-center justify-center gap-2 rounded-md bg-amber-300 px-3 py-1 text-sm font-bold text-slate-950 shadow-sm sm:max-w-none">
                   Use code <span className="rounded bg-white px-2 py-0.5 tracking-wide text-rose-700">WELCOME10</span> for 10% off
                   <span className="hidden text-slate-700 sm:inline">|</span>
                   <span>Free US shipping over {formatPrice(freeShippingThresholdCents)}</span>
                 </p>
-                <a href="/calendar" className="justify-self-center rounded-full bg-white bg-opacity-50 px-3 py-1 text-xs font-medium uppercase transition-colors hover:bg-opacity-75 sm:justify-self-end">
-                  {nextEvent.type}
-                </a>
               </div>
             ) : (
               <p className="flex w-full flex-wrap items-center justify-center gap-2 text-center text-sm font-bold sm:text-base">
