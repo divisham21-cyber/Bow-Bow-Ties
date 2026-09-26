@@ -323,7 +323,7 @@ const fallBundleProducts: CatalogProduct[] = [
     images: ['/images/fall-bundle-1-pumpkin-treat-1-fall-bow-tie.png'],
     variants: [
       { id: 'small', name: 'Small Bow Tie', priceCents: 1999 },
-      { id: 'big', name: 'Big Bow Tie', priceCents: 1999 },
+      { id: 'big', name: 'Big Bow Tie', priceCents: 2099 },
     ],
     subscriptionEnabled: false,
     featured: true,
@@ -339,8 +339,8 @@ const fallBundleProducts: CatalogProduct[] = [
       'A bigger fall bundle for gifting or restocking: two pumpkin dog treat packs and one handmade fall bow tie. Choose Small or Big for the bow tie size.',
     images: ['/images/fall-bundle-2-pumpkin-treats-1-fall-bow-tie.png'],
     variants: [
-      { id: 'small', name: 'Small Bow Tie', priceCents: 2899 },
-      { id: 'big', name: 'Big Bow Tie', priceCents: 2899 },
+      { id: 'small', name: 'Small Bow Tie', priceCents: 2999 },
+      { id: 'big', name: 'Big Bow Tie', priceCents: 3099 },
     ],
     subscriptionEnabled: false,
     featured: true,
@@ -356,8 +356,8 @@ const fallBundleProducts: CatalogProduct[] = [
       'The full fall treat-and-style bundle: three pumpkin dog treat packs and two handmade fall bow ties. Choose Small or Big for the bow tie size.',
     images: ['/images/fall-bundle-3-pumpkin-treats-2-fall-bow-ties.png'],
     variants: [
-      { id: 'small', name: 'Small Bow Ties', priceCents: 4499 },
-      { id: 'big', name: 'Big Bow Ties', priceCents: 4499 },
+      { id: 'small', name: 'Small Bow Ties', priceCents: 4999 },
+      { id: 'big', name: 'Big Bow Ties', priceCents: 5099 },
     ],
     subscriptionEnabled: false,
     featured: true,
@@ -373,8 +373,8 @@ const fallBundleProducts: CatalogProduct[] = [
       'A festive fall bundle with three pumpkin dog treat packs and one handmade sugar skull bow tie. Choose Small or Big for the bow tie size.',
     images: ['/images/fall-bundle-3-pumpkin-treats-1-sugar-skull-bow-tie.png'],
     variants: [
-      { id: 'small', name: 'Small Bow Tie', priceCents: 3899 },
-      { id: 'big', name: 'Big Bow Tie', priceCents: 3899 },
+      { id: 'small', name: 'Small Bow Tie', priceCents: 3999 },
+      { id: 'big', name: 'Big Bow Tie', priceCents: 4099 },
     ],
     subscriptionEnabled: false,
     featured: true,
