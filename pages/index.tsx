@@ -165,14 +165,14 @@ export default function Home() {
                 <p className="mx-auto inline-flex max-w-xs flex-wrap items-center justify-center gap-2 rounded-md bg-amber-300 px-3 py-1 text-sm font-bold text-slate-950 shadow-sm sm:max-w-none">
                   Use code <span className="rounded bg-white px-2 py-0.5 tracking-wide text-rose-700">WELCOME10</span> for 10% off
                   <span className="hidden text-slate-700 sm:inline">|</span>
-                  <span>Free US shipping over {formatPrice(freeShippingThresholdCents)}</span>
+                  <span>Free US shipping over ${freeShippingThresholdCents / 100}</span>
                 </p>
               </div>
             ) : (
               <p className="flex w-full flex-wrap items-center justify-center gap-2 text-center text-sm font-bold sm:text-base">
                 Use code <span className="rounded bg-white px-2 py-0.5 tracking-wide text-rose-700">WELCOME10</span> for 10% off
                 <span className="hidden text-slate-700 sm:inline">|</span>
-                <span>Free US shipping over {formatPrice(freeShippingThresholdCents)}</span>
+                <span>Free US shipping over ${freeShippingThresholdCents / 100}</span>
               </p>
             )}
           </div>

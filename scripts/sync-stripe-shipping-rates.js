@@ -40,7 +40,7 @@ const shippingRates = [
   {
     envKey: 'STRIPE_STANDARD_SHIPPING_RATE_ID',
     displayName: 'Standard shipping',
-    fixedAmountCents: 499,
+    fixedAmountCents: 599,
     minDays: 3,
     maxDays: 7,
   },
@@ -50,14 +50,14 @@ const recurringShippingPrices = [
   {
     lookupKey: 'bbt_standard-shipping_1_month_subscription',
     nickname: 'Standard shipping - monthly subscription',
-    unitAmount: 499,
+    unitAmount: 599,
     interval: 'month',
     intervalCount: 1,
   },
   {
     lookupKey: 'bbt_standard-shipping_3_month_subscription',
     nickname: 'Standard shipping - quarterly subscription',
-    unitAmount: 1497,
+    unitAmount: 1797,
     interval: 'month',
     intervalCount: 3,
   },

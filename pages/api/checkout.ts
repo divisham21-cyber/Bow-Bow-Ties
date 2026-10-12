@@ -261,7 +261,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       ...Object.fromEntries(cartMetadataChunks.map((chunk, index) => [`cart_${index}`, chunk])),
     }
 
-    if (mode === 'subscription' && fulfillmentMethod === 'ship') {
+    if (mode === 'subscription' && fulfillmentMethod === 'ship' && !qualifiesForFreeShipping(checkoutSubtotalCents)) {
       const firstSubscription = subscriptionItems[0]
       if (!firstSubscription?.intervalCount) {
         res.status(400).json({ message: 'Subscription shipping interval is missing.' })

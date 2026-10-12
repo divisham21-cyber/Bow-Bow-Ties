@@ -1,7 +1,7 @@
 export const standardShipping = {
   id: 'standard-shipping',
   name: 'Standard shipping',
-  priceCents: 499,
+  priceCents: 599,
   deliveryEstimate: '3-7 business days',
 }
 

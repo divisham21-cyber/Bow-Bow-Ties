@@ -769,7 +769,9 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                             <span>{hasFreeShipping ? 'FREE' : formatPrice(shippingPriceCents)}</span>
                           </div>
                         )}
-                        <p className="mt-1 text-xs text-slate-500">
+                        <p className={fulfillmentMethod === 'ship'
+                          ? 'mt-3 rounded-lg border border-teal-200 bg-teal-50 px-3 py-2 text-sm font-semibold leading-6 text-teal-900'
+                          : 'mt-1 text-xs text-slate-500'}>
                           {fulfillmentMethod === 'ship'
                             ? hasFreeShipping
                               ? `Free standard shipping applied on orders ${formatPrice(freeShippingThresholdCents)} and up. Tax is calculated in checkout.`
@@ -929,7 +931,9 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                           <span>{hasFreeShipping ? 'FREE' : formatPrice(shippingPriceCents)}</span>
                         </div>
                       )}
-                      <p className="mt-1 text-xs text-slate-500">
+                      <p className={fulfillmentMethod === 'ship'
+                          ? 'mt-3 rounded-lg border border-teal-200 bg-teal-50 px-3 py-2 text-sm font-semibold leading-6 text-teal-900'
+                          : 'mt-1 text-xs text-slate-500'}>
                         {fulfillmentMethod === 'ship'
                           ? hasFreeShipping
                             ? `Free standard shipping applied on orders ${formatPrice(freeShippingThresholdCents)} and up. Tax is calculated in checkout.`
