@@ -38,7 +38,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Bow-Bow-Ties - Premium Pet Bow Ties & Accessories</title>
+        <title>Bow-Bow-Ties - For Pets We Love. For Animals in Need.</title>
         <meta name="description" content="Discover our collection of stylish bow ties and accessories for your furry friends. Handmade, Premium quality, comfortable fit, and adorable designs." />
       </Head>
 
