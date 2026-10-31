@@ -134,7 +134,7 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
     () => initialProducts.filter((product) => product.active),
     [initialProducts]
   )
-  const [selectedCategory, setSelectedCategory] = useState<ProductCategoryId>('bow-ties')
+  const [selectedCategory, setSelectedCategory] = useState<ProductCategoryId>('bow-bow-treats')
   const [cartItems, setCartItems] = useState<CartItem[]>([])
   const [selections, setSelections] = useState<Record<string, ProductSelection>>(() =>
     Object.fromEntries(activeProducts.map((product) => [product.id, getDefaultSelection(product)]))
@@ -421,6 +421,9 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                     Standard shipping is {formatPrice(standardShipping.priceCents)}. FREE standard shipping on orders {formatPrice(freeShippingThresholdCents)} and up. FREE local pickup from {pickupLocation.label} is available.
                   </span>
                 </div>
+                <p className="mt-3 flex w-fit max-w-full flex-wrap items-center gap-2 rounded-lg bg-amber-300 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm">
+                  Use code <span className="rounded bg-white px-2 py-0.5 tracking-wide text-rose-700">WELCOME10</span> for 10% off at checkout
+                </p>
               </div>
             </div>
           </section>

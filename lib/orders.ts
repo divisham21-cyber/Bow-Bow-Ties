@@ -12,6 +12,7 @@ export type OrderStatus =
 export interface OrderLineItem {
   productId: string
   productName: string
+  image?: string
   variantId: string
   variantName: string
   purchaseType: 'one-time' | 'subscription'
@@ -192,6 +193,7 @@ function getCatalogLineItem(item: CartMetadataItem, products: CatalogProduct[]):
     return {
       productId: item.productId,
       productName: item.productName,
+      image: product?.images[0],
       variantId: item.variantId,
       variantName: item.variantName,
       purchaseType: item.purchaseType,
@@ -212,6 +214,7 @@ function getCatalogLineItem(item: CartMetadataItem, products: CatalogProduct[]):
   return {
     productId: product.id,
     productName: product.name,
+    image: product.images[0],
     variantId: variant.id,
     variantName: variant.name,
     purchaseType: item.purchaseType,

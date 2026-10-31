@@ -6,7 +6,7 @@ import {
   getOrderDiscountCents,
   getOrderTotalLabel,
 } from './orders'
-import { formatPrice } from './catalog'
+import { catalogProducts, formatPrice } from './catalog'
 
 export interface EmailMessage {
   to: string
@@ -21,6 +21,18 @@ const fromEmail = process.env.ORDER_FROM_EMAIL || 'contact@bowbowties.us'
 const replyToEmail = process.env.ORDER_REPLY_TO_EMAIL || sellerEmail
 const resendApiKey = process.env.RESEND_API_KEY
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://bowbowties.us'
+
+const customerFooterText = [
+  'With love and wagging tails,',
+  'Divisha & the Bow-Bow Ties Team 🐶',
+  'www.BowBowTies.us',
+  'Making the world a better place for animals. ❤️',
+]
+
+const customerFooterHtml = `With love and wagging tails,<br>
+  <strong>Divisha &amp; the Bow-Bow Ties Team</strong> 🐶<br>
+  <a href="https://www.bowbowties.us/" style="color:#0f766e;text-decoration:none;">www.BowBowTies.us</a><br>
+  <em>Making the world a better place for animals.</em> ❤️`
 
 function getLineItemsText(order: OrderSummary) {
   return order.lineItems
@@ -44,11 +56,15 @@ function getLogoUrl() {
   return `${siteUrl.replace(/\/$/, '')}/bow_bow_ties.png`
 }
 
-function renderEmailLayout(title: string, body: string) {
+function renderEmailLayout(title: string, body: string, showDefaultFooter = true) {
   const logoUrl = escapeHtml(getLogoUrl())
 
   return `<!doctype html>
 <html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
   <body style="margin:0;background:#f8fafc;padding:24px;font-family:Arial,Helvetica,sans-serif;color:#1f2937;">
     <div style="max-width:640px;margin:0 auto;background:#ffffff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
       <div style="padding:28px 28px 18px;text-align:center;background:#ecfeff;">
@@ -58,15 +74,12 @@ function renderEmailLayout(title: string, body: string) {
       <div style="padding:28px;">
         ${body}
       </div>
-      <div style="padding:22px 28px;background:#fff7ed;border-top:1px solid #fed7aa;color:#475569;font-size:14px;line-height:1.6;">
+      ${showDefaultFooter ? `<div style="padding:22px 28px;background:#fff7ed;border-top:1px solid #fed7aa;color:#475569;font-size:14px;line-height:1.6;">
         <p style="margin:0 0 14px;">Thank you for supporting our mission to help animals in need. We hope you and your furry friend love everything!</p>
         <p style="margin:0;">
-          Sincerely,<br>
-          <strong>Divisha Mandal</strong><br>
-          Founder, <a href="${escapeHtml(siteUrl.replace(/\/$/, '/'))}" style="color:#0f766e;text-decoration:none;">Bow-Bow Ties</a><br>
-          Making the world a better place for animals
+          ${customerFooterHtml}
         </p>
-      </div>
+      </div>` : ''}
     </div>
   </body>
 </html>`
@@ -76,7 +89,20 @@ function renderLineItemsRows(order: OrderSummary) {
   return order.lineItems
     .map((item) => {
       const plan = item.planName ? `, ${item.planName}` : ''
+      const image = item.image || catalogProducts.find((product) => product.id === item.productId)?.images[0]
+      let imageUrl = ''
+      if (image) {
+        try {
+          const url = new URL(image, siteUrl)
+          if (url.protocol === 'https:' || url.protocol === 'http:') imageUrl = url.href
+        } catch {
+          // Keep item details readable when an image URL is unavailable.
+        }
+      }
       return `<tr>
+        <td width="76" style="width:76px;padding:12px 12px 12px 0;border-bottom:1px solid #e5e7eb;vertical-align:top;">
+          ${imageUrl ? `<img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(item.productName)}" width="64" height="64" style="display:block;width:64px;height:64px;object-fit:cover;border:1px solid #e5e7eb;border-radius:8px;">` : ''}
+        </td>
         <td style="padding:12px 0;border-bottom:1px solid #e5e7eb;">
           <div style="font-weight:700;color:#0f172a;">${escapeHtml(item.productName)}</div>
           <div style="margin-top:3px;color:#64748b;font-size:13px;">${escapeHtml(item.variantName + plan)} x ${escapeHtml(item.quantity)}</div>
@@ -202,7 +228,21 @@ function renderSellerOrderHtml(order: OrderSummary, customerOrderNumber: string,
 }
 
 function renderFulfillmentHtml(order: OrderSummary, fulfillment: FulfillmentInfo, customerOrderNumber: string) {
-  const isPickup = order.fulfillmentMethod === 'pickup'
+  if (order.fulfillmentMethod === 'pickup') {
+    return renderEmailLayout('Your Order Is Ready For Pickup', `
+      <div style="font-size:16px;line-height:1.6;">
+        <p>Hi ${escapeHtml(order.customerName)},</p>
+        <p>Great news! Your Bow-Bow Ties order is ready for pickup! 🐾❤️</p>
+        <p>Your order will be waiting for you <strong>inside a box next to our front door</strong>. Feel free to stop by at your convenience—no need to coordinate a pickup time!</p>
+        <p><strong>Pickup Address:</strong><br><span style="white-space:pre-line;">${escapeHtml(process.env.PICKUP_ADDRESS || '4426 235th PL SE\nBothell WA 98021')}</span></p>
+        <p><strong>Pickup Window:</strong> Within the next 3 days.</p>
+        <p>If you're unable to pick up your order within 3 days, please let us know so we can make alternative arrangements.</p>
+        <p>Thank you so much for supporting Bow-Bow Ties and helping us make a difference in the lives of animals in need. We hope your furry friend loves their goodies!</p>
+        <p>${customerFooterHtml}</p>
+      </div>
+    `, false)
+  }
+  const isPickup = false
   const trackingUrl = fulfillment.trackingUrl.trim()
   const trackingRows = isPickup
     ? [
@@ -298,11 +338,7 @@ export function buildBuyerOrderEmail(order: OrderSummary): EmailMessage | null {
       '',
       'Thank you for supporting our mission to help animals in need. We hope you and your furry friend love everything!',
       '',
-      'Sincerely,',
-      'Divisha Mandal',
-      'Founder, Bow-Bow Ties',
-      'https://bowbowties.us/',
-      'Making the world a better place for animals',
+      ...customerFooterText,
     ].join('\n'),
   }
 }
@@ -360,35 +396,40 @@ export function buildShippingConfirmationEmail(
         ? `[Bow-Bow-Ties Order ${customerOrderNumber}] Ready for pickup`
         : `[Bow-Bow-Ties Order ${customerOrderNumber}] Your order has shipped`,
     html: renderFulfillmentHtml(order, fulfillment, customerOrderNumber),
-    text: [
+    text: order.fulfillmentMethod === 'pickup' ? [
+      `Hi ${order.customerName},`,
+      '',
+      'Great news! Your Bow-Bow Ties order is ready for pickup! 🐾❤️',
+      '',
+      'Your order will be waiting for you inside a box next to our front door. Feel free to stop by at your convenience—no need to coordinate a pickup time!',
+      '',
+      'Pickup Address:',
+      process.env.PICKUP_ADDRESS || '4426 235th PL SE\nBothell WA 98021',
+      '',
+      'Pickup Window: Within the next 3 days.',
+      "If you're unable to pick up your order within 3 days, please let us know so we can make alternative arrangements.",
+      '',
+      'Thank you so much for supporting Bow-Bow Ties and helping us make a difference in the lives of animals in need. We hope your furry friend loves their goodies!',
+      '',
+      ...customerFooterText,
+    ].join('\n') : [
       `Hi ${order.customerName},`,
       '',
       `Order: ${customerOrderNumber}`,
       '',
-      order.fulfillmentMethod === 'pickup'
-        ? 'Great news! Your Bow-Bow Ties order is ready for pickup.'
-        : 'Great news! Your Bow-Bow Ties order is on its way!',
+      'Great news! Your Bow-Bow Ties order is on its way!',
       '',
-      ...(order.fulfillmentMethod === 'pickup'
-        ? [
-            fulfillment.shippedAt ? `Ready date: ${fulfillment.shippedAt}` : '',
-            fulfillment.note ? `Pickup note: ${fulfillment.note}` : '',
-          ].filter(Boolean)
-        : [
+      ...[
             `Carrier: ${fulfillment.carrier || 'USPS'}`,
             `Tracking Number: ${fulfillment.trackingNumber || 'Not provided'}`,
             fulfillment.trackingUrl ? `Track Your Package: ${fulfillment.trackingUrl}` : '',
             fulfillment.shippedAt ? `Shipped date: ${fulfillment.shippedAt}` : '',
             fulfillment.note ? `Note: ${fulfillment.note}` : '',
-          ].filter(Boolean)),
+          ].filter(Boolean),
       '',
       'Thank you so much for your order and for supporting our mission to help animals in need. We hope you and your furry friend love everything!',
       '',
-      'Sincerely,',
-      'Divisha Mandal',
-      'Founder, Bow-Bow Ties',
-      'https://bowbowties.us/',
-      'Making the world a better place for animals',
+      ...customerFooterText,
     ].join('\n'),
   }
 }

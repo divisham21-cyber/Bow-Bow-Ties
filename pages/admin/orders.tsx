@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import { GetServerSideProps } from 'next'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { buildShippingConfirmationEmail } from '../../lib/email'
 import { requireAdminPage } from '../../lib/adminAuth'
 import {
@@ -69,6 +69,13 @@ export default function AdminOrders() {
   const [purchaseTypeFilter, setPurchaseTypeFilter] = useState<OrderPurchaseTypeFilter>('all')
   const [fulfillmentDraft, setFulfillmentDraft] = useState<FulfillmentInfo>(emptyFulfillment)
   const [emailPreview, setEmailPreview] = useState('')
+  const emailPreviewRef = useRef<HTMLDivElement>(null)
+  const [previewScrollRequest, setPreviewScrollRequest] = useState(0)
+
+  useEffect(() => {
+    if (!previewScrollRequest) return
+    emailPreviewRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [previewScrollRequest])
   const [statusMessage, setStatusMessage] = useState('Loading paid Stripe checkout orders...')
   const [orderAction, setOrderAction] = useState<'refund' | 'cancel' | 'send-fulfillment-email' | null>(null)
   const [savingOrderId, setSavingOrderId] = useState<string | null>(null)
@@ -253,6 +260,7 @@ export default function AdminOrders() {
   }
 
   function previewShippingEmail() {
+    setPreviewScrollRequest((request) => request + 1)
     if (!selectedEmail) {
       setEmailPreview('Customer email is missing, so no shipping email can be sent.')
       return
@@ -548,7 +556,7 @@ export default function AdminOrders() {
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-                  <div className="rounded-lg border border-gray-200 bg-white p-5">
+                  <div ref={emailPreviewRef} className="scroll-mt-6 rounded-lg border border-gray-200 bg-white p-5">
                     <h3 className="font-bold text-gray-950">Items</h3>
                     <div className="mt-4 space-y-3">
                       {selectedOrder.lineItems.map((item) => (
