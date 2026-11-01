@@ -421,8 +421,8 @@ export default function Products({ initialProducts, categoryContent }: ProductsP
                     Standard shipping is {formatPrice(standardShipping.priceCents)}. FREE standard shipping on orders {formatPrice(freeShippingThresholdCents)} and up. FREE local pickup from {pickupLocation.label} is available.
                   </span>
                 </div>
-                <p className="mt-3 flex w-fit max-w-full flex-wrap items-center gap-2 rounded-lg bg-amber-300 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm">
-                  Use code <span className="rounded bg-white px-2 py-0.5 tracking-wide text-rose-700">WELCOME10</span> for 10% off at checkout
+                <p className="mt-3 w-fit max-w-full rounded-lg bg-amber-300 px-4 py-3 text-sm font-semibold leading-relaxed text-slate-800 shadow-sm sm:flex sm:flex-wrap sm:items-center sm:gap-2 sm:leading-normal">
+                  Use code <span className="whitespace-nowrap rounded bg-white px-2 py-0.5 tracking-wide text-rose-700">WELCOME10</span> for 10% off at checkout
                 </p>
               </div>
             </div>
