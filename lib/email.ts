@@ -14,6 +14,7 @@ export interface EmailMessage {
   text: string
   html?: string
   replyTo?: string
+  copyToSeller?: boolean
 }
 
 const sellerEmail = process.env.SELLER_ORDER_EMAIL || 'contact@bowbowties.us'
@@ -292,6 +293,7 @@ export function buildBuyerOrderEmail(order: OrderSummary): EmailMessage | null {
 
   return {
     to: order.customerEmail,
+    copyToSeller: true,
     subject: isRenewalOrder
       ? `[Bow-Bow-Ties Order ${customerOrderNumber}] Subscription renewal received`
       : `[Bow-Bow-Ties Order ${customerOrderNumber}] Order received`,
@@ -391,6 +393,7 @@ export function buildShippingConfirmationEmail(
 
   return {
     to: order.customerEmail,
+    copyToSeller: true,
     subject:
       order.fulfillmentMethod === 'pickup'
         ? `[Bow-Bow-Ties Order ${customerOrderNumber}] Ready for pickup`
@@ -434,7 +437,7 @@ export function buildShippingConfirmationEmail(
   }
 }
 
-export async function sendEmail(message: EmailMessage) {
+async function deliverEmail(message: EmailMessage) {
   if (resendApiKey) {
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
@@ -475,6 +478,19 @@ export async function sendEmail(message: EmailMessage) {
       2
     )
   )
+}
+
+export async function sendEmail(message: EmailMessage) {
+  await deliverEmail(message)
+
+  if (message.copyToSeller) {
+    await deliverEmail({
+      ...message,
+      to: sellerEmail,
+      subject: `[Seller copy] ${message.subject}`,
+      copyToSeller: false,
+    })
+  }
 }
 
 export async function sendOrderEmails(order: OrderSummary) {
