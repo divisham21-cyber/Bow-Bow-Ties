@@ -114,6 +114,22 @@ export const events: Event[] = [
   },
   {
     id: 14,
+    title: "Shop Small Saturday Holiday Market",
+    date: '2026-11-28',
+    time: '10:00AM-2:00PM',
+    description: 'Support young entrepreneurs at Woodin Creek Village in Woodinville! Get handmade gifts for the holidays.',
+    type: 'marketplace'
+  },
+  {
+    id: 15,
+    title: "Woodland Terrace Senior Living Holiday Market",
+    date: '2026-12-03',
+    time: '2:00AM-6:00PM',
+    description: 'At the Woodland Terrace Senior Living home in Bothell! Get handmade gifts for the holidays.',
+    type: 'marketplace'
+  },
+  {
+    id: 16,
     title: "Kenmore Children's Business Fair",
     date: '2026-12-05',
     time: '11:00AM-3:00PM',

@@ -481,9 +481,20 @@ export default function Home() {
             </div>
             
             <div className="max-w-6xl mx-auto">
-              {/* Desktop: 2 rows layout, Mobile: stacked */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                {/* First row - 4 images */}
+              {/* Desktop: 2 rows of 4 images, Mobile: stacked */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div
+                  className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+                  onClick={() => setSelectedImage('/Recognition/UWCBFaward.jpg')}
+                >
+                  <img
+                    src="/Recognition/UWCBFaward.jpg"
+                    alt="UW Children's Business Fair: 1st Place"
+                    className="w-full h-auto sm:h-48 object-contain sm:object-cover rounded-lg"
+                  />
+                  <h4 className="mt-3 text-center text-base font-semibold text-gray-900">UW Children's Business Fair: 1st Place</h4>
+                  <p className="text-center text-sm text-gray-500 mt-2">Click to enlarge</p>
+                </div>
                 <div 
                   className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow cursor-pointer"
                   onClick={() => setSelectedImage('/Recognition/janegoodall.jpeg')}
@@ -493,6 +504,7 @@ export default function Home() {
                     alt="Jane Goodall Recognition" 
                     className="w-full h-auto sm:h-48 object-contain sm:object-cover rounded-lg"
                   />
+                  <h4 className="mt-3 text-center text-base font-semibold text-gray-900">Jane Goodall Recognition</h4>
                   <p className="text-center text-sm text-gray-500 mt-2">Click to enlarge</p>
                 </div>
                 <div 
@@ -504,6 +516,7 @@ export default function Home() {
                     alt="Presidential Letter Recognition" 
                     className="w-full h-auto sm:h-48 object-contain sm:object-cover rounded-lg"
                   />
+                  <h4 className="mt-3 text-center text-base font-semibold text-gray-900">Presidential Letter Recognition</h4>
                   <p className="text-center text-sm text-gray-500 mt-2">Click to enlarge</p>
                 </div>
                 <div 
@@ -515,6 +528,7 @@ export default function Home() {
                     alt="YSA Recognition Award" 
                     className="w-full h-auto sm:h-48 object-contain sm:object-cover rounded-lg"
                   />
+                  <h4 className="mt-3 text-center text-base font-semibold text-gray-900">YSA Recognition Award</h4>
                   <p className="text-center text-sm text-gray-500 mt-2">Click to enlarge</p>
                 </div>
                 <div 
@@ -526,12 +540,9 @@ export default function Home() {
                     alt="CEM Recognition Award" 
                     className="w-full h-auto sm:h-48 object-contain sm:object-cover rounded-lg"
                   />
+                  <h4 className="mt-3 text-center text-base font-semibold text-gray-900">CEM Recognition Award</h4>
                   <p className="text-center text-sm text-gray-500 mt-2">Click to enlarge</p>
                 </div>
-              </div>
-              
-              {/* Second row - 3 images centered */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
                 <div 
                   className="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow cursor-pointer"
                   onClick={() => setSelectedImage('/Recognition/expressionarts.png')}
@@ -541,6 +552,7 @@ export default function Home() {
                     alt="Expression Arts Recognition" 
                     className="w-full h-auto sm:h-48 object-contain sm:object-cover rounded-lg"
                   />
+                  <h4 className="mt-3 text-center text-base font-semibold text-gray-900">Expression Arts Recognition: 1st Place</h4>
                   <p className="text-center text-sm text-gray-500 mt-2">Click to enlarge</p>
                 </div>
                 <div 
@@ -552,6 +564,7 @@ export default function Home() {
                     alt="Youth4US Recognition" 
                     className="w-full h-auto sm:h-48 object-contain sm:object-cover rounded-lg"
                   />
+                  <h4 className="mt-3 text-center text-base font-semibold text-gray-900">Youth4US Recognition: 1st Place</h4>
                   <p className="text-center text-sm text-gray-500 mt-2">Click to enlarge</p>
                 </div>
                 <div 
@@ -563,6 +576,7 @@ export default function Home() {
                     alt="Jackson Recognition Award" 
                     className="w-full h-auto sm:h-48 object-contain sm:object-cover rounded-lg"
                   />
+                  <h4 className="mt-3 text-center text-base font-semibold text-gray-900">Jackson Recognition Award</h4>
                   <p className="text-center text-sm text-gray-500 mt-2">Click to enlarge</p>
                 </div>
               </div>

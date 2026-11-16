@@ -269,9 +269,31 @@ const Calendar: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Single Calendar Month - Page Wide */}
           <div className="bg-white rounded-lg shadow-md p-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-6 text-center">
-              {monthNames[getCurrentMonth().getMonth()]} {getCurrentMonth().getFullYear()}
-            </h2>
+            <div className="mb-6 flex items-center justify-center gap-3 sm:gap-6">
+              <button
+                type="button"
+                aria-label="Previous month"
+                onClick={() => setCurrentMonth(month => new Date(month.getFullYear(), month.getMonth() - 1, 1))}
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gray-100 text-gray-700 transition-colors hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+              >
+                <svg aria-hidden="true" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="m15 18-6-6 6-6" />
+                </svg>
+              </button>
+              <h2 aria-live="polite" className="text-center text-2xl font-semibold text-gray-900">
+                {monthNames[getCurrentMonth().getMonth()]} {getCurrentMonth().getFullYear()}
+              </h2>
+              <button
+                type="button"
+                aria-label="Next month"
+                onClick={() => setCurrentMonth(month => new Date(month.getFullYear(), month.getMonth() + 1, 1))}
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gray-100 text-gray-700 transition-colors hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+              >
+                <svg aria-hidden="true" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="m9 6 6 6-6 6" />
+                </svg>
+              </button>
+            </div>
             
             {/* Day headers */}
             <div className="grid grid-cols-7 gap-2 mb-4">
