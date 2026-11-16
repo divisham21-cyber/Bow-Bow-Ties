@@ -136,6 +136,14 @@ export const events: Event[] = [
     description: 'Support young entrepreneurs at the Hangar in Kenmore! Get handmade gifts for the holidays.',
     type: 'marketplace'
   },
+  {
+    id: 17,
+    title: "Wanderlust Book Lounge Book Reading",
+    date: '2026-12-06',
+    time: '3:30PM-4:30PM',
+    description: 'Come and support us at the Wanderlust Book Lounge in Bothell! We will be reading a book Divisha is featured in, Superhero Kids!',
+    type: 'partner events'
+  },
 ];
 
 export function getNextEvent(): Event | null {
